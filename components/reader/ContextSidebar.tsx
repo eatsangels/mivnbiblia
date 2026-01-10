@@ -1,9 +1,55 @@
-import { ChevronRight, ExternalLink } from "lucide-react";
+'use client';
+
+import { useState, useEffect } from "react";
+import { ChevronRight, ExternalLink, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { getBookMetadata } from "@/lib/bibleMetadata";
+import { getBookMetadata, BookMetadata } from "@/lib/bibleMetadata";
+import { createClient } from "@/lib/supabase/client";
 
 export function ContextSidebar({ bookName }: { bookName: string }) {
-    const meta = getBookMetadata(bookName);
+    const [meta, setMeta] = useState<BookMetadata>(getBookMetadata(bookName));
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        const fetchMeta = async () => {
+            setLoading(true);
+            const slug = bookName
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/ /g, "-")
+                .replace(/[^a-z0-9-]/g, "");
+
+            const { data, error } = await supabase
+                .from('book_metadata')
+                .select('*')
+                .eq('book_slug', slug)
+                .maybeSingle();
+
+            if (data) {
+                const d = data as any;
+                setMeta({
+                    title: d.title,
+                    image: d.image_path || meta.image,
+                    author: d.author || meta.author,
+                    date: d.date_written || meta.date,
+                    context: d.context || meta.context,
+                    themes: d.themes || meta.themes,
+                    intro: d.intro || meta.intro,
+                    relatedVerses: []
+                });
+            }
+            setLoading(false);
+        };
+        fetchMeta();
+    }, [bookName]);
+
+    if (loading && !meta.title) return (
+        <div className="flex items-center justify-center h-full">
+            <Loader2 className="w-6 h-6 text-gold-500 animate-spin" />
+        </div>
+    );
 
     return (
         <aside className="w-full h-full flex flex-col gap-6 overflow-y-auto pr-2">

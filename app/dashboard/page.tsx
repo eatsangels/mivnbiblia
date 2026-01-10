@@ -175,29 +175,28 @@ export default async function DashboardPage() {
             <div className="relative z-10 glass-panel rounded-3xl p-8 border-white/5">
                 <div className="flex items-center justify-between mb-8">
                     <h3 className="text-xl font-bold text-gray-200">Continuar Lectura</h3>
-                    <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">PROGRESO ACTUAL: 45%</div>
+                    <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">PROGRESO PERSONAL</div>
                 </div>
 
-                <Link href="/read" className="block group">
+                <Link href={`/read/${progress?.last_book || 'Génesis'}/${progress?.last_chapter || 1}`} className="block group">
                     <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/10 transition-all shadow-xl">
                         <div className="flex items-center gap-6">
                             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold-900 to-gold-700 flex items-center justify-center text-gold-100 font-serif text-2xl font-bold shadow-lg shadow-gold-900/40 group-hover:scale-105 transition-transform">
-                                Jn
+                                {(progress?.last_book || 'Gn').substring(0, 2)}
                             </div>
                             <div>
-                                <p className="text-xl font-bold text-white group-hover:text-gold-400 transition-colors">Evangelio de Juan</p>
+                                <p className="text-xl font-bold text-white group-hover:text-gold-400 transition-colors">{progress?.last_book || 'Génesis'}</p>
                                 <div className="flex items-center gap-3 mt-2">
-                                    <span className="text-xs text-gray-400">Capítulo 3</span>
+                                    <span className="text-xs text-gray-400">Capítulo {progress?.last_chapter || 1}</span>
                                     <div className="w-1 h-1 bg-gray-600 rounded-full" />
-                                    <span className="text-xs text-gold-500/80">Luz en las tinieblas</span>
-                                </div>
-                                <div className="w-48 h-1 bg-white/5 rounded-full mt-4 overflow-hidden">
-                                    <div className="h-full bg-gold-600 w-[45%]" />
+                                    <span className="text-xs text-gold-500/80">Continúa tu viaje espiritual</span>
                                 </div>
                             </div>
                         </div>
                         <div className="hidden md:flex flex-col items-end gap-2 text-right">
-                            <div className="text-xs text-gray-500 font-medium">Última vez: Hace 2 horas</div>
+                            <div className="text-xs text-gray-500 font-medium">
+                                {progress?.last_read_at ? `Leído el ${new Date(progress.last_read_at).toLocaleDateString()}` : 'Comienza hoy'}
+                            </div>
                             <button className="bg-gold-500 hover:bg-gold-400 text-gold-950 font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-lg shadow-gold-500/20 active:scale-95">
                                 REANUDAR
                             </button>

@@ -151,6 +151,76 @@ export interface Database {
                     display_name?: string | null
                 }
             }
+            book_metadata: {
+                Row: {
+                    id: string
+                    book_slug: string
+                    title: string
+                    author: string | null
+                    date_written: string | null
+                    context: string | null
+                    themes: string[] | null
+                    intro: string | null
+                    image_path: string | null
+                    created_at: string
+                }
+                Insert: {
+                    id?: string
+                    book_slug: string
+                    title: string
+                    author?: string | null
+                    date_written?: string | null
+                    context?: string | null
+                    themes?: string[] | null
+                    intro?: string | null
+                    image_path?: string | null
+                    created_at?: string
+                }
+                Update: {
+                    id?: string
+                    book_slug?: string
+                    title?: string
+                    author?: string | null
+                    date_written?: string | null
+                    context?: string | null
+                    themes?: string[] | null
+                    intro?: string | null
+                    image_path?: string | null
+                    created_at?: string
+                }
+            }
+            commentaries: {
+                Row: {
+                    id: string
+                    book_name: string
+                    chapter: number
+                    verse_number: number
+                    content: string
+                    type: string
+                    author_name: string | null
+                    created_at: string
+                }
+                Insert: {
+                    id?: string
+                    book_name: string
+                    chapter: number
+                    verse_number: number
+                    content: string
+                    type: string
+                    author_name?: string | null
+                    created_at?: string
+                }
+                Update: {
+                    id?: string
+                    book_name?: string
+                    chapter?: number
+                    verse_number?: number
+                    content?: string
+                    type?: string
+                    author_name?: string | null
+                    created_at?: string
+                }
+            }
         }
     }
 }

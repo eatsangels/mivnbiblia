@@ -63,8 +63,8 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                         <ContextSidebar bookName={decodedBook} />
                     </div>
 
-                    {/* Center: Reader */}
-                    <div className="col-span-1 md:col-span-6 lg:col-span-6 xl:col-span-7 h-full overflow-hidden relative">
+                    {/* Center: Reader (Now includes ToolsSidebar internally) */}
+                    <div className="col-span-1 md:col-span-9 lg:col-span-9 xl:col-span-10 h-full overflow-hidden relative">
                         {verses ? <ScriptureReader verses={verses as any} /> : (
                             <div className="flex items-center justify-center h-full text-gray-500">
                                 Cargando escrituras...
@@ -72,10 +72,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                         )}
                     </div>
 
-                    {/* Right: Tools (Hidden on mobile by default) */}
-                    <div className="hidden md:block md:col-span-3 lg:col-span-3 xl:col-span-3 h-full overflow-hidden">
-                        <ToolsSidebar bookName={decodedBook} />
-                    </div>
+
                 </div>
             </main>
         </div>
