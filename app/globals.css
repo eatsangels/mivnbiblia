@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
+@theme {
+  --font-libre: var(--font-libre-baskerville);
+
+  --color-gold-50: #fbf8eb;
+  --color-gold-100: #f5eccb;
+  --color-gold-200: #eedba3;
+  --color-gold-300: #e5ca7a;
+  --color-gold-400: #dcb356;
+  --color-gold-500: #d49f38;
+  --color-gold-600: #aa7a26;
+  --color-gold-700: #81581e;
+  --color-gold-800: #573a14;
+  --color-gold-900: #2b1d0a;
+
+  /* Midnight Blue Palette */
+  --color-midnight-950: #050a14;
+  /* Deepest background */
+  --color-midnight-900: #0a1120;
+  /* Main background */
+  --color-midnight-800: #131d33;
+  /* Secondary/Panels */
+  --color-midnight-700: #1e2d4d;
+  /* Borders/Separators */
+  --color-midnight-600: #2a3f6a;
+
+  --foreground-rgb: 220, 230, 240;
+  --background-start-rgb: 10, 17, 32;
+  /* Midnight 900ish */
+  --background-end-rgb: 5, 10, 20;
+  /* Midnight 950ish */
+}
+
+@utility glass-panel {
+  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+}
+
+@utility glass-panel-hover {
+  @apply hover:bg-white/10 hover:border-white/20 transition-all duration-300;
+}
+
+@utility text-premium-gold {
+  @apply bg-gradient-to-r from-gold-300 via-gold-100 to-gold-400 bg-clip-text text-transparent;
+}
+
+@utility font-libre {
+  font-family: var(--font-libre-baskerville), serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground-rgb: 230, 235, 255;
+  --background-start-rgb: 13, 17, 23;
+  /* GitHub Dim / Midnight feel */
+  --background-end-rgb: 10, 12, 16;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: #0d1117;
+  /* Solid fallback/base */
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d49f38;
 }

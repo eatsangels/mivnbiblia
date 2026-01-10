@@ -1,0 +1,146 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { Sparkles, Send, X, Bot, User, BookOpen } from 'lucide-react';
+
+interface Message {
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+}
+
+interface AIChatSidebarProps {
+    isOpen: boolean;
+    onClose: () => void;
+    contextVerse?: string; // Versículo seleccionado
+}
+
+export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarProps) {
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            id: 'welcome',
+            role: 'assistant',
+            content: 'La paz sea contigo. Soy tu asistente de estudio. ¿En qué pasaje te gustaría profundizar hoy?'
+        }
+    ]);
+    const [input, setInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
+
+    // Si hay un versículo de contexto, el asistente podría reaccionar (feature futura)
+    // useEffect(() => {
+    //   if (isOpen && contextVerse) { ... }
+    // }, [isOpen, contextVerse]);
+
+    const handleSend = async () => {
+        if (!input.trim()) return;
+
+        const userMsg: Message = { id: Date.now().toString(), role: 'user', content: input };
+        setMessages(prev => [...prev, userMsg]);
+        setInput('');
+        setIsLoading(true);
+
+        // Simulación de respuesta "Socrática" (mock)
+        setTimeout(() => {
+            const response: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: `Interesante observación sobre "${userMsg.content}". Si consideramos el contexto original, ¿qué crees que intentaba transmitir el autor a la audiencia de esa época? A veces, el significado se profundiza cuando miramos más allá de la traducción literal.`
+            };
+            setMessages(prev => [...prev, response]);
+            setIsLoading(false);
+        }, 1500);
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <aside className="fixed inset-y-0 right-0 w-full md:w-[400px] bg-[#0f0f0f]/95 backdrop-blur-xl border-l border-white/10 z-50 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
+
+            {/* Header */}
+            <div className="p-4 border-b border-white/5 flex items-center justify-between bg-black/20">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gold-500/10 rounded-lg text-gold-500">
+                        <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h3 className="font-serif font-bold text-gray-200">Asistente Socrático</h3>
+                        <p className="text-[10px] uppercase tracking-widest text-gold-500/50">Beta</p>
+                    </div>
+                </div>
+                <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+                    <X className="w-5 h-5" />
+                </button>
+            </div>
+
+            {/* Context Banner */}
+            {contextVerse && (
+                <div className="px-4 py-3 bg-blue-900/10 border-b border-blue-500/20 flex items-start gap-3">
+                    <BookOpen className="w-4 h-4 text-blue-400 mt-1 shrink-0" />
+                    <p className="text-xs text-blue-200 line-clamp-2 italic">"{contextVerse}"</p>
+                </div>
+            )}
+
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                {messages.map((msg) => (
+                    <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-white/10 text-white' : 'bg-gold-600 text-black'}`}>
+                            {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-5 h-5" />}
+                        </div>
+                        <div className={`flex-1 p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                                ? 'bg-white/5 text-gray-200 rounded-tr-none'
+                                : 'bg-black/40 border border-gold-500/20 text-gray-300 rounded-tl-none shadow-lg'
+                            }`}>
+                            {msg.content}
+                        </div>
+                    </div>
+                ))}
+                {isLoading && (
+                    <div className="flex gap-4">
+                        <div className="w-8 h-8 rounded-full bg-gold-600 text-black flex items-center justify-center shrink-0">
+                            <Bot className="w-5 h-5" />
+                        </div>
+                        <div className="bg-black/40 border border-white/5 px-4 py-3 rounded-2xl rounded-tl-none">
+                            <div className="flex gap-1">
+                                <span className="w-2 h-2 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <span className="w-2 h-2 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <span className="w-2 h-2 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <div className="p-4 bg-black/40 border-t border-white/10">
+                <div className="relative">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                        placeholder="Pregunta o comparte una duda..."
+                        className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-500/50 transition-colors"
+                        disabled={isLoading}
+                    />
+                    <button
+                        onClick={handleSend}
+                        disabled={!input.trim() || isLoading}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gold-500 hover:text-gold-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        <Send className="w-4 h-4" />
+                    </button>
+                </div>
+                <p className="text-[10px] text-center text-gray-600 mt-2">La IA puede cometer errores. Verifica con las escrituras.</p>
+            </div>
+        </aside>
+    );
+}
