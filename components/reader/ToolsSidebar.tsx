@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, CheckSquare, Square, Loader2, Plus, Sparkles } from "lucide-react";
+import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, CheckSquare, Square, Loader2, Plus, Sparkles, PenTool } from "lucide-react";
+import { useSearchParams } from 'next/navigation';
 import { getBookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
+import { SermonWorkshop } from "@/components/workshop/SermonWorkshop";
 
 interface ToolsSidebarProps {
     bookName: string;
@@ -28,7 +30,15 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
     const [traditionContent, setTraditionContent] = useState<string | null>(null);
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [loadingTradition, setLoadingTradition] = useState(false);
+    const [showWorkshop, setShowWorkshop] = useState(false);
+    const searchParams = useSearchParams();
     const supabase = createClient();
+
+    useEffect(() => {
+        if (searchParams.get('workshop') === 'true') {
+            setShowWorkshop(true);
+        }
+    }, [searchParams]);
 
     const fetchNotes = async () => {
         setLoading(true);
@@ -366,8 +376,23 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
                         <Square className="w-4 h-4 text-gold-500/50 group-hover:text-gold-500" />
                         <span className="text-xs font-medium text-gray-400 group-hover:text-white transition-colors">Tradiciones</span>
                     </button>
+
+                    <button
+                        onClick={() => setShowWorkshop(true)}
+                        className="w-full flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-colors text-left group border border-dashed border-white/10 hover:border-gold-500/50"
+                    >
+                        <PenTool className="w-4 h-4 text-gray-500 group-hover:text-gold-400" />
+                        <span className="text-xs font-medium text-gray-400 group-hover:text-white transition-colors">Taller de Elocuencia</span>
+                    </button>
                 </div>
             </div>
+
+            <SermonWorkshop
+                isOpen={showWorkshop}
+                onClose={() => setShowWorkshop(false)}
+                bookName={bookName}
+                chapter={chapter}
+            />
         </aside>
     );
 }

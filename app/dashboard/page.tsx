@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from 'next/navigation';
-import { Calendar, TrendingUp, Book, Sparkles, Church, Compass, MessageSquare, ArrowRight } from 'lucide-react';
+import { Calendar, TrendingUp, Book, Sparkles, Church, Compass, MessageSquare, ArrowRight, PenTool } from 'lucide-react';
 import Link from 'next/link';
+import { LogoutButton } from '@/components/auth/LogoutButton';
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -37,6 +38,15 @@ export default async function DashboardPage() {
         .eq("book_name", "Salmos")
         .eq("chapter", 119)
         .eq("verse_number", 105)
+        .eq("verse_number", 105)
+        .maybeSingle() as any;
+
+    const { data: recentSermon } = await supabase
+        .from('sermons')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
+        .limit(1)
         .maybeSingle() as any;
 
     return (
@@ -59,9 +69,12 @@ export default async function DashboardPage() {
                     </p>
                 </div>
                 <div className="hidden md:block text-right">
-                    <p className="text-xs text-gray-500 uppercase tracking-widest leading-relaxed">
+                    <p className="text-xs text-gray-500 uppercase tracking-widest leading-relaxed mb-2">
                         {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
+                    <div className="flex justify-end">
+                        <LogoutButton />
+                    </div>
                 </div>
             </header>
 
@@ -162,13 +175,13 @@ export default async function DashboardPage() {
                     <p className="text-[10px] text-gray-600 mt-1">Diario espiritual</p>
                 </Link>
 
-                <div className="group relative glass-panel p-6 rounded-2xl border-white/5 opacity-50 cursor-not-allowed text-center">
-                    <div className="mx-auto w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mb-4">
-                        <Sparkles className="w-6 h-6 text-gray-600" />
+                <Link href={recentSermon ? `/read/${recentSermon.reference_book}/${recentSermon.reference_chapter}?workshop=true` : `/read/Juan/1?workshop=true`} className="group relative glass-panel p-6 rounded-2xl border-white/5 hover:border-gold-500/20 transition-all text-center">
+                    <div className="mx-auto w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-gold-900/10">
+                        <PenTool className="w-6 h-6 text-gold-500" />
                     </div>
-                    <span className="text-sm font-bold text-gray-500">Comunidad</span>
-                    <p className="text-[10px] text-gray-700 mt-1">Próximamente</p>
-                </div>
+                    <span className="text-sm font-bold text-gray-300 group-hover:text-gold-400 transition-colors">Taller</span>
+                    <p className="text-[10px] text-gray-600 mt-1 line-clamp-1">{recentSermon ? recentSermon.title : 'Nueva Prédica'}</p>
+                </Link>
             </div>
 
             {/* Continue Reading Section */}
