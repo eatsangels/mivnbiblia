@@ -64,6 +64,22 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
         fetchNotes();
     }, [bookName, chapter]);
 
+    useEffect(() => {
+        const handleExternalOpen = () => {
+            setIsAdding(true);
+            setTimeout(() => {
+                const input = document.querySelector('textarea[placeholder*="reflexión"], textarea[placeholder*="v."]') as HTMLTextAreaElement;
+                if (input) {
+                    input.focus();
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        };
+
+        window.addEventListener('mivn-open-note-editor', handleExternalOpen);
+        return () => window.removeEventListener('mivn-open-note-editor', handleExternalOpen);
+    }, []);
+
     const handleSaveNote = async () => {
         if (!newNote.trim()) return;
         setSaving(true);

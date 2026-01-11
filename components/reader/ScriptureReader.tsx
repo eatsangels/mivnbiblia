@@ -38,7 +38,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                     .eq('chapter', currentChapter.chapter);
 
                 if (data) {
-                    setHighlights(data.map(h => h.verse_number));
+                    setHighlights((data as any[]).map(h => h.verse_number));
                 }
             }
         };
@@ -55,8 +55,8 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
         if (!user) return;
 
         if (highlights.includes(verseNum)) {
-            const { error } = await supabase
-                .from('user_highlights')
+            const { error } = await (supabase
+                .from('user_highlights') as any)
                 .delete()
                 .eq('user_id', user.id)
                 .eq('book_name', currentChapter.book_name)
@@ -67,8 +67,8 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 setHighlights(prev => prev.filter(v => v !== verseNum));
             }
         } else {
-            const { error } = await supabase
-                .from('user_highlights')
+            const { error } = await (supabase
+                .from('user_highlights') as any)
                 .insert({
                     user_id: user.id,
                     book_name: currentChapter.book_name,
@@ -97,12 +97,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
     };
 
     const handleNotesClick = () => {
-        // Focus the notes textarea in ToolsSidebar if it exists
-        const notesInput = document.querySelector('textarea[placeholder*="mensaje"]') as HTMLTextAreaElement;
-        if (notesInput) {
-            notesInput.focus();
-            notesInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        window.dispatchEvent(new CustomEvent('mivn-open-note-editor'));
     };
 
     return (
