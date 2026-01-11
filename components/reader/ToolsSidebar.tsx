@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, CheckSquare, Square, Loader2, Plus, Sparkles, PenTool } from "lucide-react";
+import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, CheckSquare, Square, Loader2, Plus, Sparkles, PenTool, Trash2, Edit3, X, Check } from "lucide-react";
 import { useSearchParams } from 'next/navigation';
 import { getBookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
@@ -31,6 +31,8 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [loadingTradition, setLoadingTradition] = useState(false);
     const [showWorkshop, setShowWorkshop] = useState(false);
+    const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+    const [editingNoteContent, setEditingNoteContent] = useState("");
     const searchParams = useSearchParams();
     const supabase = createClient();
 
@@ -52,8 +54,6 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
             .from('user_notes')
             .select('*')
             .eq('user_id', user.id)
-            .eq('book_name', bookName)
-            .eq('chapter', chapter)
             .order('created_at', { ascending: false });
 
         if (data) setNotes(data);
@@ -86,6 +86,23 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
             fetchNotes();
         }
         setSaving(false);
+    };
+
+    const handleDeleteNote = async (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        if (!confirm('¿Eliminar nota?')) return;
+        const { error } = await supabase.from('user_notes').delete().eq('id', id);
+        if (!error) fetchNotes();
+    };
+
+    const handleSaveEdit = async (id: string) => {
+        const { error } = await (supabase.from('user_notes') as any)
+            .update({ content: editingNoteContent })
+            .eq('id', id);
+        if (!error) {
+            setEditingNoteId(null);
+            fetchNotes();
+        }
     };
 
     const handleOpenCards = async () => {
@@ -323,21 +340,56 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
                     </div>
                 )}
 
-                <div className="bg-[#111623] rounded-xl overflow-hidden border border-white/5 max-h-48 overflow-y-auto">
+                <div className="bg-[#111623] rounded-xl overflow-hidden border border-white/5 max-h-[300px] overflow-y-auto custom-scrollbar">
                     {loading ? (
                         <div className="p-4 flex justify-center">
                             <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
                         </div>
                     ) : notes.length > 0 ? (
                         notes.map((note) => (
-                            <div key={note.id} className="p-3 border-b border-white/5 hover:bg-white/5 cursor-pointer flex gap-2">
-                                <span className="text-[10px] text-blue-500 mt-0.5">v.{note.verse_number}</span>
-                                <p className="text-[11px] text-gray-400 leading-snug line-clamp-2">{note.content}</p>
+                            <div key={note.id} className="p-3 border-b border-white/5 hover:bg-white/5 transition-colors group">
+                                <div className="flex justify-between items-start mb-1">
+                                    <span className="text-[10px] text-blue-500 font-bold">
+                                        {note.book_name} {note.chapter}:{note.verse_number}
+                                    </span>
+                                    <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={() => {
+                                                setEditingNoteId(note.id);
+                                                setEditingNoteContent(note.content);
+                                            }}
+                                            className="text-gray-500 hover:text-blue-400"
+                                        >
+                                            <Edit3 className="w-3 h-3" />
+                                        </button>
+                                        <button
+                                            onClick={(e) => handleDeleteNote(e, note.id)}
+                                            className="text-gray-500 hover:text-red-400"
+                                        >
+                                            <Trash2 className="w-3 h-3" />
+                                        </button>
+                                    </div>
+                                </div>
+                                {editingNoteId === note.id ? (
+                                    <div className="space-y-2 mt-2">
+                                        <textarea
+                                            value={editingNoteContent}
+                                            onChange={(e) => setEditingNoteContent(e.target.value)}
+                                            className="w-full bg-[#1c2438] border border-blue-500/30 rounded p-1.5 text-[11px] text-white focus:outline-none min-h-[60px]"
+                                        />
+                                        <div className="flex justify-end gap-2">
+                                            <button onClick={() => setEditingNoteId(null)} className="text-[9px] text-gray-500 hover:text-white uppercase font-bold">Cancelar</button>
+                                            <button onClick={() => handleSaveEdit(note.id)} className="text-[9px] text-blue-400 hover:text-blue-300 uppercase font-bold">Guardar</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="text-[11px] text-gray-400 leading-snug">{note.content}</p>
+                                )}
                             </div>
                         ))
                     ) : (
                         <div className="p-4 text-center text-[10px] text-gray-600 italic">
-                            No hay notas en este capítulo.
+                            No hay notas guardadas aún.
                         </div>
                     )}
                 </div>

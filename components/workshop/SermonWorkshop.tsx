@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import { X, Save, Book, History, Sparkles, PenTool, Loader2, Bold, Italic, List, ListOrdered, Plus } from 'lucide-react';
+import { Book, Save, X, Bold, Italic, List, ListOrdered, Loader2, Plus, Trash2, Edit3, Check } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils'; // Assuming this exists, otherwise I'll use template literals
 
@@ -25,6 +25,8 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
     const [history, setHistory] = useState<string | null>(null);
     const [traditions, setTraditions] = useState<string | null>(null);
     const [sermonsList, setSermonsList] = useState<any[]>([]);
+    const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+    const [editingNoteContent, setEditingNoteContent] = useState('');
     const [currentSermonId, setCurrentSermonId] = useState<string | null>(null);
     const [loadingRefs, setLoadingRefs] = useState(false);
 
@@ -60,8 +62,6 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                     .from('user_notes')
                     .select('*')
                     .eq('user_id', user.id)
-                    .eq('book_name', bookName)
-                    .eq('chapter', chapter)
                     .order('created_at', { ascending: false });
                 setNotes(notesData || []);
             }
@@ -187,6 +187,39 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
         }
     };
 
+    const handleDeleteSermon = async (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        if (!confirm('¿Estás seguro de que quieres eliminar esta prédica?')) return;
+
+        const { error } = await supabase.from('sermons').delete().eq('id', id);
+        if (!error) {
+            setSermonsList(prev => prev.filter(s => s.id !== id));
+            if (currentSermonId === id) {
+                handleNewSermon();
+            }
+        }
+    };
+
+    const handleDeleteNote = async (id: string) => {
+        if (!confirm('¿Estás seguro de que quieres eliminar esta nota?')) return;
+
+        const { error } = await supabase.from('user_notes').delete().eq('id', id);
+        if (!error) {
+            setNotes(prev => prev.filter(n => n.id !== id));
+        }
+    };
+
+    const handleSaveNoteEdit = async (id: string) => {
+        const { error } = await (supabase.from('user_notes') as any)
+            .update({ content: editingNoteContent })
+            .eq('id', id);
+
+        if (!error) {
+            setNotes(prev => prev.map(n => n.id === id ? { ...n, content: editingNoteContent } : n));
+            setEditingNoteId(null);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -239,9 +272,55 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                                 {activeTab === 'notes' && (
                                     <div className="space-y-3">
                                         {notes.length > 0 ? notes.map(note => (
-                                            <div key={note.id} className="p-3 bg-white/5 border border-white/5 rounded-lg">
-                                                <span className="text-blue-400 text-xs font-bold block mb-1">Versículo {note.verse_number}</span>
-                                                <p className="text-gray-300 text-sm leading-relaxed">{note.content}</p>
+                                            <div key={note.id} className="p-3 bg-white/5 border border-white/5 rounded-lg group">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className="text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+                                                        {note.book_name} {note.chapter}:{note.verse_number}
+                                                    </span>
+                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button 
+                                                            onClick={() => {
+                                                                setEditingNoteId(note.id);
+                                                                setEditingNoteContent(note.content);
+                                                            }}
+                                                            className="text-gray-500 hover:text-blue-400 transition-colors"
+                                                        >
+                                                            <Edit3 className="w-3.5 h-3.5" />
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleDeleteNote(note.id)}
+                                                            className="text-gray-500 hover:text-red-400 transition-colors"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                {editingNoteId === note.id ? (
+                                                    <div className="space-y-2">
+                                                        <textarea 
+                                                            value={editingNoteContent}
+                                                            onChange={(e) => setEditingNoteContent(e.target.value)}
+                                                            className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-blue-500 min-h-[100px]"
+                                                        />
+                                                        <div className="flex justify-end gap-2">
+                                                            <button 
+                                                                onClick={() => setEditingNoteId(null)}
+                                                                className="p-1 px-2 hover:bg-white/5 rounded text-[10px] font-bold text-gray-400 uppercase"
+                                                            >
+                                                                Cancelar
+                                                            </button>
+                                                            <button 
+                                                                onClick={() => handleSaveNoteEdit(note.id)}
+                                                                className="p-1 px-2 bg-blue-600 hover:bg-blue-500 rounded text-[10px] font-bold text-white uppercase flex items-center gap-1"
+                                                            >
+                                                                <Check className="w-3 h-3" /> Guardar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-gray-300 text-sm leading-relaxed">{note.content}</p>
+                                                )}
                                             </div>
                                         )) : (
                                             <p className="text-gray-500 text-center text-xs italic py-10">No hay notas personales.</p>
@@ -275,17 +354,26 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                                             <div
                                                 key={sermon.id}
                                                 onClick={() => loadSermon(sermon.id)}
-                                                className={`p-3 border rounded-lg cursor-pointer transition-colors ${currentSermonId === sermon.id ? 'bg-green-900/20 border-green-500/50' : 'bg-white/5 border-white/5 hover:bg-white/10'}`}
+                                                className={`p-3 border rounded-lg cursor-pointer transition-colors group relative ${currentSermonId === sermon.id ? 'bg-green-900/20 border-green-500/50' : 'bg-white/5 border-white/5 hover:bg-white/10'}`}
                                             >
-                                                <div className="flex justify-between items-start mb-1">
+                                                <button 
+                                                    onClick={(e) => handleDeleteSermon(e, sermon.id)}
+                                                    className="absolute top-3 right-3 p-1.5 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all bg-black/40 rounded-lg hover:scale-110"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                </button>
+
+                                                <div className="flex justify-between items-start mb-1 pr-8">
                                                     <h4 className={`text-sm font-bold flex-1 ${currentSermonId === sermon.id ? 'text-green-400' : 'text-gray-200'}`}>{sermon.title || 'Sin Título'}</h4>
-                                                    <span className="text-[9px] text-gray-500 uppercase font-bold bg-white/5 px-2 py-0.5 rounded border border-white/5 ml-2">
+                                                </div>
+                                                <div className="flex items-center gap-2 mt-2">
+                                                    <span className="text-[9px] text-gray-500 uppercase font-bold bg-white/5 px-2 py-0.5 rounded border border-white/5">
                                                         {sermon.reference_book} {sermon.reference_chapter}
                                                     </span>
+                                                    <span className="text-[10px] text-gray-400">
+                                                        {new Date(sermon.updated_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
                                                 </div>
-                                                <span className="text-[10px] text-gray-400 block">
-                                                    {new Date(sermon.updated_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                                                </span>
                                             </div>
                                         )) : (
                                             <p className="text-gray-500 text-center text-xs italic py-10">No hay prédicas guardadas.</p>
