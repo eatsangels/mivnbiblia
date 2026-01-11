@@ -46,16 +46,42 @@ export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarPr
         setInput('');
         setIsLoading(true);
 
-        // Simulación de respuesta "Socrática" (mock)
-        setTimeout(() => {
-            const response: Message = {
-                id: (Date.now() + 1).toString(),
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: [...messages, userMsg],
+                    contextVerse
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                const err: any = new Error(data.error);
+                err.availableModels = data.availableModels;
+                throw err;
+            }
+
+            const botMsg: Message = {
+                id: Date.now().toString(),
                 role: 'assistant',
-                content: `Interesante observación sobre "${userMsg.content}". Si consideramos el contexto original, ¿qué crees que intentaba transmitir el autor a la audiencia de esa época? A veces, el significado se profundiza cuando miramos más allá de la traducción literal.`
+                content: data.content
             };
-            setMessages(prev => [...prev, response]);
+            setMessages(prev => [...prev, botMsg]);
+        } catch (error: any) {
+            console.error('Chat error:', error);
+
+            const errorMsg: Message = {
+                id: Date.now().toString(),
+                role: 'assistant',
+                content: `Lo siento, ha ocurrido un error: ${error.message || 'Error desconocido'}. Por favor, intenta de nuevo.`
+            };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
             setIsLoading(false);
-        }, 1500);
+        }
     };
 
     if (!isOpen) return null;
@@ -95,8 +121,8 @@ export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarPr
                             {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-5 h-5" />}
                         </div>
                         <div className={`flex-1 p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                ? 'bg-white/5 text-gray-200 rounded-tr-none'
-                                : 'bg-black/40 border border-gold-500/20 text-gray-300 rounded-tl-none shadow-lg'
+                            ? 'bg-white/5 text-gray-200 rounded-tr-none'
+                            : 'bg-black/40 border border-gold-500/20 text-gray-300 rounded-tl-none shadow-lg'
                             }`}>
                             {msg.content}
                         </div>
