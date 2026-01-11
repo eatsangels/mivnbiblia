@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, X, Bot, User, BookOpen } from 'lucide-react';
+import { Sparkles, Send, X, Bot, User, BookOpen, StickyNote, Check, Loader2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 interface Message {
     id: string;
@@ -13,9 +14,12 @@ interface AIChatSidebarProps {
     isOpen: boolean;
     onClose: () => void;
     contextVerse?: string; // Versículo seleccionado
+    bookName?: string;
+    chapter?: number;
+    verse?: number;
 }
 
-export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarProps) {
+export function AIChatSidebar({ isOpen, onClose, contextVerse, bookName, chapter, verse }: AIChatSidebarProps) {
     const [messages, setMessages] = useState<Message[]>([
         {
             id: 'welcome',
@@ -25,13 +29,45 @@ export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarPr
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [savingId, setSavingId] = useState<string | null>(null);
+    const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const supabase = createClient();
 
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
+
+    const handleSaveToNotes = async (message: Message) => {
+        if (!bookName || !chapter) return;
+        setSavingId(message.id);
+
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('Usuario no autenticado');
+
+            const { error } = await (supabase
+                .from('user_notes') as any)
+                .insert({
+                    user_id: user.id,
+                    book_name: bookName,
+                    chapter: chapter,
+                    verse_number: verse || 1,
+                    content: `[Asistente Socrático]: ${message.content}`
+                });
+
+            if (error) throw error;
+
+            setSavedIds(prev => new Set(prev).add(message.id));
+        } catch (error) {
+            console.error('Error saving note:', error);
+            alert('No se pudo guardar la nota. Por favor intenta de nuevo.');
+        } finally {
+            setSavingId(null);
+        }
+    };
 
     // Si hay un versículo de contexto, el asistente podría reaccionar (feature futura)
     // useEffect(() => {
@@ -60,7 +96,6 @@ export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarPr
 
             if (data.error) {
                 const err: any = new Error(data.error);
-                err.availableModels = data.availableModels;
                 throw err;
             }
 
@@ -120,11 +155,35 @@ export function AIChatSidebar({ isOpen, onClose, contextVerse }: AIChatSidebarPr
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-white/10 text-white' : 'bg-gold-600 text-black'}`}>
                             {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-5 h-5" />}
                         </div>
-                        <div className={`flex-1 p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                            ? 'bg-white/5 text-gray-200 rounded-tr-none'
-                            : 'bg-black/40 border border-gold-500/20 text-gray-300 rounded-tl-none shadow-lg'
-                            }`}>
-                            {msg.content}
+                        <div className={`flex-1 flex flex-col gap-2 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                            <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                                ? 'bg-white/5 text-gray-200 rounded-tr-none'
+                                : 'bg-black/40 border border-gold-500/20 text-gray-300 rounded-tl-none shadow-lg'
+                                }`}>
+                                {msg.content}
+                            </div>
+
+                            {/* Actions for Assistant Messages */}
+                            {msg.role === 'assistant' && msg.id !== 'welcome' && (
+                                <button
+                                    onClick={() => handleSaveToNotes(msg)}
+                                    disabled={savingId === msg.id || savedIds.has(msg.id)}
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all
+                                        ${savedIds.has(msg.id)
+                                            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                                            : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/5'
+                                        }`}
+                                >
+                                    {savingId === msg.id ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : savedIds.has(msg.id) ? (
+                                        <Check className="w-3 h-3" />
+                                    ) : (
+                                        <StickyNote className="w-3 h-3" />
+                                    )}
+                                    {savedIds.has(msg.id) ? 'Guardado' : 'Guardar en Bitácora'}
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}

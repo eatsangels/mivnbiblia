@@ -177,6 +177,9 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 isOpen={showAI}
                 onClose={() => setShowAI(false)}
                 contextVerse={selectedVerse ? verses.find(v => v.verse_number === selectedVerse)?.content : undefined}
+                bookName={currentChapter.book_name}
+                chapter={currentChapter.chapter}
+                verse={selectedVerse || undefined}
             />
         </div>
     );
