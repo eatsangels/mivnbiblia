@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, Book, X, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronDown, Book, X, ChevronRight, Loader2, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
@@ -27,6 +27,7 @@ export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProp
     const [isOpen, setIsOpen] = useState(false);
     const [view, setView] = useState<'books' | 'chapters'>('books');
     const [selectedBook, setSelectedBook] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const supabase = createClient();
@@ -60,9 +61,14 @@ export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProp
             setTimeout(() => {
                 setView('books');
                 setSelectedBook(null);
+                setSearchTerm('');
             }, 300);
         }
     };
+
+    const filteredBooks = books.filter(book =>
+        book.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const toggleOpen = () => {
         if (isOpen) {
@@ -70,6 +76,7 @@ export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProp
             setTimeout(() => {
                 setView('books');
                 setSelectedBook(null);
+                setSearchTerm('');
             }, 300);
         } else {
             setIsOpen(true);
@@ -115,10 +122,34 @@ export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProp
 
                         {/* Content Area */}
                         <div className="p-2 max-h-[60vh] overflow-y-auto">
+                            {view === 'books' && (
+                                <div className="px-4 py-3 border-b border-white/5 bg-[#0f141f]">
+                                    <div className="relative group">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-gold-500 transition-colors" />
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar libro (ej: Juan, Génesis...)"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gold-500/50 focus:border-gold-500/50 transition-all"
+                                            autoFocus
+                                        />
+                                        {searchTerm && (
+                                            <button
+                                                onClick={() => setSearchTerm('')}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
                             {view === 'books' ? (
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-2">
                                     {/* Simple separation could be added if needed */}
-                                    {books.map((book) => (
+                                    {filteredBooks.map((book) => (
                                         <button
                                             key={book.name}
                                             onClick={() => handleBookSelect(book.name)}
@@ -127,6 +158,11 @@ export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProp
                                             {book.name}
                                         </button>
                                     ))}
+                                    {filteredBooks.length === 0 && (
+                                        <div className="col-span-full py-10 text-center text-gray-500 italic">
+                                            No se encontraron libros que coincidan con "{searchTerm}"
+                                        </div>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-5 md:grid-cols-10 gap-2 p-2">

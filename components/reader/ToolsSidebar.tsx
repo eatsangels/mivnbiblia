@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, CheckSquare, Square, Loader2, Plus } from "lucide-react";
+import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, CheckSquare, Square, Loader2, Plus, Sparkles } from "lucide-react";
 import { getBookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
 
@@ -23,8 +23,11 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
     const [activeCardIndex, setActiveCardIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
+    const [showTraditions, setShowTraditions] = useState(false);
     const [historyContent, setHistoryContent] = useState<string | null>(null);
+    const [traditionContent, setTraditionContent] = useState<string | null>(null);
     const [loadingHistory, setLoadingHistory] = useState(false);
+    const [loadingTradition, setLoadingTradition] = useState(false);
     const supabase = createClient();
 
     const fetchNotes = async () => {
@@ -103,6 +106,22 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
         if (data) setHistoryContent((data as any).content);
         else setHistoryContent(null);
         setLoadingHistory(false);
+    };
+
+    const handleOpenTraditions = async () => {
+        setShowTraditions(true);
+        setLoadingTradition(true);
+        const { data } = await supabase
+            .from('commentaries')
+            .select('content')
+            .eq('book_name', bookName)
+            .eq('chapter', chapter)
+            .eq('type', 'tradition')
+            .maybeSingle();
+
+        if (data) setTraditionContent((data as any).content);
+        else setTraditionContent(null);
+        setLoadingTradition(false);
     };
 
     return (
@@ -200,6 +219,37 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
                             ) : (
                                 <div className="text-center py-20 text-gray-500 italic">
                                     No hay relatos históricos disponibles para este capítulo aún.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Tradiciones Modal */}
+            {showTraditions && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+                    <div className="bg-[#0f141f] border border-gold-500/20 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="p-6 border-b border-white/5 flex justify-between items-center bg-gold-950/20">
+                            <h2 className="text-gold-400 font-bold flex items-center gap-2 tracking-wide uppercase text-xs">
+                                <Sparkles className="w-4 h-4" /> Tradiciones Sacras & Cultura
+                            </h2>
+                            <button onClick={() => setShowTraditions(false)} className="text-gray-500 hover:text-white">✕</button>
+                        </div>
+                        <div className="p-8 max-h-[70vh] overflow-y-auto">
+                            {loadingTradition ? (
+                                <div className="flex justify-center py-20">
+                                    <Loader2 className="w-8 h-8 text-gold-500 animate-spin" />
+                                </div>
+                            ) : traditionContent ? (
+                                <div className="prose prose-invert max-w-none">
+                                    <p className="text-gray-300 leading-relaxed font-serif text-lg whitespace-pre-wrap">
+                                        {traditionContent}
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="text-center py-20 text-gray-500 italic">
+                                    No hay tradiciones registradas para este capítulo aún.
                                 </div>
                             )}
                         </div>
@@ -309,9 +359,12 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
                         <span className="ml-auto text-[10px] text-gray-600 bg-black/20 px-1 rounded">⌘+T</span>
                     </button>
 
-                    <button className="w-full flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-colors text-left group opacity-60 cursor-not-allowed">
-                        <Square className="w-4 h-4 text-gray-600" />
-                        <span className="text-xs font-medium text-gray-400 group-hover:text-white">Tradiciones</span>
+                    <button
+                        onClick={handleOpenTraditions}
+                        className="w-full flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-colors text-left group"
+                    >
+                        <Square className="w-4 h-4 text-gold-500/50 group-hover:text-gold-500" />
+                        <span className="text-xs font-medium text-gray-400 group-hover:text-white transition-colors">Tradiciones</span>
                     </button>
                 </div>
             </div>
