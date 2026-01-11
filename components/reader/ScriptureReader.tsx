@@ -18,14 +18,91 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
     const [selectedVerse, setSelectedVerse] = useState<number | null>(null);
     const [showAI, setShowAI] = useState(false);
     const [activeTab, setActiveTab] = useState<'exegesis' | 'theology' | 'history' | 'community'>('exegesis');
+    const [highlights, setHighlights] = useState<number[]>([]);
+    const [isSpeaking, setIsSpeaking] = useState<number | null>(null);
+    const supabase = createClient();
 
     if (!verses || verses.length === 0) return null;
 
     const currentChapter = verses[0];
 
+    useEffect(() => {
+        const fetchHighlights = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data } = await supabase
+                    .from('user_highlights')
+                    .select('verse_number')
+                    .eq('user_id', user.id)
+                    .eq('book_name', currentChapter.book_name)
+                    .eq('chapter', currentChapter.chapter);
+
+                if (data) {
+                    setHighlights(data.map(h => h.verse_number));
+                }
+            }
+        };
+        fetchHighlights();
+    }, [currentChapter, supabase]);
+
     // Helper to get the next verse for the "context" view in the card
     const getNextVerse = (currentNum: number) => {
         return verses.find(v => v.verse_number === currentNum + 1);
+    };
+
+    const toggleHighlight = async (verseNum: number) => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        if (highlights.includes(verseNum)) {
+            const { error } = await supabase
+                .from('user_highlights')
+                .delete()
+                .eq('user_id', user.id)
+                .eq('book_name', currentChapter.book_name)
+                .eq('chapter', currentChapter.chapter)
+                .eq('verse_number', verseNum);
+
+            if (!error) {
+                setHighlights(prev => prev.filter(v => v !== verseNum));
+            }
+        } else {
+            const { error } = await supabase
+                .from('user_highlights')
+                .insert({
+                    user_id: user.id,
+                    book_name: currentChapter.book_name,
+                    chapter: currentChapter.chapter,
+                    verse_number: verseNum
+                });
+
+            if (!error) {
+                setHighlights(prev => [...prev, verseNum]);
+            }
+        }
+    };
+
+    const toggleAudio = (verse: Verse) => {
+        if (isSpeaking === verse.verse_number) {
+            window.speechSynthesis.cancel();
+            setIsSpeaking(null);
+        } else {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(verse.content);
+            utterance.lang = 'es-ES';
+            utterance.onend = () => setIsSpeaking(null);
+            window.speechSynthesis.speak(utterance);
+            setIsSpeaking(verse.verse_number);
+        }
+    };
+
+    const handleNotesClick = () => {
+        // Focus the notes textarea in ToolsSidebar if it exists
+        const notesInput = document.querySelector('textarea[placeholder*="mensaje"]') as HTMLTextAreaElement;
+        if (notesInput) {
+            notesInput.focus();
+            notesInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     };
 
     return (
@@ -118,14 +195,23 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
 
                                         {/* Bottom Toolbar (Dark, attached to card bottom like image) */}
                                         <div className="bg-[#0f141f] py-4 px-6 flex items-center gap-6 text-gray-400 text-xs font-bold border-t border-gray-800">
-                                            <button className="flex items-center gap-2 text-gold-400 bg-gold-500/10 px-3 py-1.5 rounded hover:bg-gold-500/20 transition-all">
+                                            <button
+                                                onClick={() => toggleHighlight(verse.verse_number)}
+                                                className={`flex items-center gap-2 px-3 py-1.5 rounded transition-all ${highlights.includes(verse.verse_number) ? 'text-gold-400 bg-gold-500/20 shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'text-gray-400 hover:text-gold-400 hover:bg-gold-500/10'}`}
+                                            >
                                                 <Highlighter className="w-3.5 h-3.5" /> Subrayado
                                             </button>
-                                            <button className="flex items-center gap-2 hover:text-white transition-colors">
+                                            <button
+                                                onClick={handleNotesClick}
+                                                className="flex items-center gap-2 hover:text-white transition-colors"
+                                            >
                                                 <MessageSquarePlus className="w-3.5 h-3.5" /> Notas
                                             </button>
-                                            <button className="flex items-center gap-2 hover:text-white transition-colors">
-                                                <Volume2 className="w-3.5 h-3.5" /> Audio Biblia
+                                            <button
+                                                onClick={() => toggleAudio(verse)}
+                                                className={`flex items-center gap-2 transition-colors ${isSpeaking === verse.verse_number ? 'text-blue-400 animate-pulse' : 'hover:text-white'}`}
+                                            >
+                                                <Volume2 className="w-3.5 h-3.5" /> {isSpeaking === verse.verse_number ? 'Detener' : 'Audio Biblia'}
                                             </button>
                                             <button
                                                 className="flex items-center gap-2 text-gold-400 hover:text-gold-300 transition-colors ml-auto font-bold"
@@ -151,10 +237,10 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                 className="group relative pl-4 pr-4 py-2 cursor-pointer hover:bg-white/5 transition-colors border border-transparent hover:border-white/5 rounded-lg opacity-60 hover:opacity-100"
                             >
                                 <div className="flex gap-4">
-                                    <span className="text-sm font-bold text-gray-500 group-hover:text-gold-500 transition-colors mt-1 w-6 text-right">
+                                    <span className={`text-sm font-bold transition-colors mt-1 w-6 text-right ${isSelected || highlights.includes(verse.verse_number) ? 'text-gold-500' : 'text-gray-500 group-hover:text-gold-500'}`}>
                                         {verse.verse_number}
                                     </span>
-                                    <p className="font-libre text-lg text-gray-300 leading-relaxed font-light">
+                                    <p className={`font-libre text-lg leading-relaxed font-light transition-all ${highlights.includes(verse.verse_number) ? 'text-white border-b border-gold-500/50 bg-gold-500/5' : 'text-gray-300 group-hover:text-white'}`}>
                                         {verse.content}
                                     </p>
                                 </div>

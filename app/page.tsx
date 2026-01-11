@@ -95,7 +95,7 @@ export default async function Home() {
         {/* Feature Grid (Timeline, Maps, Temple) - Reference Image 1 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
           {/* Timeline Card */}
-          <div className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-blue-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
+          <Link href="/timeline" className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-blue-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
             <div className="absolute inset-0 bg-[url('/bible-covers/salmos.jpg')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" />
 
@@ -106,10 +106,10 @@ export default async function Home() {
               <h3 className="text-xl font-bold text-white mb-1">Línea del Tiempo</h3>
               <p className="text-xs text-gray-400">Navega la historia de la redención cronológicamente.</p>
             </div>
-          </div>
+          </Link>
 
           {/* Maps Card */}
-          <div className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-emerald-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
+          <Link href="/maps" className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-emerald-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
             <div className="absolute inset-0 bg-[url('/bible-covers/hechos.jpg')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" />
 
@@ -120,10 +120,10 @@ export default async function Home() {
               <h3 className="text-xl font-bold text-white mb-1">Mapas Bíblicos</h3>
               <p className="text-xs text-gray-400">Geografía interactiva de los viajes patriarcales y apostólicos.</p>
             </div>
-          </div>
+          </Link>
 
           {/* Temple Card */}
-          <div className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-gold-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
+          <Link href="/temple" className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-gold-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
             {/* Abstract Gold texture */}
             <div className="absolute inset-0 bg-[url('/bible-covers/1-reyes.jpg')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" />
@@ -136,7 +136,7 @@ export default async function Home() {
               <h3 className="text-xl font-bold text-white mb-1">El Templo 3D</h3>
               <p className="text-xs text-gray-400">Reconstrucción inmersiva para el estudio espacial.</p>
             </div>
-          </div>
+          </Link>
         </div>
 
       </section>
