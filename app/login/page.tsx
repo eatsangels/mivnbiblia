@@ -3,12 +3,15 @@
 import { createBrowserClient } from '@supabase/ssr'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Heart, Cross } from 'lucide-react'
+import { Loader2, Eye, EyeOff, Heart, Cross } from 'lucide-react'
 import Link from 'next/link'
+import { AuthLayout, Testimonial } from '@/components/ui/auth-layout'
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
@@ -36,9 +39,7 @@ export default function LoginPage() {
 
         if (error) {
             console.error(error)
-            if (error.message.includes("Anonymous sign-ins are disabled")) {
-                setError("Error: Verifica que el proveedor de Email esté habilitado en Supabase, o que no estés enviando campos vacíos.")
-            } else if (error.message.includes("Invalid login credentials")) {
+            if (error.message.includes("Invalid login credentials")) {
                 setError("Correo o contraseña incorrectos.")
             } else {
                 setError(error.message)
@@ -50,106 +51,98 @@ export default function LoginPage() {
         }
     }
 
-    const handleSignUp = async () => {
-        if (!email.trim() || !password.trim()) {
-            setError("Por favor completa todos los campos.")
-            return
-        }
-
-        setIsLoading(true)
-        setError(null)
-
+    const handleGoogleSignIn = async () => {
         const supabase = createBrowserClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         )
-
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
+        await supabase.auth.signInWithOAuth({
+            provider: 'google',
             options: {
-                emailRedirectTo: `${location.origin}/auth/callback`,
-                data: {
-                    full_name: email.split('@')[0]
-                }
-            }
+                redirectTo: `${window.location.origin}/auth/callback`,
+            },
         })
-
-        if (error) {
-            setError(error.message)
-        } else {
-            setError('¡Revisa tu correo para confirmar tu cuenta!')
-        }
-        setIsLoading(false)
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden px-4">
-            {/* Ambient background */}
-            <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-gold-600/10 rounded-full blur-[120px]" />
-            <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-900/10 rounded-full blur-[120px]" />
-
-            <div className="w-full max-w-md bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Bienvenido a <span className="text-gold-500">MIVN</span></h1>
-                    <p className="text-gray-400">Tu espacio para el estudio bíblico profundo</p>
+        <AuthLayout
+            mode="login"
+            heroImageSrc="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2670&auto=format&fit=crop"
+            onGoogleSignIn={handleGoogleSignIn}
+            footerContent={
+                <div className="animate-element animate-delay-900 flex flex-col items-center gap-6 pt-4">
+                    <p className="text-center text-sm text-gray-500">
+                        ¿Nuevo en la plataforma? <Link href="/register" className="text-gold-500 hover:underline transition-colors font-bold">Crea una cuenta</Link>
+                    </p>
+                    <div className="w-full h-px bg-white/5" />
+                    <div className="text-center">
+                        <p className="text-[10px] text-gray-700 font-medium">
+                            Desarrollado por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gold-400 transition-colors underline decoration-white/5 underline-offset-4">Edward Trinidad</Link>
+                        </p>
+                        <div className="flex items-center justify-center gap-1.5 mt-2 text-[8px] uppercase tracking-[0.2em] text-gray-800 font-black">
+                            Hecho con <Heart className="w-2.5 h-2.5 text-red-500/20 fill-red-500/20 animate-pulse" /> Soli Deo Gloria
+                        </div>
+                    </div>
                 </div>
-
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <div>
-                        <label className="block text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">Correo Electrónico</label>
+            }
+        >
+            <form onSubmit={handleLogin} className="space-y-5">
+                <div className="animate-element animate-delay-300">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block">Correo Electrónico</label>
+                    <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all focus-within:border-gold-500/50 focus-within:bg-gold-500/5 group">
                         <input
+                            name="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-gold-500/50 transition-colors"
-                            placeholder="juan@ejemplo.com"
+                            placeholder="tu@ejemplo.com"
+                            className="w-full bg-transparent text-sm p-3.5 rounded-xl focus:outline-none text-white placeholder-gray-600"
                             required
                         />
                     </div>
+                </div>
 
-                    <div>
-                        <label className="block text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">Contraseña</label>
+                <div className="animate-element animate-delay-400">
+                    <div className="flex justify-between items-center mb-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block">Contraseña</label>
+                        <button type="button" className="text-[10px] text-gold-500/60 hover:text-gold-400 transition-colors font-bold uppercase tracking-tight">¿La olvidaste?</button>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all focus-within:border-gold-500/50 focus-within:bg-gold-500/5 group relative">
                         <input
-                            type="password"
+                            name="password"
+                            type={showPassword ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-gold-500/50 transition-colors"
                             placeholder="••••••••"
+                            className="w-full bg-transparent text-sm p-3.5 pr-12 rounded-xl focus:outline-none text-white placeholder-gray-600"
                             required
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
                     </div>
+                </div>
 
-                    {error && (
-                        <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
-                            {error}
-                        </div>
-                    )}
+                {error && (
+                    <div className="animate-element animate-delay-500 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs font-medium">
+                        {error}
+                    </div>
+                )}
 
+                <div className="animate-element animate-delay-600">
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-gold-600 hover:bg-gold-500 text-black font-bold py-3.5 rounded-lg transition-all shadow-[0_0_20px_rgba(212,159,56,0.2)] hover:shadow-[0_0_30px_rgba(212,159,56,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        className="w-full rounded-xl bg-gold-600 py-3.5 font-bold text-black hover:bg-gold-500 transition-all shadow-lg shadow-gold-900/20 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center"
                     >
-                        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Iniciar Sesión'}
+                        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Entrar al Santuario'}
                     </button>
-                </form>
-
-                <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-500">
-                        ¿No tienes cuenta? <Link href="/register" className="text-white hover:text-gold-400 font-semibold transition-colors">Regístrate aquí</Link>
-                    </p>
                 </div>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-white/5 text-center">
-                <p className="text-[10px] text-gray-600 font-medium">
-                    Plataforma desarrollada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gold-400 transition-colors underline decoration-white/10 underline-offset-4 font-bold">Edward Trinidad</Link>
-                </p>
-                <div className="flex items-center justify-center gap-2 mt-2 text-[8px] uppercase tracking-[0.3em] text-gray-700 font-black">
-                    Hecho con <Heart className="w-2.5 h-2.5 text-red-500/30 fill-red-500/30 animate-pulse" /> Soli Deo Gloria
-                </div>
-            </div>
-        </div>
+            </form>
+        </AuthLayout>
     )
 }

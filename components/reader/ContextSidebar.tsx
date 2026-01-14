@@ -10,6 +10,7 @@ import Link from "next/link";
 export function ContextSidebar({ bookName }: { bookName: string }) {
     const [meta, setMeta] = useState<BookMetadata>(getBookMetadata(bookName));
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<'exegetico' | 'esinp'>('exegetico');
     const supabase = createClient();
 
     useEffect(() => {
@@ -110,29 +111,61 @@ export function ContextSidebar({ bookName }: { bookName: string }) {
                 <div className="w-full h-px bg-white/5 my-4" />
             </div>
 
-            {/* Commentary Preview */}
+            {/* Commentary Tabs */}
             <div className="shrink-0">
-                <h3 className="text-white font-bold text-sm mb-2">Comentario</h3>
-                <div className="mb-3 flex items-center gap-2">
-                    <span className="text-[10px] bg-white/5 text-gray-300 px-2 py-0.5 rounded border border-white/5">Exegético</span>
-                    <span className="text-[10px] text-gray-500 truncate">v. 1, análisis del Logos...</span>
+                <div className="flex items-center gap-4 mb-3 border-b border-white/5 pb-2">
+                    <button
+                        onClick={() => setActiveTab('exegetico')}
+                        className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'exegetico' ? 'text-gold-500' : 'text-gray-500 hover:text-gray-300'}`}
+                    >
+                        Exegético
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('esinp')}
+                        className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'esinp' ? 'text-gold-500' : 'text-gray-500 hover:text-gray-300'}`}
+                    >
+                        Esinp LCNT
+                    </button>
                 </div>
-                <div className="flex gap-2 text-[10px] text-gray-500 uppercase tracking-wider mb-4">
-                    <span>✦ {meta.author}</span>
-                    <span>• {meta.date}</span>
+
+                <div className="min-h-[60px] animate-element">
+                    {activeTab === 'exegetico' ? (
+                        <div className="space-y-2">
+                            <p className="text-[11px] text-gray-400 italic leading-relaxed">
+                                "Un análisis profundo del texto original, enfocándose en el significado histórico y lingüístico."
+                            </p>
+                            <div className="flex gap-2 text-[9px] text-gray-500 uppercase tracking-wider">
+                                <span>✦ {meta.author}</span>
+                                <span>• {meta.date}</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="space-y-2">
+                            <p className="text-[11px] text-gray-400 italic leading-relaxed">
+                                "Estudio Integral del Nuevo Testamento (LCNT). Aplicación práctica y teológica para el creyente moderno."
+                            </p>
+                            <div className="flex gap-2 text-[9px] text-gray-500 uppercase tracking-wider">
+                                <span>✦ Perspectiva LCNT</span>
+                                <span>• Referencial</span>
+                            </div>
+                        </div>
+                    )}
                 </div>
-                <div className="w-full h-px bg-white/5" />
+                <div className="w-full h-px bg-white/5 my-4" />
             </div>
 
-            {/* Intro/Instrupoada */}
-            <div className="shrink-0">
+            {/* Intro/Description */}
+            <div className="shrink-0" id="book-intro">
                 <h3 className="text-white font-bold text-sm mb-2">Introducción</h3>
                 <p className="text-xs text-gray-400 leading-relaxed font-sans mb-4">
                     {meta.intro}
                 </p>
             </div>
 
-            <button className="w-full py-3 bg-[#1e2230] hover:bg-[#252a3b] text-gold-500 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors border border-gold-500/10 shrink-0 mb-8">
+            <button
+                onClick={() => document.getElementById('book-intro')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full py-3 bg-[#1e2230] hover:bg-[#252a3b] text-gold-500 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors border border-gold-500/10 shrink-0 mb-8 active:scale-95"
+            >
                 Leer más
             </button>
 

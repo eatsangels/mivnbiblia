@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { Calendar, TrendingUp, Book, Sparkles, Church, Compass, MessageSquare, ArrowRight, PenTool, Heart, Cross } from 'lucide-react';
 import Link from 'next/link';
 import { LogoutButton } from '@/components/auth/LogoutButton';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -55,28 +56,7 @@ export default async function DashboardPage() {
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />
 
-            <header className="mb-12 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Sparkles className="w-4 h-4 text-gold-400 animate-pulse" />
-                        <span className="text-xs font-bold text-gold-500/60 uppercase tracking-[0.3em]">Panel de Control</span>
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                        Hola, <span className="text-premium-gold drop-shadow-sm">{profile?.full_name?.split(' ')[0] || 'Peregrino'}</span>
-                    </h1>
-                    <p className="text-gray-400 mt-3 text-lg font-light">
-                        {new Date().getHours() < 12 ? 'Buenos días' : new Date().getHours() < 18 ? 'Buenas tardes' : 'Buenas noches'}. Tu santuario personal te espera.
-                    </p>
-                </div>
-                <div className="hidden md:block text-right">
-                    <p className="text-xs text-gray-500 uppercase tracking-widest leading-relaxed mb-2">
-                        {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                    </p>
-                    <div className="flex justify-end">
-                        <LogoutButton />
-                    </div>
-                </div>
-            </header>
+            <DashboardHeader user={user} profile={profile} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 relative z-10">
                 {/* Verse of the Day - Large Card */}
@@ -210,9 +190,9 @@ export default async function DashboardPage() {
                             <div className="text-xs text-gray-500 font-medium">
                                 {progress?.last_read_at ? `Leído el ${new Date(progress.last_read_at).toLocaleDateString()}` : 'Comienza hoy'}
                             </div>
-                            <button className="bg-gold-500 hover:bg-gold-400 text-gold-950 font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-lg shadow-gold-500/20 active:scale-95">
+                            <span className="bg-gold-500 hover:bg-gold-400 text-gold-950 font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-lg shadow-gold-500/20 active:scale-95">
                                 REANUDAR
-                            </button>
+                            </span>
                         </div>
                     </div>
                 </Link>

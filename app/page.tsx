@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Compass, Search, Map, Clock, LandPlot, Sparkles, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -70,16 +71,30 @@ export default async function Home() {
 
         {/* Dynamic Background with Parallax effect */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[#051120]" />
-          <div
-            className="absolute inset-0 bg-[url('/images/home_hero.png')] bg-cover bg-center opacity-40 mix-blend-luminosity scale-110"
-            style={{ filter: 'contrast(1.2) brightness(0.7)' }}
+          {/* Sparkles Effect */}
+          <SparklesCore
+            id="hero-sparkles"
+            background="transparent"
+            minSize={0.4}
+            maxSize={1.2}
+            particleDensity={100}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+            speed={1}
           />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(10,24,41,0),#051120_80%)]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#051120]/20 to-[#051120]" />
+          {/* Radial Gradient to prevent sharp edges and focus center */}
+          <div className="absolute inset-0 w-full h-full bg-[#051120] [mask-image:radial-gradient(circle_at_50%_40%,transparent_0%,white_100%)] opacity-60" />
+          <div className="absolute inset-0 w-full h-full bg-[#051120] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,transparent_0%,white_100%)]" />
+
+          <div
+            className="absolute inset-0 bg-[url('/images/home_hero.png')] bg-cover bg-center opacity-30 mix-blend-luminosity scale-110"
+            style={{ filter: 'contrast(1.2) brightness(0.6)' }}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(10,24,41,0),#051120_70%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#051120]/10 to-[#051120]" />
 
           {/* Animated Glows */}
-          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] animate-pulse" />
           <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gold-500/5 rounded-full blur-[150px] animate-pulse delay-1000" />
         </div>
 
@@ -199,6 +214,6 @@ export default async function Home() {
           </div>
         </div>
       </footer>
-    </main>
+    </main >
   );
 }
