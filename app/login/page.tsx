@@ -3,7 +3,7 @@
 import { createBrowserClient } from '@supabase/ssr'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Heart, Cross } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -139,6 +139,15 @@ export default function LoginPage() {
                     <p className="text-sm text-gray-500">
                         ¿No tienes cuenta? <Link href="/register" className="text-white hover:text-gold-400 font-semibold transition-colors">Regístrate aquí</Link>
                     </p>
+                </div>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-white/5 text-center">
+                <p className="text-[10px] text-gray-600 font-medium">
+                    Plataforma desarrollada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gold-400 transition-colors underline decoration-white/10 underline-offset-4 font-bold">Edward Trinidad</Link>
+                </p>
+                <div className="flex items-center justify-center gap-2 mt-2 text-[8px] uppercase tracking-[0.3em] text-gray-700 font-black">
+                    Hecho con <Heart className="w-2.5 h-2.5 text-red-500/30 fill-red-500/30 animate-pulse" /> Soli Deo Gloria
                 </div>
             </div>
         </div>

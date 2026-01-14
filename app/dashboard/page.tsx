@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from 'next/navigation';
-import { Calendar, TrendingUp, Book, Sparkles, Church, Compass, MessageSquare, ArrowRight, PenTool } from 'lucide-react';
+import { Calendar, TrendingUp, Book, Sparkles, Church, Compass, MessageSquare, ArrowRight, PenTool, Heart, Cross } from 'lucide-react';
 import Link from 'next/link';
 import { LogoutButton } from '@/components/auth/LogoutButton';
 
@@ -217,6 +217,21 @@ export default async function DashboardPage() {
                     </div>
                 </Link>
             </div>
+
+            {/* Global Credit Footer */}
+            <footer className="mt-24 pt-12 border-t border-white/5 text-center relative z-10">
+                <div className="max-w-xl mx-auto space-y-6">
+                    <Cross className="w-6 h-6 text-gold-500/20 mx-auto" />
+                    <div className="space-y-4">
+                        <p className="text-[10px] text-gray-600 font-medium italic">
+                            Esta plataforma fue desarrollada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold-400 transition-colors underline decoration-gold-500/20 underline-offset-4">Edward Trinidad</Link>
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-[9px] uppercase tracking-[0.3em] text-gray-700 font-black">
+                            Hecho con <Heart className="w-2.5 h-2.5 text-red-500/40 fill-red-500/40 animate-pulse" /> Soli Deo Gloria
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }

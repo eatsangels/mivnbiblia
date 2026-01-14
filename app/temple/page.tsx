@@ -5,7 +5,7 @@ import { useRef, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls, Environment, Float, Stars, PerspectiveCamera } from '@react-three/drei';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Clock, Map, Sparkles, ChevronDown, History, Construction, Scale, Globe, Cross } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clock, Map, Sparkles, ChevronDown, History, Construction, Scale, Globe, Cross, Heart } from 'lucide-react';
 
 function GoldenParticles({ count = 1000 }) {
     const mesh = useRef<THREE.InstancedMesh>(null);
@@ -278,11 +278,24 @@ export default function TemplePage() {
 
                 {/* Footer Message */}
                 <footer className="py-32 text-center border-t border-white/5 bg-black">
-                    <div className="max-w-xl mx-auto space-y-6 px-6">
+                    <div className="max-w-xl mx-auto space-y-8 px-6">
                         <Cross className="w-8 h-8 text-gold-500/50 mx-auto" />
-                        <p className="text-xs uppercase tracking-[0.5em] text-gray-600 font-bold">
-                            Soli Deo Gloria • MIVN
-                        </p>
+                        <div className="space-y-4">
+                            <p className="text-sm text-gray-400 font-light">
+                                "Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres."
+                            </p>
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-gold-500/60 font-black">
+                                Colosenses 3:23
+                            </p>
+                        </div>
+                        <div className="pt-8 space-y-2 border-t border-white/5">
+                            <p className="text-xs text-gray-500 font-medium">
+                                Esta experiencia fue creada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-400 transition-colors underline decoration-gold-500/30 underline-offset-4">Edward Trinidad</Link>
+                            </p>
+                            <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em] text-gray-600 font-black">
+                                Hecho con <Heart className="w-3 h-3 text-red-500 fill-red-500 animate-pulse" /> Soli Deo Gloria
+                            </div>
+                        </div>
                     </div>
                 </footer>
             </div>

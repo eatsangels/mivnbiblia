@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Compass, Search, Map, Clock, LandPlot, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, Search, Map, Clock, LandPlot, Sparkles, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -184,8 +184,20 @@ export default async function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 text-center text-[10px] text-gray-600 uppercase tracking-widest border-t border-white/5 bg-midnight-950">
-        <p>Soli Deo Gloria • Ministerio Internacional Vida Nueva</p>
+      <footer className="relative z-10 py-16 border-t border-white/5 bg-midnight-950 text-center">
+        <div className="max-w-7xl mx-auto px-6 space-y-4">
+          <p className="text-[10px] text-gray-500 uppercase tracking-[0.5em] font-black">
+            Soli Deo Gloria • Ministerio Internacional Vida Nueva
+          </p>
+          <div className="pt-4 flex flex-col items-center gap-2">
+            <p className="text-[10px] text-gray-600 font-medium">
+              Plataforma desarrollada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors underline decoration-white/20 underline-offset-4">Edward Trinidad</Link>
+            </p>
+            <div className="flex items-center gap-1.5 text-[8px] text-gray-700 uppercase tracking-widest font-black">
+              Hecho con <Heart className="w-2.5 h-2.5 text-red-500/50 fill-red-500/50 animate-pulse" /> para Su Gloria
+            </div>
+          </div>
+        </div>
       </footer>
     </main>
   );

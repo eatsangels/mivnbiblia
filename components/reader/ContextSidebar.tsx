@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { ChevronRight, ExternalLink, Loader2 } from "lucide-react";
+import { ChevronRight, ExternalLink, Loader2, Heart } from "lucide-react";
 import Image from "next/image";
 import { getBookMetadata, BookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 
 export function ContextSidebar({ bookName }: { bookName: string }) {
     const [meta, setMeta] = useState<BookMetadata>(getBookMetadata(bookName));
@@ -131,9 +132,19 @@ export function ContextSidebar({ bookName }: { bookName: string }) {
                 </p>
             </div>
 
-            <button className="mt-auto w-full py-3 bg-[#1e2230] hover:bg-[#252a3b] text-gold-500 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors border border-gold-500/10 shrink-0">
+            <button className="w-full py-3 bg-[#1e2230] hover:bg-[#252a3b] text-gold-500 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors border border-gold-500/10 shrink-0 mb-8">
                 Leer más
             </button>
+
+            {/* Subtle Credit Footer */}
+            <div className="mt-auto pt-6 border-t border-white/5 text-center pb-4 shrink-0">
+                <p className="text-[9px] text-gray-600 font-medium">
+                    Desarrollado por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gold-400 transition-colors underline decoration-white/10 underline-offset-4">Edward Trinidad</Link>
+                </p>
+                <div className="flex items-center justify-center gap-1.5 mt-1 text-[8px] uppercase tracking-[0.2em] text-gray-700 font-black">
+                    Con <Heart className="w-2 h-2 text-red-500/30 fill-red-500/30 animate-pulse" /> Soli Deo Gloria
+                </div>
+            </div>
         </aside>
     );
 }

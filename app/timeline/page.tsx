@@ -314,10 +314,22 @@ export default function TimelinePage() {
                         "Ayudar a cualquier persona —niños, jóvenes o adultos— a entender la Biblia como una sola historia, conectada y con propósito eterno."
                     </p>
                     <div className="h-px w-40 bg-gradient-to-r from-transparent via-gold-500/50 to-transparent mx-auto mb-12" />
-                    <p className="text-gray-500 font-serif italic text-2xl opacity-60">
-                        "Jesucristo es el mismo ayer, y hoy, y por los siglos."
-                    </p>
-                    <p className="text-gold-500/30 text-xs uppercase tracking-[0.8em] mt-6">Hebreos 13:8</p>
+
+                    <div className="space-y-4 mb-16">
+                        <p className="text-lg text-gray-500 font-serif italic opacity-60">
+                            "Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres."
+                        </p>
+                        <p className="text-[10px] uppercase tracking-[0.4em] text-gold-500/30 font-black">Colosenses 3:23</p>
+                    </div>
+
+                    <div className="pt-12 space-y-3 border-t border-white/5 max-w-xl mx-auto">
+                        <p className="text-sm text-gray-500 font-medium tracking-wide">
+                            Esta experiencia fue creada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-400 transition-colors underline decoration-gold-500/30 underline-offset-4">Edward Trinidad</Link>
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.3em] text-gray-600 font-black">
+                            Hecho con <Heart className="w-3 h-3 text-red-500 fill-red-500 animate-pulse" /> Soli Deo Gloria
+                        </div>
+                    </div>
                 </div>
             </section>
 

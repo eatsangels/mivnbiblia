@@ -2,7 +2,7 @@
 
 import {
     ArrowLeft, Map as MapIcon, Compass, Navigation, X, Globe,
-    History, Info, Layers, ZoomIn, Anchor, BookOpen
+    History, Info, Layers, ZoomIn, Anchor, BookOpen, Heart, Cross
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -367,6 +367,28 @@ export default function MapsPage() {
                 )}
 
             </main>
+
+            <footer className="py-24 text-center border-t border-white/5 bg-[#051120] relative z-10">
+                <div className="max-w-xl mx-auto space-y-8 px-6">
+                    <Cross className="w-8 h-8 text-blue-500/30 mx-auto" />
+                    <div className="space-y-4">
+                        <p className="text-sm text-gray-400 font-light italic">
+                            "Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres."
+                        </p>
+                        <p className="text-[10px] uppercase tracking-[0.3em] text-blue-400/60 font-black">
+                            Colosenses 3:23
+                        </p>
+                    </div>
+                    <div className="pt-8 space-y-2 border-t border-white/5">
+                        <p className="text-xs text-gray-500 font-medium">
+                            Esta experiencia fue creada por <Link href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors underline decoration-blue-500/30 underline-offset-4">Edward Trinidad</Link>
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em] text-gray-600 font-black">
+                            Hecho con <Heart className="w-3 h-3 text-red-500 fill-red-500 animate-pulse" /> Soli Deo Gloria
+                        </div>
+                    </div>
+                </div>
+            </footer>
 
             <style jsx global>{`
                 @keyframes spin-slow {
