@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Compass, Search, Map, Clock, LandPlot } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, Search, Map, Clock, LandPlot, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -65,80 +65,122 @@ export default async function Home() {
         </div>
       </nav>
 
-      {/* Hero Content */}
-      <section className="relative z-10 flex flex-col items-center justify-center pt-20 pb-32 px-6 text-center max-w-5xl mx-auto">
-        <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-gray-300 text-xs font-bold mb-8 backdrop-blur-sm">
-          <span className="text-gold-400 mr-2">✦</span> Explora la Biblia como nunca antes
+      {/* Cinematic Hero Section */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-32 px-6 overflow-hidden">
+
+        {/* Dynamic Background with Parallax effect */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[#051120]" />
+          <div
+            className="absolute inset-0 bg-[url('/images/home_hero.png')] bg-cover bg-center opacity-40 mix-blend-luminosity scale-110"
+            style={{ filter: 'contrast(1.2) brightness(0.7)' }}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(10,24,41,0),#051120_80%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#051120]/20 to-[#051120]" />
+
+          {/* Animated Glows */}
+          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gold-500/5 rounded-full blur-[150px] animate-pulse delay-1000" />
         </div>
 
-        <h1 className="text-6xl md:text-8xl font-serif font-bold tracking-tight mb-8 text-white drop-shadow-2xl">
-          <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/60">Santuario</span>
-          <span className="block text-4xl md:text-6xl mt-2 font-sans font-light text-blue-200/80">Digital</span>
-        </h1>
+        {/* Floating Narrative Content */}
+        <div className="relative z-10 flex flex-col items-center text-center max-w-6xl mx-auto">
+          <div className="inline-flex items-center px-4 py-2 rounded-full border border-white/10 bg-white/5 text-gray-300 text-[10px] font-black uppercase tracking-[0.4em] mb-12 backdrop-blur-md animate-fade-in">
+            <Sparkles className="w-3 h-3 text-gold-400 mr-3" />
+            Explora la Verdad Eterna
+          </div>
 
-        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 leading-relaxed font-light">
-          Sumérgete en el contexto histórico, geográfico y teológico de las escrituras.
-          Una experiencia diseñada para la contemplación.
-        </p>
+          <div className="relative mb-12 group">
+            {/* Floating Book Aura */}
+            <div className="absolute -inset-10 bg-gold-500/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full justify-center mb-24">
-          <Link href="/read/Juan/1" className="group flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full transition-all hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-            <BookOpen className="w-4 h-4 mr-2" />
-            Abrir Escrituras
-          </Link>
-          <Link href="/temple" className="group flex items-center justify-center px-8 py-4 bg-midnight-800 border border-white/10 hover:border-gold-500/50 text-white font-bold rounded-full transition-all hover:bg-midnight-750">
-            <Compass className="w-4 h-4 mr-2 text-gold-500" />
-            Visitar el Templo
-          </Link>
+            <h1 className="text-7xl md:text-[10rem] font-serif font-black tracking-tighter leading-none text-white select-none">
+              <span className="block opacity-90 drop-shadow-2xl">MIVN</span>
+              <span className="block text-4xl md:text-6xl -mt-4 md:-mt-8 font-sans font-light text-blue-200/40 tracking-[0.3em] uppercase">
+                Santuario Digital
+              </span>
+            </h1>
+          </div>
+
+          <p className="text-lg md:text-2xl text-gray-400 max-w-2xl mb-16 leading-relaxed font-light italic">
+            "Donde la tecnología se encuentra con lo sagrado para iluminar tu camino en las Escrituras."
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6 w-full justify-center mb-32">
+            <Link
+              href="/read/Juan/1"
+              className="group relative px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full transition-all hover:scale-105 overflow-hidden shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <span className="relative flex items-center justify-center gap-3">
+                <BookOpen className="w-4 h-4" /> Abrir Escrituras
+              </span>
+            </Link>
+
+            <Link
+              href="/temple"
+              className="group px-10 py-5 bg-transparent border border-white/10 hover:border-gold-500/50 text-white font-black uppercase tracking-widest text-xs rounded-full transition-all hover:bg-gold-500/5 backdrop-blur-md"
+            >
+              <span className="flex items-center justify-center gap-3">
+                <Compass className="w-4 h-4 text-gold-500" /> Visitar el Templo
+              </span>
+            </Link>
+          </div>
+
+          {/* Connected Modules Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+            {/* Timeline Module */}
+            <Link href="/timeline" className="group relative h-64 rounded-[2.5rem] overflow-hidden transition-all hover:-translate-y-2 border border-white/5 hover:border-blue-500/30 shadow-2xl">
+              <div className="absolute inset-0 bg-[url('/bible-covers/salmos.jpg')] bg-cover bg-center opacity-60 group-hover:scale-110 transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#051120] via-[#051120]/40 to-transparent" />
+              <div className="relative h-full w-full p-8 flex flex-col justify-between z-10">
+                <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 w-fit backdrop-blur-md">
+                  <Clock className="w-6 h-6 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2 shadow-sm">Cronología</h3>
+                  <p className="text-[10px] text-gray-300 uppercase tracking-widest leading-none font-bold">Historia de la Redención</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Maps Module */}
+            <Link href="/maps" className="group relative h-64 rounded-[2.5rem] overflow-hidden transition-all hover:-translate-y-2 border border-white/5 hover:border-emerald-500/30 shadow-2xl">
+              <div className="absolute inset-0 bg-[url('/bible-covers/hechos.jpg')] bg-cover bg-center opacity-60 group-hover:scale-110 transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#051120] via-[#051120]/40 to-transparent" />
+              <div className="relative h-full w-full p-8 flex flex-col justify-between z-10">
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 w-fit backdrop-blur-md">
+                  <Map className="w-6 h-6 text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2 shadow-sm">Cartografía</h3>
+                  <p className="text-[10px] text-gray-300 uppercase tracking-widest leading-none font-bold">Geografía Sagrada</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* AI Module */}
+            <Link href="/dashboard" className="group relative h-64 rounded-[2.5rem] overflow-hidden transition-all hover:-translate-y-2 border border-white/5 hover:border-gold-500/30 shadow-2xl">
+              <div className="absolute inset-0 bg-[url('/bible-covers/1-reyes.jpg')] bg-cover bg-center opacity-60 group-hover:scale-110 transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#051120] via-[#051120]/40 to-transparent" />
+              <div className="relative h-full w-full p-8 flex flex-col justify-between z-10">
+                <div className="p-4 rounded-2xl bg-gold-500/10 border border-gold-500/20 w-fit backdrop-blur-md">
+                  <Sparkles className="w-6 h-6 text-gold-400" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-2 shadow-sm">Elocuencia</h3>
+                  <p className="text-[10px] text-gray-300 uppercase tracking-widest leading-none font-bold">Asistente Homilético AI</p>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
 
-        {/* Feature Grid (Timeline, Maps, Temple) - Reference Image 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
-          {/* Timeline Card */}
-          <Link href="/timeline" className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-blue-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-            <div className="absolute inset-0 bg-[url('/bible-covers/salmos.jpg')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" />
-
-            <div className="relative z-20">
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-3 backdrop-blur-md">
-                <Clock className="w-5 h-5 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-1">Línea del Tiempo</h3>
-              <p className="text-xs text-gray-400">Navega la historia de la redención cronológicamente.</p>
-            </div>
-          </Link>
-
-          {/* Maps Card */}
-          <Link href="/maps" className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-emerald-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-            <div className="absolute inset-0 bg-[url('/bible-covers/hechos.jpg')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" />
-
-            <div className="relative z-20">
-              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center mb-3 backdrop-blur-md">
-                <Map className="w-5 h-5 text-emerald-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-1">Mapas Bíblicos</h3>
-              <p className="text-xs text-gray-400">Geografía interactiva de los viajes patriarcales y apostólicos.</p>
-            </div>
-          </Link>
-
-          {/* Temple Card */}
-          <Link href="/temple" className="relative overflow-hidden rounded-2xl bg-midnight-800/50 border border-white/5 hover:border-gold-500/30 transition-all group h-[240px] p-6 flex flex-col justify-end">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-            {/* Abstract Gold texture */}
-            <div className="absolute inset-0 bg-[url('/bible-covers/1-reyes.jpg')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute top-0 right-[-20%] w-[150%] h-[150%] bg-gold-600/10 rounded-full blur-3xl group-hover:opacity-75 transition-opacity" />
-
-            <div className="relative z-20">
-              <div className="w-10 h-10 rounded-full bg-gold-500/20 flex items-center justify-center mb-3 backdrop-blur-md">
-                <LandPlot className="w-5 h-5 text-gold-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-1">El Templo 3D</h3>
-              <p className="text-xs text-gray-400">Reconstrucción inmersiva para el estudio espacial.</p>
-            </div>
-          </Link>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-20 animate-bounce">
+          <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
+          <span className="text-[8px] uppercase tracking-[0.5em] font-black">Scroll</span>
         </div>
-
       </section>
 
       {/* Footer */}
