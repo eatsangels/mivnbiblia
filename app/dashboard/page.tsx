@@ -68,6 +68,18 @@ export default async function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-[#05070a] text-white p-6 md:p-12 relative overflow-hidden">
+            {/* Main Background Image */}
+            <div
+                className="absolute inset-0 z-0 opacity-60 pointer-events-none"
+                style={{
+                    backgroundImage: 'url(/dashboard-bg.png)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                }}
+            />
+            {/* Gradient Overlay to fade bottom */}
+            <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#05070a] via-transparent to-transparent pointer-events-none" />
             {/* Background Decorative Elements */}
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-gold-500/5 blur-[120px] rounded-full pointer-events-none" />
