@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Play, MessageCircle, PenTool, Highlighter, Sparkles, MessageSquarePlus, ChevronRight, BookOpen, Layers, Volume2, Type, Loader2 } from 'lucide-react';
+import { Play, MessageCircle, PenTool, Highlighter, Sparkles, MessageSquarePlus, ChevronRight, BookOpen, Layers, Volume2, Type, Loader2, LayoutDashboard } from 'lucide-react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { AIChatSidebar } from './AIChatSidebar';
 import { CommentsSection } from './CommentsSection';
@@ -16,7 +17,10 @@ interface Verse {
     content: string;
 }
 
+import { useReader } from './ReaderContext';
+
 export function ScriptureReader({ verses }: { verses: Verse[] }) {
+    const { fontSize } = useReader();
     const [selectedVerse, setSelectedVerse] = useState<number | null>(null);
     const [showAI, setShowAI] = useState(false);
     const [activeTab, setActiveTab] = useState<'exegesis' | 'theology' | 'history' | 'community'>('exegesis');
@@ -32,14 +36,30 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
         }
     }, [searchParams]);
 
+    // Font Size Mapping
+    const getFontSizeClass = (type: 'list' | 'card') => {
+        const sizes = {
+            small: { list: 'text-base', card: 'text-lg' },
+            normal: { list: 'text-lg', card: 'text-[1.35rem]' },
+            large: { list: 'text-xl', card: 'text-2xl' },
+            huge: { list: 'text-2xl', card: 'text-3xl' }
+        };
+        return sizes[fontSize][type];
+    };
+
+    // ... (rest of component unchanged until rendering) ...
+
     if (!verses || verses.length === 0) return null;
 
     const currentChapter = verses[0];
 
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
     useEffect(() => {
-        const fetchHighlights = async () => {
+        const fetchHighlightsAndTrackProgress = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
+                // 1. Fetch Highlights
                 const { data } = await supabase
                     .from('user_highlights')
                     .select('verse_number')
@@ -50,9 +70,27 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 if (data) {
                     setHighlights((data as any[]).map(h => h.verse_number));
                 }
+
+                // 2. Track Progress via RPC
+                try {
+                    setSaveStatus('saving');
+                    const { error } = await supabase.rpc('track_reading', {
+                        p_book_name: currentChapter.book_name,
+                        p_chapter: currentChapter.chapter
+                    } as any);
+
+                    if (error) throw error;
+                    setSaveStatus('saved');
+
+                    // Reset saved status after 3 seconds
+                    setTimeout(() => setSaveStatus('idle'), 3000);
+                } catch (err) {
+                    console.error('Error tracking reading:', err);
+                    setSaveStatus('error');
+                }
             }
         };
-        fetchHighlights();
+        fetchHighlightsAndTrackProgress();
     }, [currentChapter, supabase]);
 
     // Helper to get the next verse for the "context" view in the card
@@ -117,18 +155,22 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
             <div className="flex items-center justify-between mb-6 px-2 shrink-0">
                 <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
                     {currentChapter.book_name} {currentChapter.chapter}
-                    {selectedVerse && (
-                        <span className="text-sm font-bold text-gray-500 bg-white/5 px-3 py-1 rounded-full border border-white/5">
-                            + 1 versículo
-                        </span>
-                    )}
                 </h2>
-                <button
-                    onClick={() => setShowWorkshop(true)}
-                    className="md:hidden p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors"
-                >
-                    <PenTool className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                    <Link
+                        href="/dashboard"
+                        className="p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors"
+                        title="Volver al Panel"
+                    >
+                        <LayoutDashboard className="w-5 h-5" />
+                    </Link>
+                    <button
+                        onClick={() => setShowWorkshop(true)}
+                        className="md:hidden p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors"
+                    >
+                        <PenTool className="w-5 h-5" />
+                    </button>
+                </div>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
@@ -155,9 +197,8 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                             </div>
 
                                             {/* Main Verse Text */}
-                                            <p className="font-libre text-[1.35rem] leading-[1.8] text-[#1a2b4b] mb-6">
+                                            <p className={`font-libre ${getFontSizeClass('card')} leading-[1.8] text-[#1a2b4b] mb-6`}>
                                                 <span className="text-gold-600 font-bold mr-1">"</span>
-                                                {/* We can simulate bolding some words for visual accuracy if desired, but raw text is fine */}
                                                 {verse.content}
                                             </p>
 
@@ -251,7 +292,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                     <span className={`text-sm font-bold transition-colors mt-1 w-6 text-right ${isSelected || highlights.includes(verse.verse_number) ? 'text-gold-500' : 'text-gray-500 group-hover:text-gold-500'}`}>
                                         {verse.verse_number}
                                     </span>
-                                    <p className={`font-libre text-lg leading-relaxed font-light transition-all ${highlights.includes(verse.verse_number) ? 'text-white border-b border-gold-500/50 bg-gold-500/5' : 'text-gray-300 group-hover:text-white'}`}>
+                                    <p className={`font-libre ${getFontSizeClass('list')} leading-relaxed font-light transition-all ${highlights.includes(verse.verse_number) ? 'text-white border-b border-gold-500/50 bg-gold-500/5' : 'text-gray-300 group-hover:text-white'}`}>
                                         {verse.content}
                                     </p>
                                 </div>
@@ -261,14 +302,37 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 </div>
 
                 {/* Vertical Sidebar on the Right */}
-                <div className="hidden lg:block w-96 h-full border-l border-white/5 pl-6 overflow-y-auto">
+                < div className="hidden lg:block w-96 h-full border-l border-white/5 pl-6 overflow-y-auto" >
                     <ToolsSidebar
                         bookName={currentChapter.book_name}
                         chapter={currentChapter.chapter}
                         selectedVerse={selectedVerse}
                         onOpenWorkshop={() => setShowWorkshop(true)}
                     />
-                </div>
+                </div >
+            </div>
+
+            {/* Save Status Indicator */}
+            <div className={`fixed bottom-6 right-6 px-4 py-2 bg-black/80 backdrop-blur-md rounded-full border border-white/10 text-xs font-bold transition-all duration-500 z-50 flex items-center gap-2 ${saveStatus === 'idle' ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+                }`}>
+                {saveStatus === 'saving' && (
+                    <>
+                        <div className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
+                        <span className="text-gray-300">Guardando progreso...</span>
+                    </>
+                )}
+                {saveStatus === 'saved' && (
+                    <>
+                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                        <span className="text-green-400">Progreso guardado</span>
+                    </>
+                )}
+                {saveStatus === 'error' && (
+                    <>
+                        <div className="w-2 h-2 rounded-full bg-red-500" />
+                        <span className="text-red-400">Error al guardar</span>
+                    </>
+                )}
             </div>
 
             <AIChatSidebar
@@ -286,7 +350,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 bookName={currentChapter.book_name}
                 chapter={currentChapter.chapter}
             />
-        </div>
+        </div >
     );
 }
 
@@ -338,6 +402,8 @@ function StudyCommentaryContent({ book, chapter, verse, type }: { book: string; 
                     </div>
                 </div>
             </div>
+
+
         </div>
     );
 }

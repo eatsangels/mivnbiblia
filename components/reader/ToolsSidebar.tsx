@@ -5,6 +5,7 @@ import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, Chec
 import { useSearchParams } from 'next/navigation';
 import { getBookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 
 
 interface ToolsSidebarProps {
@@ -307,16 +308,38 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse, onOpenWorkshop 
                 </div>
 
                 <div className="space-y-3">
-                    {meta.relatedVerses.map((item) => (
-                        <div key={item.ref} className="bg-[#151b2b] hover:bg-[#1c2438] border border-white/5 hover:border-blue-500/30 rounded-lg p-3 transition-all cursor-pointer group">
-                            <div className="flex justify-between items-center mb-1">
-                                <span className="text-blue-300 group-hover:text-blue-200 text-xs font-bold transition-colors">{item.ref}</span>
-                            </div>
-                            <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed font-sans">
-                                {item.text}
-                            </p>
-                        </div>
-                    ))}
+                    {meta.relatedVerses.map((item) => {
+                        // Helper to parse "Libro Cap:Versos" -> /read/Libro/Cap
+                        const getLinkFromRef = (ref: string) => {
+                            try {
+                                // Handle "1 Corintios 10:1-4" or "Hebreos 11:23"
+                                // Split by last space to separate Book from Chapter:Verse
+                                const lastSpaceIndex = ref.lastIndexOf(' ');
+                                if (lastSpaceIndex === -1) return '#';
+
+                                const book = ref.substring(0, lastSpaceIndex).trim();
+                                const rest = ref.substring(lastSpaceIndex + 1);
+                                const chapter = rest.split(':')[0];
+
+                                return `/read/${book}/${chapter}`;
+                            } catch (e) {
+                                return '#';
+                            }
+                        };
+
+                        return (
+                            <Link href={getLinkFromRef(item.ref)} key={item.ref} className="block group">
+                                <div className="bg-[#151b2b] hover:bg-[#1c2438] border border-white/5 hover:border-blue-500/30 rounded-lg p-3 transition-all cursor-pointer">
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-blue-300 group-hover:text-blue-200 text-xs font-bold transition-colors">{item.ref}</span>
+                                    </div>
+                                    <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed font-sans">
+                                        {item.text}
+                                    </p>
+                                </div>
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
 

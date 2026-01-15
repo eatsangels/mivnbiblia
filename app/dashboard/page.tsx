@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from 'next/navigation';
-import { Calendar, TrendingUp, Book, Sparkles, Church, Compass, MessageSquare, ArrowRight, PenTool, Heart, Cross } from 'lucide-react';
+import { Calendar, TrendingUp, Book, Church, Compass, MessageSquare, PenTool, Heart, Cross } from 'lucide-react';
 import Link from 'next/link';
-import { LogoutButton } from '@/components/auth/LogoutButton';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { VerseOfTheDayCard } from '../../components/dashboard/VerseOfTheDayCard';
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -27,20 +27,35 @@ export default async function DashboardPage() {
         .eq('user_id', user.id)
         .single() as any;
 
-    // Fetch a random verse for "Verse of the Day"
-    // Using a simpler approach for now: fetch 1 from a random offset (though random is hard in pure SQL without custom functions)
-    // We'll use a semi-random approach by fetching a verse based on the day of the year
+    // Deterministic Verse of the Day
+    // We fetch a "random" verse based on the date. 
+    // Since we can't easily do seeded random in simple Supabase/Postgres select without RPC, 
+    // we'll fetch a count, then pick an ID based on (Date % Count).
+
+    // 1. Get total verse count (Cached estimate or just raw count. Scriptures table shouldn't change much).
+    // Optimization: Hardcode approx count or just query it. ~31102 verses.
+    // Let's rely on a randomized ID approach or use the day of year to pick a specific book/chapter/verse index.
+
+    // Better approach: Create a simple RPC or just select one randomly using a seed if possible.
+    // For now, let's use the day of the year to cycle through popular verses if we had a "popular_verses" table,
+    // but looking at "scriptures" table, let's just pick one.
+
     const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    // There are ~31,102 verses in the table
-    // Fetch verse of the day (mock logic for now, random or specific)
-    const { data: verseOfTheDay } = await supabase
-        .from("scriptures")
-        .select("*")
-        .eq("book_name", "Salmos")
-        .eq("chapter", 119)
-        .eq("verse_number", 105)
-        .eq("verse_number", 105)
-        .maybeSingle() as any;
+
+    // Fetch a verse using an ID offset or something stable for the day.
+    // Assuming 'id' is distinct. If not, we use limit/offset.
+    const { count } = await supabase.from('scriptures').select('*', { count: 'exact', head: true });
+
+    // Simple deterministic offset
+    const verseOffset = count ? (dayOfYear * 12345) % count : 0;
+
+    const { data: verses } = await supabase
+        .from('scriptures')
+        .select('*')
+        .range(verseOffset, verseOffset); // fetching 1 verse at offset
+
+    const verseOfTheDay = verses?.[0];
+
 
     const { data: recentSermon } = await supabase
         .from('sermons')
@@ -60,30 +75,8 @@ export default async function DashboardPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 relative z-10">
                 {/* Verse of the Day - Large Card */}
-                <div className="lg:col-span-2 glass-panel rounded-3xl p-8 relative overflow-hidden group border-gold-500/10 hover:border-gold-500/30 transition-all duration-500 shadow-2xl shadow-black/50">
-                    <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Book className="w-32 h-32 text-gold-500 rotate-12" />
-                    </div>
-
-                    <div className="relative z-10 h-full flex flex-col justify-between">
-                        <div>
-                            <span className="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/20 rounded-full text-[10px] font-bold text-gold-400 uppercase tracking-widest mb-6">
-                                Versículo del Día
-                            </span>
-                            <blockquote className="font-libre italic text-2xl md:text-3xl text-gray-100 leading-relaxed mb-6">
-                                "{verseOfTheDay?.content || "Lámpara es a mis pies tu palabra, Y lumbrera a mi camino."}"
-                            </blockquote>
-                            <cite className="not-italic text-gold-500 font-bold tracking-widest uppercase text-sm">
-                                — {verseOfTheDay ? `${verseOfTheDay.book_name} ${verseOfTheDay.chapter}:${verseOfTheDay.verse_number}` : 'Salmos 119:105'}
-                            </cite>
-                        </div>
-
-                        <div className="mt-8 pt-8 border-t border-white/5 flex items-center gap-4">
-                            <Link href="/read" className="text-xs font-bold text-gray-400 hover:text-gold-400 transition-colors flex items-center gap-2 group/link">
-                                SEGUIR LEYENDO <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-                            </Link>
-                        </div>
-                    </div>
+                <div className="lg:col-span-2">
+                    <VerseOfTheDayCard verse={verseOfTheDay} />
                 </div>
 
                 {/* Stats Grid */}

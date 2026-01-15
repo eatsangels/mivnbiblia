@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { ChevronRight, ExternalLink, Loader2, Heart } from "lucide-react";
+import { ChevronRight, ExternalLink, Loader2, Heart, X } from "lucide-react";
 import Image from "next/image";
 import { getBookMetadata, BookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
@@ -10,51 +10,68 @@ import Link from "next/link";
 export function ContextSidebar({ bookName }: { bookName: string }) {
     const [meta, setMeta] = useState<BookMetadata>(getBookMetadata(bookName));
     const [loading, setLoading] = useState(true);
+    const [showIntro, setShowIntro] = useState(false);
     const [activeTab, setActiveTab] = useState<'exegetico' | 'esinp'>('exegetico');
-    const supabase = createClient();
 
     useEffect(() => {
-        const fetchMeta = async () => {
-            setLoading(true);
-            const slug = bookName
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replace(/ /g, "-")
-                .replace(/[^a-z0-9-]/g, "");
-
-            const { data, error } = await supabase
-                .from('book_metadata')
-                .select('*')
-                .eq('book_slug', slug)
-                .maybeSingle();
-
-            if (data) {
-                const d = data as any;
-                setMeta({
-                    title: d.title,
-                    image: d.image_path || meta.image,
-                    author: d.author || meta.author,
-                    date: d.date_written || meta.date,
-                    context: d.context || meta.context,
-                    themes: d.themes || meta.themes,
-                    intro: d.intro || meta.intro,
-                    relatedVerses: []
-                });
-            }
-            setLoading(false);
-        };
-        fetchMeta();
+        setMeta(getBookMetadata(bookName));
     }, [bookName]);
 
-    if (loading && !meta.title) return (
-        <div className="flex items-center justify-center h-full">
-            <Loader2 className="w-6 h-6 text-gold-500 animate-spin" />
-        </div>
-    );
+    // ... (existing useEffects)
 
     return (
         <aside className="w-full h-full flex flex-col gap-6 overflow-y-auto pr-2">
+
+            {/* Intro Modal */}
+            {showIntro && (
+                <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+                    <div className="bg-[#0f141f] border border-gold-500/20 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300 relative">
+                        {/* Header Image Background */}
+                        <div className="h-48 w-full relative shrink-0">
+                            <Image
+                                src={meta.image}
+                                alt={meta.title}
+                                fill
+                                className="object-cover opacity-20"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0f141f] via-[#0f141f]/40 to-transparent" />
+                            <button
+                                onClick={() => setShowIntro(false)}
+                                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors z-20"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="px-8 pb-8 -mt-16 relative z-10">
+                            <div className="w-20 h-20 rounded-xl overflow-hidden shadow-2xl border-2 border-gold-500/30 mb-4 bg-black relative">
+                                <Image
+                                    src={meta.image}
+                                    alt={meta.author}
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+
+                            <h2 className="text-3xl font-serif font-bold text-white mb-1 drop-shadow-lg">{meta.title || meta.image.split('/').pop()}</h2>
+                            <p className="text-gold-500 text-xs uppercase tracking-widest font-bold mb-6">Autor: {meta.author} • {meta.date}</p>
+
+                            <div className="prose prose-invert prose-sm max-w-none bg-[#0f141f]/50 p-4 rounded-xl backdrop-blur-sm border border-white/5">
+                                <p className="text-gray-300 leading-relaxed font-serif text-base whitespace-pre-wrap">
+                                    {meta.intro || "Descripción no disponible."}
+                                </p>
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-white/5 flex gap-4">
+                                <div className="flex-1 bg-white/5 rounded-lg p-4 border border-white/5">
+                                    <h4 className="text-gold-500 text-[10px] font-bold uppercase tracking-wider mb-2">Contexto Histórico</h4>
+                                    <p className="text-xs text-gray-400 leading-relaxed font-sans">{meta.context}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Book Header Card (Dynamic) */}
             <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1e2738] to-[#0d121c] p-0 mb-2 group shrink-0 min-h-[140px]">
@@ -157,13 +174,13 @@ export function ContextSidebar({ bookName }: { bookName: string }) {
             {/* Intro/Description */}
             <div className="shrink-0" id="book-intro">
                 <h3 className="text-white font-bold text-sm mb-2">Introducción</h3>
-                <p className="text-xs text-gray-400 leading-relaxed font-sans mb-4">
+                <p className="text-xs text-gray-400 leading-relaxed font-sans mb-4 line-clamp-3">
                     {meta.intro}
                 </p>
             </div>
 
             <button
-                onClick={() => document.getElementById('book-intro')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => setShowIntro(true)}
                 className="w-full py-3 bg-[#1e2230] hover:bg-[#252a3b] text-gold-500 text-xs font-bold uppercase tracking-widest rounded-lg transition-colors border border-gold-500/10 shrink-0 mb-8 active:scale-95"
             >
                 Leer más
