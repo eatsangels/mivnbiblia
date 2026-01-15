@@ -5,15 +5,16 @@ import { ArrowUpRight, MessageSquare, StickyNote, Bookmark, MoreHorizontal, Chec
 import { useSearchParams } from 'next/navigation';
 import { getBookMetadata } from "@/lib/bibleMetadata";
 import { createClient } from "@/lib/supabase/client";
-import { SermonWorkshop } from "@/components/workshop/SermonWorkshop";
+
 
 interface ToolsSidebarProps {
     bookName: string;
     chapter: number;
     selectedVerse: number | null;
+    onOpenWorkshop: () => void;
 }
 
-export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarProps) {
+export function ToolsSidebar({ bookName, chapter, selectedVerse, onOpenWorkshop }: ToolsSidebarProps) {
     const meta = getBookMetadata(bookName);
     const [notes, setNotes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -30,17 +31,13 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
     const [traditionContent, setTraditionContent] = useState<string | null>(null);
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [loadingTradition, setLoadingTradition] = useState(false);
-    const [showWorkshop, setShowWorkshop] = useState(false);
+
     const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
     const [editingNoteContent, setEditingNoteContent] = useState("");
     const searchParams = useSearchParams();
     const supabase = createClient();
 
-    useEffect(() => {
-        if (searchParams.get('workshop') === 'true') {
-            setShowWorkshop(true);
-        }
-    }, [searchParams]);
+
 
     const fetchNotes = async () => {
         setLoading(true);
@@ -446,7 +443,7 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
                     </button>
 
                     <button
-                        onClick={() => setShowWorkshop(true)}
+                        onClick={onOpenWorkshop}
                         className="w-full flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-colors text-left group border border-dashed border-white/10 hover:border-gold-500/50"
                     >
                         <PenTool className="w-4 h-4 text-gray-500 group-hover:text-gold-400" />
@@ -455,12 +452,7 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse }: ToolsSidebarP
                 </div>
             </div>
 
-            <SermonWorkshop
-                isOpen={showWorkshop}
-                onClose={() => setShowWorkshop(false)}
-                bookName={bookName}
-                chapter={chapter}
-            />
+
         </aside>
     );
 }

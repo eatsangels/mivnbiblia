@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/client';
 import { AIChatSidebar } from './AIChatSidebar';
 import { CommentsSection } from './CommentsSection';
 import { ToolsSidebar } from './ToolsSidebar';
+import { SermonWorkshop } from '@/components/workshop/SermonWorkshop';
+import { useSearchParams } from 'next/navigation';
 
 interface Verse {
     book_name: string;
@@ -20,7 +22,15 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
     const [activeTab, setActiveTab] = useState<'exegesis' | 'theology' | 'history' | 'community'>('exegesis');
     const [highlights, setHighlights] = useState<number[]>([]);
     const [isSpeaking, setIsSpeaking] = useState<number | null>(null);
+    const [showWorkshop, setShowWorkshop] = useState(false);
+    const searchParams = useSearchParams();
     const supabase = createClient();
+
+    useEffect(() => {
+        if (searchParams.get('workshop') === 'true') {
+            setShowWorkshop(true);
+        }
+    }, [searchParams]);
 
     if (!verses || verses.length === 0) return null;
 
@@ -113,6 +123,12 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                         </span>
                     )}
                 </h2>
+                <button
+                    onClick={() => setShowWorkshop(true)}
+                    className="md:hidden p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors"
+                >
+                    <PenTool className="w-5 h-5" />
+                </button>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
@@ -250,6 +266,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                         bookName={currentChapter.book_name}
                         chapter={currentChapter.chapter}
                         selectedVerse={selectedVerse}
+                        onOpenWorkshop={() => setShowWorkshop(true)}
                     />
                 </div>
             </div>
@@ -261,6 +278,13 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 bookName={currentChapter.book_name}
                 chapter={currentChapter.chapter}
                 verse={selectedVerse || undefined}
+            />
+
+            <SermonWorkshop
+                isOpen={showWorkshop}
+                onClose={() => setShowWorkshop(false)}
+                bookName={currentChapter.book_name}
+                chapter={currentChapter.chapter}
             />
         </div>
     );

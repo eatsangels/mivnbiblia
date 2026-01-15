@@ -224,10 +224,10 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
 
     return (
         <div className="fixed inset-0 z-[150] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4">
-            <div className="w-full h-full max-w-7xl bg-[#0f141f] border border-gold-500/20 rounded-3xl flex overflow-hidden shadow-2xl">
+            <div className="w-full h-full max-w-7xl bg-[#0f141f] border border-gold-500/20 rounded-3xl flex flex-col md:flex-row overflow-hidden shadow-2xl">
 
                 {/* Left Panel - References */}
-                <div className="w-1/3 border-r border-white/5 flex flex-col bg-[#0a0e14]">
+                <div className="w-full md:w-1/3 h-[40%] md:h-full border-b md:border-b-0 md:border-r border-white/5 flex flex-col bg-[#0a0e14]">
                     <div className="p-4 border-b border-white/5">
                         <h2 className="text-gold-400 font-bold flex items-center gap-2 uppercase text-xs tracking-widest">
                             <Book className="w-4 h-4" /> Referencias: {bookName} {chapter}
@@ -235,7 +235,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                     </div>
 
                     {/* Tabs */}
-                    <div className="flex p-2 gap-2 border-b border-white/5">
+                    <div className="flex p-2 gap-2 border-b border-white/5 overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('notes')}
                             className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-colors ${activeTab === 'notes' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-500 hover:text-gray-300'}`}
@@ -278,7 +278,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                                                         {note.book_name} {note.chapter}:{note.verse_number}
                                                     </span>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button 
+                                                        <button
                                                             onClick={() => {
                                                                 setEditingNoteId(note.id);
                                                                 setEditingNoteContent(note.content);
@@ -287,7 +287,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                                                         >
                                                             <Edit3 className="w-3.5 h-3.5" />
                                                         </button>
-                                                        <button 
+                                                        <button
                                                             onClick={() => handleDeleteNote(note.id)}
                                                             className="text-gray-500 hover:text-red-400 transition-colors"
                                                         >
@@ -298,19 +298,19 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
 
                                                 {editingNoteId === note.id ? (
                                                     <div className="space-y-2">
-                                                        <textarea 
+                                                        <textarea
                                                             value={editingNoteContent}
                                                             onChange={(e) => setEditingNoteContent(e.target.value)}
                                                             className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-blue-500 min-h-[100px]"
                                                         />
                                                         <div className="flex justify-end gap-2">
-                                                            <button 
+                                                            <button
                                                                 onClick={() => setEditingNoteId(null)}
                                                                 className="p-1 px-2 hover:bg-white/5 rounded text-[10px] font-bold text-gray-400 uppercase"
                                                             >
                                                                 Cancelar
                                                             </button>
-                                                            <button 
+                                                            <button
                                                                 onClick={() => handleSaveNoteEdit(note.id)}
                                                                 className="p-1 px-2 bg-blue-600 hover:bg-blue-500 rounded text-[10px] font-bold text-white uppercase flex items-center gap-1"
                                                             >
@@ -356,7 +356,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                                                 onClick={() => loadSermon(sermon.id)}
                                                 className={`p-3 border rounded-lg cursor-pointer transition-colors group relative ${currentSermonId === sermon.id ? 'bg-green-900/20 border-green-500/50' : 'bg-white/5 border-white/5 hover:bg-white/10'}`}
                                             >
-                                                <button 
+                                                <button
                                                     onClick={(e) => handleDeleteSermon(e, sermon.id)}
                                                     className="absolute top-3 right-3 p-1.5 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all bg-black/40 rounded-lg hover:scale-110"
                                                 >
@@ -386,7 +386,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
                 </div>
 
                 {/* Right Panel - Editor */}
-                <div className="w-2/3 flex flex-col bg-[#0f141f]">
+                <div className="w-full md:w-2/3 h-[60%] md:h-full flex flex-col bg-[#0f141f]">
                     {/* Header */}
                     <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#151b2b]">
                         <div className="flex-1 mr-4">
