@@ -27,12 +27,16 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
     const [highlights, setHighlights] = useState<number[]>([]);
     const [isSpeaking, setIsSpeaking] = useState<number | null>(null);
     const [showWorkshop, setShowWorkshop] = useState(false);
+    const [showMobileTools, setShowMobileTools] = useState(false);
     const searchParams = useSearchParams();
     const supabase = createClient();
 
     useEffect(() => {
         if (searchParams.get('workshop') === 'true') {
             setShowWorkshop(true);
+        }
+        if (searchParams.get('notes') === 'true') {
+            setShowMobileTools(true);
         }
     }, [searchParams]);
 
@@ -164,16 +168,24 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                     >
                         <LayoutDashboard className="w-5 h-5" />
                     </Link>
+
+                    <button
+                        onClick={() => setShowMobileTools(!showMobileTools)}
+                        className="lg:hidden p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors relative"
+                    >
+                        <Layers className="w-5 h-5" />
+                        {showMobileTools && <span className="absolute top-1 right-1 w-2 h-2 bg-gold-500 rounded-full animate-pulse" />}
+                    </button>
                     <button
                         onClick={() => setShowWorkshop(true)}
-                        className="md:hidden p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors"
+                        className="hidden md:hidden p-2 rounded-full bg-white/5 hover:bg-gold-500/20 text-gray-400 hover:text-gold-400 transition-colors"
                     >
                         <PenTool className="w-5 h-5" />
                     </button>
                 </div>
             </div>
 
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex overflow-hidden relative">
                 {/* Scrollable List container */}
                 <div className="flex-1 w-full overflow-y-auto pr-2 space-y-2 pb-32">
                     {verses.map((verse) => {
@@ -302,14 +314,41 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                 </div>
 
                 {/* Vertical Sidebar on the Right */}
-                < div className="hidden lg:block w-96 h-full border-l border-white/5 pl-6 overflow-y-auto" >
+                <div className="hidden lg:block w-96 h-full border-l border-white/5 pl-6 overflow-y-auto">
                     <ToolsSidebar
                         bookName={currentChapter.book_name}
                         chapter={currentChapter.chapter}
                         selectedVerse={selectedVerse}
                         onOpenWorkshop={() => setShowWorkshop(true)}
                     />
-                </div >
+                </div>
+
+                {/* Mobile Tools Overlay */}
+                {showMobileTools && (
+                    <div className="lg:hidden absolute inset-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md animate-in slide-in-from-right duration-300">
+                        <div className="h-full flex flex-col">
+                            <div className="p-4 border-b border-white/10 flex justify-between items-center bg-black/40">
+                                <h3 className="text-sm font-bold text-gold-500 uppercase tracking-widest flex items-center gap-2">
+                                    <Layers className="w-4 h-4" /> Herramientas y Notas
+                                </h3>
+                                <button
+                                    onClick={() => setShowMobileTools(false)}
+                                    className="p-2 bg-white/5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            <div className="flex-1 overflow-y-auto p-4">
+                                <ToolsSidebar
+                                    bookName={currentChapter.book_name}
+                                    chapter={currentChapter.chapter}
+                                    selectedVerse={selectedVerse}
+                                    onOpenWorkshop={() => setShowWorkshop(true)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Save Status Indicator */}

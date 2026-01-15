@@ -4,6 +4,7 @@ import { Calendar, TrendingUp, Book, Church, Compass, MessageSquare, PenTool, He
 import Link from 'next/link';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { VerseOfTheDayCard } from '../../components/dashboard/VerseOfTheDayCard';
+import { ResetProgressButton } from '@/components/dashboard/ResetProgressButton';
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -140,7 +141,7 @@ export default async function DashboardPage() {
                     <p className="text-[10px] text-gray-600 mt-1">Lector inteligente</p>
                 </Link>
 
-                <Link href="/read" className="group relative glass-panel p-6 rounded-2xl border-white/5 hover:border-white/20 transition-all text-center">
+                <Link href="/read?notes=true" className="group relative glass-panel p-6 rounded-2xl border-white/5 hover:border-white/20 transition-all text-center">
                     <div className="mx-auto w-12 h-12 bg-purple-950/50 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-purple-900/20">
                         <MessageSquare className="w-6 h-6 text-purple-400" />
                     </div>
@@ -192,8 +193,10 @@ export default async function DashboardPage() {
             </div>
 
             {/* Global Credit Footer */}
-            <footer className="mt-24 pt-12 border-t border-white/5 text-center relative z-10">
+            <footer className="mt-24 pt-12 border-t border-white/5 text-center relative z-10 transition-colors hover:border-white/10">
                 <div className="max-w-xl mx-auto space-y-6">
+                    <ResetProgressButton />
+
                     <Cross className="w-6 h-6 text-gold-500/20 mx-auto" />
                     <div className="space-y-4">
                         <p className="text-[10px] text-gray-600 font-medium italic">
