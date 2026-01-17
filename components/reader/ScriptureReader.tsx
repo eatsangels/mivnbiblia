@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Play, MessageCircle, PenTool, Highlighter, Sparkles, MessageSquarePlus, ChevronRight, BookOpen, Layers, Volume2, Type, Loader2, LayoutDashboard } from 'lucide-react';
+import { Play, MessageCircle, PenTool, Highlighter, Sparkles, MessageSquarePlus, ChevronRight, BookOpen, Layers, Volume2, Type, Loader2, LayoutDashboard, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { AIChatSidebar } from './AIChatSidebar';
@@ -28,8 +28,40 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
     const [isSpeaking, setIsSpeaking] = useState<number | null>(null);
     const [showWorkshop, setShowWorkshop] = useState(false);
     const [showMobileTools, setShowMobileTools] = useState(false);
+
+    // Voice Selection State
+    const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+    const [audioSettingsOpen, setAudioSettingsOpen] = useState(false);
+
     const searchParams = useSearchParams();
     const supabase = createClient();
+
+    // Load Voices
+    useEffect(() => {
+        const loadVoices = () => {
+            const voices = window.speechSynthesis.getVoices();
+            setAvailableVoices(voices);
+
+            // Load saved preference
+            const savedVoiceURI = localStorage.getItem('mivn-audio-voice');
+            if (savedVoiceURI) {
+                const voice = voices.find(v => v.voiceURI === savedVoiceURI);
+                if (voice) setSelectedVoice(voice);
+            } else {
+                // Default to Google Spanish or first ES voice
+                const esVoice = voices.find(v => v.lang.startsWith('es') && v.name.includes('Google')) || voices.find(v => v.lang.startsWith('es'));
+                if (esVoice) setSelectedVoice(esVoice);
+            }
+        };
+
+        loadVoices();
+
+        // Chrome loads voices asynchronously
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+    }, []);
 
     useEffect(() => {
         if (searchParams.get('workshop') === 'true') {
@@ -141,7 +173,10 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
         } else {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(verse.content);
-            utterance.lang = 'es-ES';
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+            utterance.lang = 'es-ES'; // Fallback or force lang
             utterance.onend = () => setIsSpeaking(null);
             window.speechSynthesis.speak(utterance);
             setIsSpeaking(verse.verse_number);
@@ -258,7 +293,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                         </div>
 
                                         {/* Bottom Toolbar (Dark, attached to card bottom like image) */}
-                                        <div className="bg-[#0f141f] py-4 px-6 flex items-center gap-6 text-gray-400 text-xs font-bold border-t border-gray-800">
+                                        <div className="bg-[#0f141f] py-4 px-6 flex items-center gap-6 text-gray-400 text-xs font-bold border-t border-gray-800 relative">
                                             <button
                                                 onClick={() => toggleHighlight(verse.verse_number)}
                                                 className={`flex items-center gap-2 px-3 py-1.5 rounded transition-all ${highlights.includes(verse.verse_number) ? 'text-gold-400 bg-gold-500/20 shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'text-gray-400 hover:text-gold-400 hover:bg-gold-500/10'}`}
@@ -271,12 +306,52 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                             >
                                                 <MessageSquarePlus className="w-3.5 h-3.5" /> Notas
                                             </button>
-                                            <button
-                                                onClick={() => toggleAudio(verse)}
-                                                className={`flex items-center gap-2 transition-colors ${isSpeaking === verse.verse_number ? 'text-blue-400 animate-pulse' : 'hover:text-white'}`}
-                                            >
-                                                <Volume2 className="w-3.5 h-3.5" /> {isSpeaking === verse.verse_number ? 'Detener' : 'Audio Biblia'}
-                                            </button>
+
+                                            <div className="flex items-center gap-2 relative">
+                                                <button
+                                                    onClick={() => toggleAudio(verse)}
+                                                    className={`flex items-center gap-2 transition-colors ${isSpeaking === verse.verse_number ? 'text-blue-400 animate-pulse' : 'hover:text-white'}`}
+                                                >
+                                                    <Volume2 className="w-3.5 h-3.5" /> {isSpeaking === verse.verse_number ? 'Detener' : 'Audio Biblia'}
+                                                </button>
+
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setAudioSettingsOpen(!audioSettingsOpen);
+                                                    }}
+                                                    className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-500 hover:text-white"
+                                                    title="Configurar Voz"
+                                                >
+                                                    <Settings className="w-3 h-3" />
+                                                </button>
+
+                                                {audioSettingsOpen && (
+                                                    <div className="absolute bottom-full left-0 mb-2 w-64 bg-[#1a2b4b] border border-white/10 rounded-lg shadow-xl p-3 z-50 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+                                                        <h5 className="text-[10px] uppercase font-bold text-gray-400 mb-2">Seleccionar Voz</h5>
+                                                        <div className="max-h-48 overflow-y-auto space-y-1">
+                                                            {availableVoices.filter(v => v.lang.startsWith('es')).map((voice) => (
+                                                                <button
+                                                                    key={voice.voiceURI}
+                                                                    onClick={() => {
+                                                                        setSelectedVoice(voice);
+                                                                        setAudioSettingsOpen(false);
+                                                                        localStorage.setItem('mivn-audio-voice', voice.voiceURI);
+                                                                    }}
+                                                                    className={`w-full text-left px-2 py-1.5 rounded textxs flex items-center justify-between ${selectedVoice?.voiceURI === voice.voiceURI ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300 hover:bg-white/5'}`}
+                                                                >
+                                                                    <span className="truncate">{voice.name}</span>
+                                                                    {selectedVoice?.voiceURI === voice.voiceURI && <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />}
+                                                                </button>
+                                                            ))}
+                                                            {availableVoices.filter(v => v.lang.startsWith('es')).length === 0 && (
+                                                                <div className="text-gray-500 text-[10px] italic p-2">No se detectaron voces en español.</div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
                                             <button
                                                 className="flex items-center gap-2 text-gold-400 hover:text-gold-300 transition-colors ml-auto font-bold"
                                                 onClick={(e) => {

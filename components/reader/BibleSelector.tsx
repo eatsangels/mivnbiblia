@@ -1,21 +1,62 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, Book, X, ChevronRight, Loader2, Search } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { ChevronDown, Book, X, ChevronRight, Search, ScrollText, History, Flame, MessageSquare, BookOpen, Compass, ArrowLeft, LayoutGrid, List } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
-// Data simulada (fallback)
-const BIBLE_BOOKS_FALLBACK = [
-    { name: "Génesis", chapters: 50, testament: "old" },
-    { name: "Éxodo", chapters: 40, testament: "old" },
-    { name: "Levítico", chapters: 27, testament: "old" },
-    { name: "Números", chapters: 36, testament: "old" },
-    { name: "Deuteronomio", chapters: 34, testament: "old" },
-    { name: "Juan", chapters: 21, testament: "new" },
-    { name: "Mateo", chapters: 28, testament: "new" },
-    { name: "Apocalipsis", chapters: 22, testament: "new" },
+// Categorías de la Biblia
+const BIBLE_GROUPS = [
+    {
+        id: 'pentateuco',
+        name: 'Pentateuco',
+        subtitle: 'LA CREACIÓN Y EL PACTO',
+        icon: ScrollText,
+        books: ['Génesis', 'Éxodo', 'Levítico', 'Números', 'Deuteronomio']
+    },
+    {
+        id: 'historia',
+        name: 'Historia',
+        subtitle: 'CONQUISTA Y REINOS',
+        icon: History,
+        books: ['Josué', 'Jueces', 'Rut', '1 Samuel', '2 Samuel', '1 Reyes', '2 Reyes', '1 Crónicas', '2 Crónicas', 'Esdras', 'Nehemías', 'Ester']
+    },
+    {
+        id: 'poesia',
+        name: 'Poesía',
+        subtitle: 'SABIDURÍA Y ALABANZA',
+        icon: Flame,
+        books: ['Job', 'Salmos', 'Proverbios', 'Eclesiastés', 'Cantares']
+    },
+    {
+        id: 'profetas',
+        name: 'Profetas',
+        subtitle: 'LLAMADO AL ARREPENTIMIENTO',
+        icon: MessageSquare,
+        books: ['Isaías', 'Jeremías', 'Lamentaciones', 'Ezequiel', 'Daniel', 'Oseas', 'Joel', 'Amós', 'Abdías', 'Jonás', 'Miqueas', 'Nahúm', 'Habacuc', 'Sofonías', 'Hageo', 'Zacarías', 'Malaquías']
+    },
+    {
+        id: 'evangelios',
+        name: 'Evangelios',
+        subtitle: 'LA VIDA DE CRISTO',
+        icon: BookOpen,
+        books: ['Mateo', 'Marcos', 'Lucas', 'Juan']
+    },
+    {
+        id: 'apostoles',
+        name: 'Apóstoles',
+        subtitle: 'LA IGLESIA PRIMITIVA',
+        icon: Compass,
+        books: ['Hechos', 'Romanos', '1 Corintios', '2 Corintios', 'Gálatas', 'Efesios', 'Filipenses', 'Colosenses', '1 Tesalonicenses', '2 Tesalonicenses', '1 Timoteo', '2 Timoteo', 'Tito', 'Filemón', 'Hebreos', 'Santiago', '1 Pedro', '2 Pedro', '1 Juan', '2 Juan', '3 Juan', 'Judas', 'Apocalipsis']
+    }
 ];
+
+interface BookData {
+    name: string;
+    chapters: number;
+    testament: string;
+}
 
 interface BibleSelectorProps {
     currentBook: string;
@@ -23,164 +64,279 @@ interface BibleSelectorProps {
 }
 
 export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProps) {
-    const [books, setBooks] = useState<any[]>(BIBLE_BOOKS_FALLBACK);
+    const [allBooksData, setAllBooksData] = useState<BookData[]>([]);
     const [isOpen, setIsOpen] = useState(false);
-    const [view, setView] = useState<'books' | 'chapters'>('books');
-    const [selectedBook, setSelectedBook] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    // Navigation State for "Explorar" side
+    const [view, setView] = useState<'groups' | 'books' | 'chapters'>('groups');
+    const [selectedGroup, setSelectedGroup] = useState<typeof BIBLE_GROUPS[0] | null>(null);
+    const [selectedBook, setSelectedBook] = useState<string | null>(null); // For header display
+
+    // Mobile Tab State
+    const [mobileTab, setMobileTab] = useState<'explore' | 'list'>('explore');
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const supabase = createClient();
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Cargar datos reales de capítulos desde Supabase
+    useEffect(() => {
         const fetchBooks = async () => {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('books')
                 .select('*')
                 .order('display_order', { ascending: true });
 
             if (data && data.length > 0) {
-                setBooks(data);
+                setAllBooksData(data);
             }
         };
         fetchBooks();
     }, []);
 
-    const currentBookData = books.find(b => b.name === (selectedBook || currentBook));
+    // Helper to get total chapters for a book
+    const getBookChapters = (bookName: string) => {
+        const book = allBooksData.find(b => b.name === bookName);
+        return book ? book.chapters : 0;
+    };
+
+    const handleGroupSelect = (group: typeof BIBLE_GROUPS[0]) => {
+        setSelectedGroup(group);
+        setView('books');
+        setSearchTerm('');
+    };
 
     const handleBookSelect = (bookName: string) => {
         setSelectedBook(bookName);
         setView('chapters');
+        setSearchTerm('');
+        setMobileTab('explore'); // Ensure explore tab is active if a book is selected from list
     };
 
-    const handleChapterSelect = (chapter: number) => {
-        if (selectedBook) {
-            router.push(`/read/${selectedBook}/${chapter}`);
+    const handleChapterSelect = (chapter: number, bookName?: string) => {
+        const targetBook = bookName || selectedBook;
+        if (targetBook) {
+            router.push(`/read/${targetBook}/${chapter}`);
             setIsOpen(false);
-            // Reset state slightly after to allow transition
+            // Reset layout after transition
             setTimeout(() => {
-                setView('books');
-                setSelectedBook(null);
-                setSearchTerm('');
+                resetState();
             }, 300);
         }
     };
 
-    const filteredBooks = books.filter(book =>
-        book.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const resetState = () => {
+        setView('groups');
+        setSelectedGroup(null);
+        setSelectedBook(null);
+        setSearchTerm('');
+        setMobileTab('explore');
+    };
 
     const toggleOpen = () => {
         if (isOpen) {
             setIsOpen(false);
-            setTimeout(() => {
-                setView('books');
-                setSelectedBook(null);
-                setSearchTerm('');
-            }, 300);
+            setTimeout(resetState, 300);
         } else {
             setIsOpen(true);
         }
     };
 
+    // Filter Logic
+    const isSearching = searchTerm.length > 0;
+    const filteredAllBooks = isSearching
+        ? allBooksData.filter(b => b.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : allBooksData;
+
     return (
-        <div className="relative z-50">
-            {/* Trigger Button */}
-            <div
-                onClick={toggleOpen}
-                className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 cursor-pointer transition-all active:scale-95"
-            >
-                <Book className="w-4 h-4 text-gold-500" />
-                <span className="text-sm font-bold text-gray-200">{currentBook} {currentChapter}</span>
-                <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <>
+            <div className="relative z-50 font-sans">
+                {/* Trigger Button */}
+                <div
+                    onClick={toggleOpen}
+                    className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 cursor-pointer transition-all active:scale-95"
+                >
+                    <Book className="w-4 h-4 text-gold-500" />
+                    <span className="text-sm font-bold text-gray-200">{currentBook} {currentChapter}</span>
+                    <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                </div>
             </div>
 
-            {/* Dropdown / Modal */}
-            {isOpen && (
-                <>
-                    {/* Backdrop */}
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]" onClick={toggleOpen} />
+            {/* Modal Portal */}
+            {isOpen && mounted && createPortal(
+                <div className="fixed inset-0 z-[9999] font-sans">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={toggleOpen} />
 
-                    {/* Menu Content */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[90vw] max-w-2xl bg-[#0f141f] border border-white/10 rounded-2xl shadow-2xl z-[70] overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b border-white/5 bg-[#151b2b]">
-                            <div className="flex items-center gap-2">
-                                {view === 'chapters' && (
-                                    <button onClick={() => setView('books')} className="p-1 hover:bg-white/5 rounded-full mr-1 transition-colors">
-                                        <ChevronDown className="w-5 h-5 text-gray-400 rotate-90" />
-                                    </button>
-                                )}
-                                <h3 className="text-white font-bold text-lg">
-                                    {view === 'books' ? 'Selecciona un Libro' : `Capítulos de ${selectedBook}`}
-                                </h3>
-                            </div>
-                            <button onClick={toggleOpen} className="p-2 hover:bg-white/5 rounded-full transition-colors text-gray-400 hover:text-white">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
+                    <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
+                        <div className="w-full max-w-5xl max-h-[80vh] h-auto bg-[#0f141f] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col pointer-events-auto">
 
-                        {/* Content Area */}
-                        <div className="p-2 max-h-[60vh] overflow-y-auto">
-                            {view === 'books' && (
-                                <div className="px-4 py-3 border-b border-white/5 bg-[#0f141f]">
-                                    <div className="relative group">
-                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-gold-500 transition-colors" />
+                            {/* Header */}
+                            <div className="p-4 border-b border-white/5 bg-[#151b2b] shrink-0">
+                                <div className="flex items-center gap-3">
+                                    {/* Back Button Logic (Only for Explore View) */}
+                                    {mobileTab === 'explore' && view !== 'groups' && !isSearching && (
+                                        <button
+                                            onClick={() => {
+                                                if (view === 'chapters') setView('books');
+                                                else if (view === 'books') setView('groups');
+                                            }}
+                                            className="p-1.5 hover:bg-white/5 rounded-full text-gray-400 hover:text-white transition-colors"
+                                        >
+                                            <ArrowLeft className="w-5 h-5" />
+                                        </button>
+                                    )}
+
+                                    <h3 className="text-white font-bold text-lg flex-1 truncate">
+                                        {isSearching ? 'Búsqueda' :
+                                            (mobileTab === 'explore' && view === 'books') ? selectedGroup?.name :
+                                                (mobileTab === 'explore' && view === 'chapters') ? selectedBook :
+                                                    'Explorar Biblia'}
+                                    </h3>
+
+                                    <div className="relative group w-full max-w-[180px] md:max-w-[250px]">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
                                         <input
                                             type="text"
-                                            placeholder="Buscar libro (ej: Juan, Génesis...)"
+                                            placeholder="Buscar libro..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gold-500/50 focus:border-gold-500/50 transition-all"
-                                            autoFocus
+                                            className="w-full bg-[#0a0f18] border border-white/10 rounded-full py-1.5 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-gold-500/50 transition-all"
                                         />
-                                        {searchTerm && (
-                                            <button
-                                                onClick={() => setSearchTerm('')}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
+                                    </div>
+                                    <button onClick={toggleOpen} className="p-1.5 hover:bg-white/5 rounded-full text-gray-400 hover:text-white">
+                                        <X className="w-5 h-5" />
+                                    </button>
+                                </div>
+
+                                {/* Mobile Tabs */}
+                                <div className="flex md:hidden mt-4 bg-[#0a0f18] p-1 rounded-lg border border-white/5">
+                                    <button
+                                        onClick={() => setMobileTab('explore')}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-xs font-bold transition-all ${mobileTab === 'explore' ? 'bg-[#1e2738] text-gold-500 shadow-sm' : 'text-gray-500'}`}
+                                    >
+                                        <LayoutGrid className="w-3.5 h-3.5" /> Explorar
+                                    </button>
+                                    <button
+                                        onClick={() => setMobileTab('list')}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-xs font-bold transition-all ${mobileTab === 'list' ? 'bg-[#1e2738] text-gold-500 shadow-sm' : 'text-gray-500'}`}
+                                    >
+                                        <List className="w-3.5 h-3.5" /> Lista A-Z
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Main Body */}
+                            <div className="flex-1 overflow-hidden flex flex-row">
+
+                                {/* LEFT PANEL: EXPLORE (Categorized) - Hidden on mobile if tab is 'list' */}
+                                <div className={`flex-1 bg-[#0f141f] border-r border-white/5 flex flex-col overflow-hidden transition-all ${mobileTab === 'list' ? 'hidden md:flex' : 'flex'}`}>
+                                    <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                                        {isSearching ? (
+                                            <div className="text-center py-10 text-gray-500 text-sm italic">
+                                                La búsqueda filtra la lista lateral/rápida. <br />
+                                                Usa la lista para ver resultados.
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {/* Groups View */}
+                                                {view === 'groups' && (
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        {BIBLE_GROUPS.map((group) => (
+                                                            <button
+                                                                key={group.id}
+                                                                onClick={() => handleGroupSelect(group)}
+                                                                className="flex items-center gap-4 p-4 rounded-xl bg-[#1e2738] hover:bg-[#252f42] border border-white/5 hover:border-gold-500/30 transition-all group text-left"
+                                                            >
+                                                                <div className="p-3 rounded-lg bg-[#0f141f] text-gray-400 group-hover:text-gold-500 transition-colors">
+                                                                    <group.icon className="w-6 h-6" />
+                                                                </div>
+                                                                <div>
+                                                                    <h4 className="text-base font-bold text-gray-200 group-hover:text-white mb-0.5">{group.name}</h4>
+                                                                    <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">{group.subtitle}</p>
+                                                                </div>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Books in Group View */}
+                                                {view === 'books' && selectedGroup && (
+                                                    <div className="grid grid-cols-2 gap-3 animate-in slide-in-from-right-4 duration-200">
+                                                        {selectedGroup.books.map((bookName) => (
+                                                            <button
+                                                                key={bookName}
+                                                                onClick={() => handleBookSelect(bookName)}
+                                                                className="p-4 rounded-xl bg-[#1e2738] hover:bg-[#252f42] border border-white/5 hover:border-gold-500/30 text-left transition-all"
+                                                            >
+                                                                <span className="text-sm font-bold text-gray-200">{bookName}</span>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Chapters View */}
+                                                {view === 'chapters' && selectedBook && (
+                                                    <div className="animate-in slide-in-from-right-4 duration-200">
+                                                        <h4 className="text-center text-gold-500 font-bold mb-4 uppercase text-sm tracking-widest">{selectedBook}</h4>
+                                                        <div className="grid grid-cols-5 md:grid-cols-8 gap-3">
+                                                            {Array.from({ length: getBookChapters(selectedBook) }, (_, i) => i + 1).map((chapter) => (
+                                                                <button
+                                                                    key={chapter}
+                                                                    onClick={() => handleChapterSelect(chapter)}
+                                                                    className="aspect-square flex items-center justify-center rounded-lg bg-[#1e2738] hover:bg-gold-500 hover:text-black font-bold text-sm text-gray-300 border border-white/5 transition-all"
+                                                                >
+                                                                    {chapter}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>
-                            )}
 
-                            {view === 'books' ? (
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-2">
-                                    {/* Simple separation could be added if needed */}
-                                    {filteredBooks.map((book) => (
-                                        <button
-                                            key={book.name}
-                                            onClick={() => handleBookSelect(book.name)}
-                                            className="px-4 py-3 rounded-lg text-left text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors border border-transparent hover:border-white/5"
-                                        >
-                                            {book.name}
-                                        </button>
-                                    ))}
-                                    {filteredBooks.length === 0 && (
-                                        <div className="col-span-full py-10 text-center text-gray-500 italic">
-                                            No se encontraron libros que coincidan con "{searchTerm}"
-                                        </div>
-                                    )}
+                                {/* RIGHT PANEL: LIST (Quick Access) - Hidden on mobile if tab is 'explore' */}
+                                <div className={`w-full md:w-[280px] bg-[#0a0f18] flex flex-col overflow-hidden border-l border-white/5 transition-all ${mobileTab === 'explore' ? 'hidden md:flex' : 'flex'}`}>
+                                    <div className="p-3 border-b border-white/5 bg-[#0f141f]">
+                                        <h5 className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                                            {isSearching ? 'Resultados' : 'Lista Rápida'}
+                                        </h5>
+                                    </div>
+                                    <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
+                                        {filteredAllBooks.length > 0 ? (
+                                            filteredAllBooks.map((book) => (
+                                                <div key={book.name} className="mb-1">
+                                                    <button
+                                                        onClick={() => handleBookSelect(book.name)}
+                                                        className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors flex justify-between items-center group"
+                                                    >
+                                                        <span>{book.name}</span>
+                                                        <span className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-gray-600 group-hover:bg-gold-500/20 group-hover:text-gold-500 transition-colors">
+                                                            {book.chapters} cap
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="text-center py-4 text-gray-500 text-xs text-balance">
+                                                No se encontraron libros.
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            ) : (
-                                <div className="grid grid-cols-5 md:grid-cols-10 gap-2 p-2">
-                                    {currentBookData && Array.from({ length: currentBookData.chapters }, (_, i) => i + 1).map((chapter) => (
-                                        <button
-                                            key={chapter}
-                                            onClick={() => handleChapterSelect(chapter)}
-                                            className="px-2 py-3 rounded-lg text-center text-sm font-bold bg-[#1e2738] hover:bg-gold-500 hover:text-black border border-white/5 hover:border-gold-400 transition-all text-gray-300"
-                                        >
-                                            {chapter}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
+
+                            </div>
                         </div>
                     </div>
-                </>
+                </div>,
+                document.body
             )}
-        </div>
+        </>
     );
 }
