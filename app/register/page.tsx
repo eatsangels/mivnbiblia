@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation'
 import { Loader2, User, Mail, Lock, Eye, EyeOff, Check, Heart, Cross } from 'lucide-react'
 import Link from 'next/link'
 import { AuthLayout, Testimonial } from '@/components/ui/auth-layout'
+import { Modal } from '@/components/ui/modal'
+import { TermsContent } from '@/components/legal/TermsContent'
+import { PrivacyContent } from '@/components/legal/PrivacyContent'
 
 
 export default function RegisterPage() {
@@ -20,6 +23,8 @@ export default function RegisterPage() {
     })
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [showTermsModal, setShowTermsModal] = useState(false)
+    const [showPrivacyModal, setShowPrivacyModal] = useState(false)
 
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -251,10 +256,26 @@ export default function RegisterPage() {
                         />
                         <Check className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 text-black opacity-0 peer-checked:opacity-100" />
                     </div>
-                    <label className="text-[9px] text-gray-500 leading-normal">
-                        Acepto los <Link href="/terminos" target="_blank" className="text-gold-500 cursor-pointer hover:underline font-bold">Términos y Condiciones</Link> y la <Link href="/privacidad" target="_blank" className="text-gold-500 cursor-pointer hover:underline font-bold">Política de Privacidad</Link>.
+                    <label className="text-[10px] text-gray-500 leading-normal">
+                        Acepto los <button type="button" onClick={() => setShowTermsModal(true)} className="text-gold-500 cursor-pointer hover:underline font-bold">Términos y Condiciones</button> y la <button type="button" onClick={() => setShowPrivacyModal(true)} className="text-gold-500 cursor-pointer hover:underline font-bold">Política de Privacidad</button>.
                     </label>
                 </div>
+
+                <Modal
+                    isOpen={showTermsModal}
+                    onClose={() => setShowTermsModal(false)}
+                    title="Términos y Condiciones"
+                >
+                    <TermsContent />
+                </Modal>
+
+                <Modal
+                    isOpen={showPrivacyModal}
+                    onClose={() => setShowPrivacyModal(false)}
+                    title="Política de Privacidad"
+                >
+                    <PrivacyContent />
+                </Modal>
 
                 {error && (
                     <div className={`animate-element animate-delay-700 p-2.5 rounded-xl text-xs font-medium ${error.includes('¡Cuenta creada!') ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
