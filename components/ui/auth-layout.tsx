@@ -81,6 +81,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                     .limit(10);
 
                 if (data && data.length > 0) {
+                    console.log('✅ Fetched Testimonials:', data);
                     // Shuffle array using Fisher-Yates algorithm
                     const shuffled = [...data];
                     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -104,7 +105,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
     return (
         <div className="min-h-screen flex flex-col md:flex-row bg-[#0a0a0a] overflow-x-hidden w-full font-sans">
             {/* Left column: form */}
-            <section className="flex-1 flex items-center justify-center p-6 md:p-12 relative z-10">
+            <section className="flex-1 flex items-center justify-center p-6 md:p-6 relative z-10">
                 <div className="w-full max-w-md">
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-2">

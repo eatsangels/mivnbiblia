@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, Home } from 'lucide-react';
+import { Sparkles, Home, User as UserIcon } from 'lucide-react';
 import { AvatarUpload } from '@/components/auth/AvatarUpload';
 import { LogoutButton } from '@/components/auth/LogoutButton';
 
@@ -24,7 +24,7 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
                         <span className="text-xs font-bold text-gold-500/60 uppercase tracking-[0.3em]">Panel de Control</span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                        Hola, <span className="text-premium-gold drop-shadow-sm">{profile?.full_name?.split(' ')[0] || 'Peregrino'}</span>
+                        Hola, <Link href="/dashboard/profile" className="text-premium-gold drop-shadow-sm hover:underline decoration-gold-500/30 underline-offset-4 transition-all">{profile?.full_name?.split(' ')[0] || 'Peregrino'}</Link>
                     </h1>
                     <p className="text-gray-400 mt-3 text-lg font-light">
                         {new Date().getHours() < 12 ? 'Buenos días' : new Date().getHours() < 18 ? 'Buenas tardes' : 'Buenas noches'}. Tu santuario personal te espera.
@@ -36,6 +36,13 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
                     {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
                 <div className="flex items-center md:justify-end gap-3">
+                    <Link
+                        href="/dashboard/profile"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-bold text-gray-300 hover:text-white transition-all border border-white/5 hover:border-white/20"
+                    >
+                        <UserIcon className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Perfil</span>
+                    </Link>
                     <Link
                         href="/"
                         className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-bold text-gray-300 hover:text-white transition-all border border-white/5 hover:border-white/20"
