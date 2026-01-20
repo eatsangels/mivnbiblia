@@ -270,7 +270,7 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
                     }}
                 >
                     {/* Decorative Overlay */}
-                    <div className="absolute inset-0 bg-[url('/dashboard_background_divine_particles_1768502120581.png')] bg-cover opacity-20" />
+                    <div className="absolute inset-0 bg-[url('/dashboard_background_divine_particles_1768502120581.png')] bg-cover opacity-80 mix-blend-screen" />
 
                     {/* Golden Glow Center */}
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.08),transparent_70%)]" />
