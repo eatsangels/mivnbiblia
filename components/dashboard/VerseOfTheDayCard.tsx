@@ -77,7 +77,8 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
         try {
             const response = await fetch(previewUrl);
             const blob = await response.blob();
-            const file = new File([blob], `versiculo-${verse?.book_name || 'mivn'}.png`, { type: 'image/png' });
+            const fileName = verse ? `${verse.book_name} ${verse.chapter}-${verse.verse_number}.png` : 'versiculo-mivn.png';
+            const file = new File([blob], fileName, { type: 'image/png' });
 
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
@@ -96,7 +97,7 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
 
         const a = document.createElement('a');
         a.href = previewUrl;
-        a.download = `versiculo-${verse?.book_name || 'mivn'}.png`;
+        a.download = verse ? `${verse.book_name} ${verse.chapter}-${verse.verse_number}.png` : 'versiculo-mivn.png';
         a.click();
     };
 
@@ -108,7 +109,8 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
             const blob = await generateImageBlob();
             if (!blob) throw new Error('Failed to generate image');
 
-            const file = new File([blob], `versiculo-${verse?.book_name || 'mivn'}.png`, { type: 'image/png' });
+            const fileName = verse ? `${verse.book_name} ${verse.chapter}-${verse.verse_number}.png` : 'versiculo-mivn.png';
+            const file = new File([blob], fileName, { type: 'image/png' });
 
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
@@ -137,7 +139,7 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `versiculo-${verse?.book_name || 'mivn'}.png`;
+            a.download = verse ? `${verse.book_name} ${verse.chapter}-${verse.verse_number}.png` : 'versiculo-mivn.png';
             a.click();
             URL.revokeObjectURL(url);
         } catch (err) {
@@ -150,9 +152,9 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
     return (
         <>
             {/* UI Card (on screen) */}
-            <div className="glass-panel rounded-3xl p-8 relative overflow-hidden group border-gold-500/10 hover:border-gold-500/30 transition-all duration-500 shadow-2xl shadow-black/50 h-full flex flex-col justify-between">
+            <div className="glass-panel rounded-3xl p-6 md:p-8 relative overflow-hidden group border-gold-500/10 hover:border-gold-500/30 transition-all duration-500 shadow-2xl shadow-black/50 h-full flex flex-col justify-between">
                 {/* Capture Area */}
-                <div ref={cardRef} className="relative z-10 flex-1 flex flex-col justify-center bg-[#05070a]/0 p-4 -m-4 rounded-xl">
+                <div ref={cardRef} className="relative z-10 flex-1 flex flex-col justify-center bg-[#05070a]/0 p-2 md:p-4 -m-2 md:-m-4 rounded-xl">
                     {/* Background Decor only for the capture (can be invisible in UI but visible in capture if needed, 
                         but here we recycle the parent style or rely on bg color set in toBlob) */}
                     <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
@@ -160,24 +162,24 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
                     </div>
 
                     <div className="relative z-10">
-                        <span className="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/20 rounded-full text-[10px] font-bold text-gold-400 uppercase tracking-widest mb-6">
+                        <span className="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/20 rounded-full text-[10px] font-bold text-gold-400 uppercase tracking-widest mb-4 md:mb-6">
                             Versículo del Día
                         </span>
-                        <blockquote className="font-libre italic text-2xl md:text-3xl text-gray-100 leading-relaxed mb-6">
+                        <blockquote className="font-libre italic text-xl md:text-3xl text-gray-100 leading-relaxed mb-4 md:mb-6">
                             "{verse?.content || "Lámpara es a mis pies tu palabra, Y lumbrera a mi camino."}"
                         </blockquote>
-                        <cite className="not-italic text-gold-500 font-bold tracking-widest uppercase text-sm">
+                        <cite className="not-italic text-gold-500 font-bold tracking-widest uppercase text-xs md:text-sm">
                             — {verse ? `${verse.book_name} ${verse.chapter}:${verse.verse_number}` : 'Salmos 119:105'}
                         </cite>
                     </div>
                 </div>
 
-                <div className="relative z-20 mt-8 pt-8 border-t border-white/5 flex items-center justify-between gap-4">
+                <div className="relative z-20 mt-6 md:mt-8 pt-6 md:pt-8 border-t border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <Link href={verse ? `/read/${verse?.book_name}/${verse?.chapter}` : '/read'} className="text-xs font-bold text-gray-400 hover:text-gold-400 transition-colors flex items-center gap-2 group/link">
                         SEGUIR LEYENDO <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                         <button
                             onClick={handleCopyText}
                             className="p-2 rounded-full bg-white/5 hover:bg-gold-500/10 text-gray-400 hover:text-gold-400 transition-all"
@@ -215,7 +217,7 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
             {/* Preview Modal - Rendered via Portal */}
             {mounted && showPreview && previewUrl && createPortal(
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-                    <div className="bg-[#0f141f] border border-white/10 rounded-2xl max-w-lg w-full flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+                    <div className="bg-[#0f141f] border border-white/10 rounded-2xl max-w-lg w-full flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 mx-4">
                         {/* Header */}
                         <div className="p-4 border-b border-white/5 flex items-center justify-between bg-white/5">
                             <span className="text-sm font-bold text-gray-300 uppercase tracking-wider">Vista Previa</span>
@@ -226,8 +228,8 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
                         </div>
 
                         {/* Image Preview Container */}
-                        <div className="p-6 flex items-center justify-center bg-[#05070a] relative">
-                            <img src={previewUrl} alt="Preview" className="max-h-[60vh] w-auto rounded-lg shadow-lg" />
+                        <div className="p-4 md:p-6 flex items-center justify-center bg-[#05070a] relative">
+                            <img src={previewUrl} alt="Preview" className="max-h-[70vh] w-auto rounded-lg shadow-lg" />
                         </div>
 
                         {/* Actions */}
@@ -303,7 +305,7 @@ export function VerseOfTheDayCard({ verse }: { verse: any }) {
                             <img
                                 src="/logo_mivn.png"
                                 alt="MIVN Logo"
-                                className="w-32 h-auto mt-4 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]"
+                                className="w-52 h-auto mt-6 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]"
                             />
                         </div>
                     </div>
