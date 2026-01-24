@@ -5,7 +5,7 @@ import { Bell, Search, User } from "lucide-react";
 import Image from "next/image";
 export const InstituteHeader = () => {
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[#0A0F1D] px-6 py-3 font-lexend">
+        <header className="sticky top-20 z-40 w-full border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[#0A0F1D] px-6 py-3 font-lexend">
             <div className="max-w-[1440px] mx-auto flex items-center justify-between">
                 <div className="flex items-center gap-8">
                     <Link href="/" className="flex items-center gap-3 text-mivn-blue hover:opacity-80 transition-opacity">

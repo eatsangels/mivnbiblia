@@ -36,6 +36,7 @@ export const metadata: Metadata = {
 };
 
 import { TopBanner } from "@/components/institute/TopBanner";
+import { GlobalNav } from "@/components/layout/GlobalNav";
 
 export default function RootLayout({
   children,
@@ -48,6 +49,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${libreBaskerville.variable} ${playfair.variable} ${lexend.variable} antialiased`}
       >
         <TopBanner />
+        <GlobalNav />
         {children}
         <Toaster richColors position="top-right" />
       </body>
