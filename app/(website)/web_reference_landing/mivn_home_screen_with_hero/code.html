@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ministerio Internacional Vida Nueva (MIVN)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Material+Icons&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4AA3DF",
+                        gold: "#D4AF37",
+                        "background-light": "#FDFDFF",
+                        "background-dark": "#0A0F1D",
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display", "serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .hero-gradient {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+        }
+        .gold-border {
+            border-image: linear-gradient(to right, #D4AF37, #F1D279, #D4AF37) 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<div class="flex items-center gap-3">
+<img alt="MIVN Logo" class="h-14 w-auto drop-shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW2bTpBd8_js6oEHbvo9AQBiTXcvJ5awB7rEYp2pMSTTHfrBL3ml9muOSzvW4XT45GcLtXo3J8nzZmTJSB0MBM4JMTcYNosaAXlb4LB1aEFrp7_TXdjLkwT84pQ_5Q6SPtky98hiPh87v5T4H7d9UC9oPgrUFjIEWTfMoUJ_iWNashPvWQmXbPGHkvd1HVMYGUuTWv0f9_-_nGOBATVmqpNlN9PZrpqKuCZ6NKsB1tXRQSVIERfuIlUOeLR82FAqmQ7iDwY47-Vzk"/>
+<span class="font-display text-xl font-bold tracking-tight hidden sm:block">MIVN</span>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium" href="#">Inicio</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium" href="#eventos">Eventos</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium" href="#devocional">Devocional</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium" href="#">Nosotros</a>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons text-xl leading-none">dark_mode</span>
+</button>
+<a class="bg-primary text-white px-6 py-2.5 rounded-full font-semibold hover:bg-opacity-90 transition-all shadow-lg shadow-primary/20" href="#">Donar</a>
+</div>
+<div class="md:hidden flex items-center">
+<button class="text-slate-600 dark:text-slate-300">
+<span class="material-icons text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<section class="relative h-[85vh] flex items-center justify-center overflow-hidden hero-gradient">
+<div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent"></div>
+<div class="relative z-10 max-w-4xl mx-auto text-center px-4 space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white animate-fade-in">
+<span class="flex h-2 w-2 rounded-full bg-gold animate-pulse"></span>
+<span class="text-sm font-medium uppercase tracking-wider">Un nuevo comienzo en Cristo</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-display text-white font-bold leading-tight drop-shadow-lg">
+                Bienvenido al Ministerio Internacional <span class="text-primary italic">Vida Nueva</span>
+</h1>
+<p class="text-xl md:text-2xl text-slate-100 max-w-2xl mx-auto font-light drop-shadow-md">
+                Conéctate, crece y participa en nuestra comunidad cristiana. Experimenta la gracia de Dios cada día.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+<a class="bg-primary text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-primary/90 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-xl shadow-primary/30" href="#">
+<span class="material-icons">play_circle</span>
+                    Ver cultos en vivo
+                </a>
+<a class="bg-white/10 backdrop-blur-md text-white border-2 border-white/30 px-8 py-4 rounded-full text-lg font-bold hover:bg-white/20 transition-all transform hover:scale-105 flex items-center justify-center" href="#">
+                    Unirse al ministerio
+                </a>
+</div>
+</div>
+</section>
+<section class="py-24 px-4 bg-background-light dark:bg-background-dark" id="eventos">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+<div class="space-y-2">
+<h2 class="text-gold font-bold tracking-widest uppercase text-sm">Calendario</h2>
+<h3 class="text-4xl font-display font-bold text-slate-900 dark:text-white">Próximos Eventos</h3>
+</div>
+<a class="text-primary font-semibold flex items-center gap-1 hover:underline" href="#">
+                    Ver calendario completo <span class="material-icons text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+<div class="flex gap-5">
+<div class="flex flex-col items-center justify-center bg-primary/10 dark:bg-primary/20 text-primary rounded-xl px-4 py-3 min-w-[70px]">
+<span class="text-2xl font-bold">14</span>
+<span class="text-xs uppercase font-bold tracking-tighter">OCT</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-xl font-bold group-hover:text-primary transition-colors">Vigilia de Oración</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+<span class="material-icons text-sm">schedule</span> 19:00 PM
+                            </p>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+<span class="material-icons text-sm">location_on</span> Templo Central
+                            </p>
+</div>
+</div>
+</div>
+<div class="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+<div class="flex gap-5">
+<div class="flex flex-col items-center justify-center bg-gold/10 text-gold rounded-xl px-4 py-3 min-w-[70px]">
+<span class="text-2xl font-bold">18</span>
+<span class="text-xs uppercase font-bold tracking-tighter">OCT</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-xl font-bold group-hover:text-primary transition-colors">Grupo de Jóvenes</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+<span class="material-icons text-sm">schedule</span> 18:30 PM
+                            </p>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+<span class="material-icons text-sm">location_on</span> Salón Comunitario
+                            </p>
+</div>
+</div>
+</div>
+<div class="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+<div class="flex gap-5">
+<div class="flex flex-col items-center justify-center bg-primary/10 dark:bg-primary/20 text-primary rounded-xl px-4 py-3 min-w-[70px]">
+<span class="text-2xl font-bold">20</span>
+<span class="text-xs uppercase font-bold tracking-tighter">OCT</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-xl font-bold group-hover:text-primary transition-colors">Culto de Adoración</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+<span class="material-icons text-sm">schedule</span> 10:00 AM
+                            </p>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+<span class="material-icons text-sm">location_on</span> Auditorio Principal
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-slate-50 dark:bg-slate-900/30" id="devocional">
+<div class="max-w-5xl mx-auto px-4">
+<div class="relative bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row border border-slate-100 dark:border-slate-800">
+<div class="md:w-1/2 relative h-64 md:h-auto">
+<img alt="Daily Devotional Bible" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoL0jNU6TdvGcdyQSvExNCu5EqJcZ2cDQVtQ6YcAc1R7GgHgR9m9_-FZkOWeIfd4T8DxZvUQogceERpB5svK9pl1Nx6HsDv_a0QXwhP9nijPzqubcg5Il_igBx5ZmCB4_XiH-jyqIZBPpdz62q3HTWApI4jByPWPjyYn39QH_igou0yTCIpnVFM3PQ0n3X75B8eWnThMzJDVeI5LkJEmIK9NLfx_nOn1D-Haq9CCzwdYR7igSWH5O8KHlpu0jwe8xnp6behn0Qv2I"/>
+<div class="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+</div>
+<div class="md:w-1/2 p-10 md:p-16 flex flex-col justify-center space-y-6">
+<div>
+<span class="text-gold font-bold tracking-[0.2em] uppercase text-xs">Palabra de Hoy</span>
+<h3 class="text-3xl font-display font-bold mt-2 text-slate-900 dark:text-white">Devocional Diario</h3>
+</div>
+<blockquote class="relative">
+<span class="material-icons absolute -top-4 -left-6 text-5xl text-slate-100 dark:text-slate-700 -z-0">format_quote</span>
+<p class="text-xl italic font-display text-slate-700 dark:text-slate-300 relative z-10">
+                            "De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas."
+                        </p>
+<cite class="block mt-4 text-primary font-bold not-italic">2 Corintios 5:17</cite>
+</blockquote>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Cada día es una oportunidad para comenzar de nuevo. En Cristo, nuestro pasado ya no define nuestro futuro. Hoy te invitamos a reflexionar sobre la renovación espiritual...
+                    </p>
+<div>
+<a class="inline-flex items-center gap-2 font-bold text-slate-900 dark:text-white hover:text-primary transition-colors" href="#">
+                            Leer más <span class="material-icons">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer class="bg-white dark:bg-background-dark pt-20 pb-10 border-t border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="space-y-6 col-span-1 md:col-span-1">
+<div class="flex items-center gap-3">
+<img alt="MIVN Logo" class="h-16" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiFZXW8-pN-RwiNH39bUHzWi4uBjIehlfxMGhHNtW_i4nr5_cR2ixpbhQATEdbHRswq6U5e1BioS02dsfFge3WKLH0oLFXHQgFxCEVXLyEFfU9p1_fgO3rgZjDgicZTC0ZOiYtrdMcoNCii8iQ_tqBIIDZjUwEusW9_6xmDG_BXB93TfhEktlzuaRw2GSoiv4iwDRRzND2lINPoC-tgD4XJdrorOFzX-11sfBYaGex1fiiZCse9PK5UlfaFk_wYVMORTPQYsUMQNE"/>
+</div>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Unidos en fe, esperanza y amor, llevando el mensaje de Cristo a todas las naciones. 
+                </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold mb-6">Enlaces Rápidos</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">Horarios de Servicio</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Ministerios</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Prédicas Recientes</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Petición de Oración</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold mb-6">Contáctanos</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li class="flex items-start gap-3">
+<span class="material-icons text-primary text-xl">location_on</span>
+<span>Av. Siempre Viva 123, Ciudad Nueva</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-icons text-primary text-xl">phone</span>
+<span>+1 234 567 890</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-icons text-primary text-xl">mail</span>
+<span>contacto@mivn.org</span>
+</li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-900 dark:text-white font-bold mb-6">Boletín Informativo</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Recibe palabras de aliento y noticias directamente en tu correo.</p>
+<form class="flex flex-col gap-3">
+<input class="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 focus:ring-primary focus:border-primary" placeholder="Tu correo electrónico" type="email"/>
+<button class="bg-primary text-white font-bold py-2 rounded-lg hover:bg-opacity-90 transition-all" type="submit">Suscribirme</button>
+</form>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-4 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+<p>© 2024 Ministerio Internacional Vida Nueva. Todos los derechos reservados.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary" href="#">Política de Privacidad</a>
+<a class="hover:text-primary" href="#">Términos de Uso</a>
+</div>
+</div>
+</footer>
+
+</body></html>

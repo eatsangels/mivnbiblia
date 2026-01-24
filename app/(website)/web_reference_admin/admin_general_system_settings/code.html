@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MIVN Admin - Configuración del Sistema</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1392ec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d161b] dark:text-slate-200">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between border-b border-solid border-[#e7eef3] dark:border-slate-800 bg-white dark:bg-slate-900 px-4 md:px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-[#0d161b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">MIVN Admin</h2>
+</div>
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden">
+<div class="text-[#4c799a] flex border-none bg-[#e7eef3] dark:bg-slate-800 items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-[#e7eef3] dark:bg-slate-800 text-[#0d161b] dark:text-white focus:ring-0 h-full placeholder:text-[#4c799a] px-4 pl-2 text-base font-normal" placeholder="Buscar configuración..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
+<div class="flex gap-2">
+<button class="flex size-10 items-center justify-center rounded-lg bg-[#e7eef3] dark:bg-slate-800 text-[#0d161b] dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="flex size-10 items-center justify-center rounded-lg bg-[#e7eef3] dark:bg-slate-800 text-[#0d161b] dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full"></span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAW4RgwRUs4BOb8gpFFyp1OLS-DKIs7Xp3EFtfo7S5DScqO-osrU2f2ZBrYrY-ngiXvDe6cRiOQzcXSRr_xqdHuwJ4DETFEXLO7disDP7RAeM1qjEvzY2RUJRwRKZ1e-TgJXDGVq61UrZS1ygkd5MKZWMAZVNNbtvUzQiMA0hNWil8Y8SJzRGWvMxVQD8PJd3BZW_XiLGfXYlfhZRSh18S8-GO9D6RFU3MPYs6Sgf7yg60HqlBElnHP_8os09kE_yESuu-6mbf9hnE");'></div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex w-72 flex-col justify-between bg-white dark:bg-slate-900 border-r border-[#e7eef3] dark:border-slate-800 p-6 h-[calc(100vh-64px)] sticky top-16">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col px-3">
+<h1 class="text-[#0d161b] dark:text-white text-base font-bold leading-normal">Ministerio Vida Nueva</h1>
+<p class="text-[#4c799a] text-xs font-medium uppercase tracking-wider">Administración General</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#4c799a] hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-semibold">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#4c799a] hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-semibold">Miembros</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#4c799a] hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">event</span>
+<p class="text-sm font-semibold">Eventos</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#4c799a] hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<p class="text-sm font-semibold">Finanzas</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
+<p class="text-sm font-bold">Configuración</p>
+</a>
+</nav>
+</div>
+<div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+<p class="text-xs font-bold text-[#0d161b] dark:text-white mb-1">Espacio de Almacenamiento</p>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mb-2">
+<div class="bg-primary h-full rounded-full w-[65%]"></div>
+</div>
+<p class="text-[10px] text-[#4c799a]">6.5 GB de 10 GB usados</p>
+</div>
+</aside>
+<!-- Main Content Container -->
+<main class="flex-1 overflow-y-auto">
+<div class="max-w-5xl mx-auto p-4 md:p-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h2 class="text-[#0d161b] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Configuración del Sistema</h2>
+<p class="text-[#4c799a] text-base font-normal leading-normal max-w-2xl">Gestione la información institucional, roles administrativos y políticas legales de la congregación.</p>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-xl">save</span>
+<span>Guardar Cambios</span>
+</button>
+</div>
+<!-- Tabs -->
+<div class="mb-8 overflow-x-auto">
+<div class="flex border-b border-[#cfdde7] dark:border-slate-800 gap-8 min-w-max">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-primary text-[#0d161b] dark:text-white pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Información General</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#4c799a] pb-[13px] pt-4 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Identidad Visual</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#4c799a] pb-[13px] pt-4 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Gestión de Roles</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#4c799a] pb-[13px] pt-4 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold tracking-[0.015em]">Documentos Legales</p>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-8">
+<!-- Section: Información de la Iglesia -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-[#e7eef3] dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-[#e7eef3] dark:border-slate-800">
+<h3 class="text-[#0d161b] dark:text-white text-xl font-bold">Información de la Iglesia</h3>
+<p class="text-sm text-[#4c799a]">Estos datos aparecerán en el encabezado y pie de página del sitio público.</p>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-1 md:col-span-2">
+<label class="block text-sm font-bold text-[#0d161b] dark:text-white mb-2">Dirección Física</label>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" type="text" value="Av. Principal #123, Sector Los Olivos, Ciudad de México"/>
+</div>
+<div>
+<label class="block text-sm font-bold text-[#0d161b] dark:text-white mb-2">Teléfono de Contacto</label>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" type="text" value="+52 (55) 1234-5678"/>
+</div>
+<div>
+<label class="block text-sm font-bold text-[#0d161b] dark:text-white mb-2">Correo Institucional</label>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" type="email" value="contacto@mivn.org"/>
+</div>
+<div class="col-span-1 md:col-span-2">
+<label class="block text-sm font-bold text-[#0d161b] dark:text-white mb-2">Google Maps Embed Link</label>
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" type="text" value="https://maps.google.com/?q=MIVN+Church"/>
+</div>
+</div>
+</section>
+<!-- Section: Redes Sociales -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-[#e7eef3] dark:border-slate-800 shadow-sm">
+<div class="p-6 border-b border-[#e7eef3] dark:border-slate-800">
+<h3 class="text-[#0d161b] dark:text-white text-xl font-bold">Redes Sociales</h3>
+<p class="text-sm text-[#4c799a]">Conecte las cuentas oficiales de la congregación.</p>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-[#e7eef3] dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#4c799a]">social_leaderboard</span>
+</div>
+<input class="flex-1 rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" placeholder="Facebook URL" type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-[#e7eef3] dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#4c799a]">photo_camera</span>
+</div>
+<input class="flex-1 rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" placeholder="Instagram URL" type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-[#e7eef3] dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#4c799a]">play_circle</span>
+</div>
+<input class="flex-1 rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" placeholder="YouTube Channel URL" type="text"/>
+</div>
+</div>
+</section>
+<!-- Section: Identidad Visual -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-[#e7eef3] dark:border-slate-800 shadow-sm">
+<div class="p-6 border-b border-[#e7eef3] dark:border-slate-800">
+<h3 class="text-[#0d161b] dark:text-white text-xl font-bold">Logotipo Institucional</h3>
+<p class="text-sm text-[#4c799a]">Suba el logo oficial para ser usado en toda la plataforma.</p>
+</div>
+<div class="p-6 flex flex-col md:flex-row gap-8 items-center">
+<div class="size-32 bg-slate-50 dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center overflow-hidden">
+<img alt="Logo Preview" class="max-w-[80%]" data-alt="Official church logo preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF39GG4WOWtuRWpHJs1iRi5ZNC2XBUNdKvBZX1dQu-Ctid9NXEHIEQ_no2LBe-Mdt_nGn31CwBaAG-ITE425Z-Sa_VcnADwtYUtghPh50qsWMn07DQJ02fpq-VnaqcK3VoCxfw5hRl4gpyFTHA_kAD3DksBp3-B1yi5V3s-oKMFveQYOCaJvdVZD-JzmetGWwcUEe6Q36UdoYoLw_4WmXtE_xErkGYnzHGfk4qGxy-26jMUIUfAqhiB8rhk9dJ5380Gks3HVu2jSE"/>
+</div>
+<div class="flex-1 text-center md:text-left">
+<div class="mb-4">
+<h4 class="font-bold text-[#0d161b] dark:text-white mb-1">Cargar nuevo logo</h4>
+<p class="text-xs text-[#4c799a]">Formatos recomendados: PNG, SVG o WEBP (Fondo transparente). Máx 2MB.</p>
+</div>
+<div class="flex gap-3 justify-center md:justify-start">
+<button class="bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-all">Subir Archivo</button>
+<button class="bg-[#e7eef3] dark:bg-slate-800 text-[#0d161b] dark:text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Eliminar</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Gestión de Roles -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-[#e7eef3] dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-[#e7eef3] dark:border-slate-800 flex justify-between items-center">
+<div>
+<h3 class="text-[#0d161b] dark:text-white text-xl font-bold">Gestión de Roles</h3>
+<p class="text-sm text-[#4c799a]">Controle quién tiene acceso a la administración.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>Nuevo Admin</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800 text-xs text-[#4c799a] uppercase font-bold tracking-wider">
+<tr>
+<th class="px-6 py-4">Usuario</th>
+<th class="px-6 py-4">Rol</th>
+<th class="px-6 py-4">Estado</th>
+<th class="px-6 py-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-500">JP</div>
+<div>
+<p class="text-sm font-bold text-[#0d161b] dark:text-white">Juan Pérez</p>
+<p class="text-xs text-[#4c799a]">juan.perez@mivn.org</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wide">Súper Admin</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+<span class="size-2 rounded-full bg-green-500"></span>
+                                                    Activo
+                                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-[#4c799a] hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="p-1.5 text-[#4c799a] hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-xl">delete</span></button>
+</div>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-500">MG</div>
+<div>
+<p class="text-sm font-bold text-[#0d161b] dark:text-white">María García</p>
+<p class="text-xs text-[#4c799a]">maria.g@mivn.org</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wide">Moderador</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-green-500 font-medium">
+<span class="size-2 rounded-full bg-green-500"></span>
+                                                    Activo
+                                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-[#4c799a] hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="p-1.5 text-[#4c799a] hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-xl">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Section: Documentos Legales -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-[#e7eef3] dark:border-slate-800 shadow-sm">
+<div class="p-6 border-b border-[#e7eef3] dark:border-slate-800">
+<h3 class="text-[#0d161b] dark:text-white text-xl font-bold">Documentos Legales</h3>
+<p class="text-sm text-[#4c799a]">Editores de políticas y términos.</p>
+</div>
+<div class="p-6 space-y-8">
+<div>
+<div class="flex items-center justify-between mb-2">
+<label class="block text-sm font-bold text-[#0d161b] dark:text-white">Política de Privacidad</label>
+<button class="text-primary text-xs font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">visibility</span> Previsualizar</button>
+</div>
+<div class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+<div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-2 flex gap-2">
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">format_bold</span></button>
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">format_italic</span></button>
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">format_list_bulleted</span></button>
+<div class="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1"></div>
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">link</span></button>
+</div>
+<textarea class="w-full border-none dark:bg-slate-900 text-sm focus:ring-0 p-4" placeholder="Escriba aquí los términos legales..." rows="6">En el Ministerio Internacional Vida Nueva, valoramos su privacidad. Esta política describe cómo manejamos sus datos personales...</textarea>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-2">
+<label class="block text-sm font-bold text-[#0d161b] dark:text-white">Términos y Condiciones</label>
+<button class="text-primary text-xs font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">visibility</span> Previsualizar</button>
+</div>
+<div class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+<div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-2 flex gap-2">
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">format_bold</span></button>
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">format_italic</span></button>
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">format_list_bulleted</span></button>
+<div class="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1"></div>
+<button class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><span class="material-symbols-outlined text-xl">link</span></button>
+</div>
+<textarea class="w-full border-none dark:bg-slate-900 text-sm focus:ring-0 p-4" placeholder="Escriba aquí los términos legales..." rows="6">Al utilizar esta plataforma, usted acepta los siguientes términos y condiciones de uso del Ministerio Internacional Vida Nueva...</textarea>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Final Action (Mobile Friendly) -->
+<div class="mt-8 flex md:hidden">
+<button class="w-full flex items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white text-base font-bold shadow-lg shadow-primary/25">
+<span class="material-symbols-outlined">save</span>
+<span>Guardar Cambios</span>
+</button>
+</div>
+<footer class="mt-12 py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+<p class="text-xs text-[#4c799a]">© 2024 Ministerio Internacional Vida Nueva. Todos los derechos reservados. Panel de Administración v2.4.0</p>
+</footer>
+</div>
+</main>
+</div>
+</div>
+</body></html>

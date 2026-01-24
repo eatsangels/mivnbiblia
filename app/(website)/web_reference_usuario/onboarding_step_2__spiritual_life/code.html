@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding Step 2: Spiritual Life - MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3ea5ea",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111b21",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7eef3] dark:border-b-slate-700 bg-white dark:bg-slate-900 px-4 md:px-40 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4 text-[#0e161b] dark:text-white">
+<div class="size-6 text-primary">
+<span class="material-symbols-outlined text-3xl">church</span>
+</div>
+<h2 class="text-[#0e161b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">MIVN</h2>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Cerrar Sesión</span>
+</button>
+</header>
+<main class="flex flex-1 justify-center py-10 px-4">
+<div class="layout-content-container flex flex-col max-w-[720px] flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-[#e7eef3] dark:border-slate-800 p-6 md:p-10">
+<!-- Progress Bar -->
+<div class="flex flex-col gap-3 mb-8">
+<div class="flex gap-6 justify-between">
+<p class="text-[#0e161b] dark:text-white text-base font-medium leading-normal">Progreso del Registro</p>
+<p class="text-[#0e161b] dark:text-white text-sm font-normal leading-normal">66%</p>
+</div>
+<div class="rounded bg-[#d0dee7] dark:bg-slate-700">
+<div class="h-2 rounded bg-primary" style="width: 66%;"></div>
+</div>
+<p class="text-[#4e7a97] dark:text-slate-400 text-sm font-normal leading-normal">Paso 2 de 3</p>
+</div>
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between gap-3 mb-6">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-[#0e161b] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Registro de Nuevo Miembro</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">auto_awesome</span>
+<p class="text-[#4e7a97] dark:text-slate-300 text-lg font-medium leading-normal">Paso 2: Vida Espiritual</p>
+</div>
+</div>
+</div>
+<!-- Form Content -->
+<form class="space-y-8">
+<!-- Section 1: Baptism -->
+<div>
+<h2 class="text-[#0e161b] dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em] pb-3">¿Te has bautizado?</h2>
+<div class="flex flex-wrap gap-3">
+<label class="text-sm font-medium leading-normal flex items-center justify-center rounded-lg border border-[#d0dee7] dark:border-slate-700 px-6 h-12 text-[#0e161b] dark:text-white has-[:checked]:border-[3px] has-[:checked]:px-5.5 has-[:checked]:border-primary relative cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            Sí
+                            <input checked="" class="invisible absolute" name="baptized" type="radio"/>
+</label>
+<label class="text-sm font-medium leading-normal flex items-center justify-center rounded-lg border border-[#d0dee7] dark:border-slate-700 px-6 h-12 text-[#0e161b] dark:text-white has-[:checked]:border-[3px] has-[:checked]:px-5.5 has-[:checked]:border-primary relative cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            No
+                            <input class="invisible absolute" name="baptized" type="radio"/>
+</label>
+</div>
+</div>
+<!-- Section 2: Ministry -->
+<div>
+<h2 class="text-[#0e161b] dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em] pb-3">¿Perteneces a algún ministerio?</h2>
+<div class="flex flex-wrap gap-3">
+<label class="text-sm font-medium leading-normal flex items-center justify-center rounded-lg border border-[#d0dee7] dark:border-slate-700 px-6 h-12 text-[#0e161b] dark:text-white has-[:checked]:border-[3px] has-[:checked]:px-5.5 has-[:checked]:border-primary relative cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            Sí
+                            <input class="invisible absolute" name="ministry" type="radio"/>
+</label>
+<label class="text-sm font-medium leading-normal flex items-center justify-center rounded-lg border border-[#d0dee7] dark:border-slate-700 px-6 h-12 text-[#0e161b] dark:text-white has-[:checked]:border-[3px] has-[:checked]:px-5.5 has-[:checked]:border-primary relative cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            No
+                            <input checked="" class="invisible absolute" name="ministry" type="radio"/>
+</label>
+</div>
+</div>
+<!-- Section 3: Referral -->
+<div>
+<h2 class="text-[#0e161b] dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em] pb-3">¿Cómo llegaste a MIVN?</h2>
+<select class="w-full h-12 rounded-lg border border-[#d0dee7] dark:border-slate-700 bg-white dark:bg-slate-800 px-4 text-[#0e161b] dark:text-white focus:border-primary focus:ring-primary">
+<option value="">Selecciona una opción</option>
+<option value="friend">Por un amigo/familiar</option>
+<option value="social">Redes Sociales</option>
+<option value="event">Evento Especial</option>
+<option value="location">Cercanía geográfica</option>
+<option value="other">Otro</option>
+</select>
+</div>
+<!-- Section 4: Interests -->
+<div>
+<h2 class="text-[#0e161b] dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em] pb-3">Áreas de Interés</h2>
+<p class="text-sm text-[#4e7a97] dark:text-slate-400 mb-4">Selecciona los ministerios que te gustaría conocer o participar.</p>
+<div class="flex flex-wrap gap-3">
+<label class="cursor-pointer group">
+<input class="hidden peer" name="interest" type="checkbox" value="youth"/>
+<span class="flex items-center gap-2 px-4 py-2 rounded-full border border-[#d0dee7] dark:border-slate-700 text-sm font-medium text-[#0e161b] dark:text-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">
+<span class="material-symbols-outlined text-sm">groups</span>
+                                Jóvenes
+                            </span>
+</label>
+<label class="cursor-pointer group">
+<input checked="" class="hidden peer" name="interest" type="checkbox" value="music"/>
+<span class="flex items-center gap-2 px-4 py-2 rounded-full border border-[#d0dee7] dark:border-slate-700 text-sm font-medium text-[#0e161b] dark:text-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">
+<span class="material-symbols-outlined text-sm">music_note</span>
+                                Música
+                            </span>
+</label>
+<label class="cursor-pointer group">
+<input class="hidden peer" name="interest" type="checkbox" value="missions"/>
+<span class="flex items-center gap-2 px-4 py-2 rounded-full border border-[#d0dee7] dark:border-slate-700 text-sm font-medium text-[#0e161b] dark:text-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">
+<span class="material-symbols-outlined text-sm">public</span>
+                                Misiones
+                            </span>
+</label>
+<label class="cursor-pointer group">
+<input class="hidden peer" name="interest" type="checkbox" value="teaching"/>
+<span class="flex items-center gap-2 px-4 py-2 rounded-full border border-[#d0dee7] dark:border-slate-700 text-sm font-medium text-[#0e161b] dark:text-white peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+                                Enseñanza
+                            </span>
+</label>
+</div>
+</div>
+<!-- Footer Navigation -->
+<div class="flex items-center justify-between pt-10 border-t border-[#e7eef3] dark:border-slate-800">
+<a class="text-[#4e7a97] dark:text-slate-400 text-sm font-bold hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-base">arrow_back</span>
+                        Volver
+                    </a>
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity" type="submit">
+<span class="truncate">Siguiente</span>
+</button>
+</div>
+</form>
+</div>
+</main>
+<footer class="py-10 text-center text-[#4e7a97] dark:text-slate-500 text-sm">
+<p>© 2024 Ministerio Internacional Vida Nueva. Todos los derechos reservados.</p>
+</footer>
+</body></html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MIVN - Calendario de Eventos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0a1d37", // Deep Navy from the logo
+                        accent: "#b8860b", // Gold tone from logo
+                        "background-light": "#fdfbf7", // Creamy background matching logo center
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display", "serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+<style>
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .event-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<div class="flex items-center gap-4">
+<img alt="MIVN Logo" class="h-14 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqfla1AbnhLuzHMH_bwEgjdURiXw1PCbCjvfoKt5VOJJAVMq8SnxGkcZOmpFQJMwB8BxNo5IQPgKQjSaDAVOrndpjb52rJudk6brNNfdHxWKhvI0LSmGo97Jtdys4FuKsMRH-kzpPVWuXxyossxa1LKAkQdy05gN6fjKDrkYB9rOWPCSEQiDv2MO0cfn9uRNEu6O3xBdevUTosuntyUvZO92qrhbZZMEjhiw9u_2fPrtbwxFKNBaQLx0ForqkXQuOd0f9uFMPPiWg"/>
+<div class="hidden md:block">
+<h1 class="text-xl font-bold tracking-tight text-primary dark:text-white leading-none">MIVN</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">Ministerio Internacional Vida Nueva</p>
+</div>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">Inicio</a>
+<a class="text-sm font-medium text-accent border-b-2 border-accent pb-1" href="#">Eventos</a>
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">Ministerios</a>
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">Donaciones</a>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="toggleDarkMode()">
+<span class="material-icons-outlined text-slate-600 dark:text-slate-400">dark_mode</span>
+</button>
+<a class="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity" href="#">Contactar</a>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="mb-10 text-center lg:text-left">
+<h2 class="text-4xl font-display font-bold text-primary dark:text-white mb-2">Calendario de Bendición</h2>
+<p class="text-slate-600 dark:text-slate-400 max-w-2xl">Mantente al tanto de nuestros cultos, talleres y actividades especiales. ¡Te esperamos con los brazos abiertos!</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+<div class="lg:col-span-7 xl:col-span-8">
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<h3 class="text-xl font-bold">Octubre 2024</h3>
+<div class="flex gap-1">
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors">
+<span class="material-icons-outlined text-sm">chevron_left</span>
+</button>
+<button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors">
+<span class="material-icons-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<button class="text-sm font-medium text-primary dark:text-blue-400 hover:underline">Hoy</button>
+</div>
+<div class="p-4">
+<div class="calendar-grid mb-2">
+<div class="text-center text-xs font-semibold text-slate-400 py-2">DOM</div>
+<div class="text-center text-xs font-semibold text-slate-400 py-2">LUN</div>
+<div class="text-center text-xs font-semibold text-slate-400 py-2">MAR</div>
+<div class="text-center text-xs font-semibold text-slate-400 py-2">MIÉ</div>
+<div class="text-center text-xs font-semibold text-slate-400 py-2">JUE</div>
+<div class="text-center text-xs font-semibold text-slate-400 py-2">VIE</div>
+<div class="text-center text-xs font-semibold text-slate-400 py-2">SÁB</div>
+</div>
+<div class="calendar-grid gap-px bg-slate-100 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-lg overflow-hidden">
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-slate-300 dark:text-slate-600">29</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-slate-300 dark:text-slate-600">30</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative group hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="text-sm">1</span>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+<div class="event-dot bg-blue-500"></div>
+</div>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative group hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="text-sm">2</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative group hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="text-sm">3</span>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+<div class="event-dot bg-red-500"></div>
+</div>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative group hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="text-sm">4</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative group hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<span class="text-sm font-bold text-accent">5</span>
+<div class="absolute inset-0 border-2 border-accent/20"></div>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+<div class="event-dot bg-green-500"></div>
+</div>
+</div>
+<script>
+                                const calendarContainer = document.querySelector('.calendar-grid:last-child');
+                                for(let i = 6; i <= 31; i++) {
+                                    const day = document.createElement('div');
+                                    day.className = "aspect-square bg-white dark:bg-slate-900 p-2 relative group hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer";
+                                    day.innerHTML = `<span class="text-sm">${i}</span>`;
+                                    // Add dots for random days
+                                    if(i % 7 === 0 || i % 4 === 0) {
+                                        const dotColor = i % 7 === 0 ? 'bg-primary' : (i % 3 === 0 ? 'bg-red-500' : 'bg-green-500');
+                                        day.innerHTML += `<div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1"><div class="event-dot ${dotColor}"></div></div>`;
+                                    }
+                                    calendarContainer.appendChild(day);
+                                }
+                                // Fill trailing days
+                                for(let i = 1; i <= 4; i++) {
+                                    const day = document.createElement('div');
+                                    day.className = "aspect-square bg-white dark:bg-slate-900 p-2 text-slate-300 dark:text-slate-600";
+                                    day.innerHTML = `<span class="text-sm">${i}</span>`;
+                                    calendarContainer.appendChild(day);
+                                }
+                            </script>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-6">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Filtrar por</h4>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full bg-primary text-white text-sm font-medium">Todos</button>
+<button class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors">Cultos</button>
+<button class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors">Talleres</button>
+<button class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors">Grupos</button>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="text-lg font-bold flex items-center gap-2">
+                        Próximos Eventos
+                        <span class="bg-accent/10 text-accent text-[10px] px-2 py-0.5 rounded-full">3 hoy</span>
+</h4>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all group">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex flex-col items-center justify-center border border-blue-100 dark:border-blue-800">
+<span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase">Oct</span>
+<span class="text-xl font-bold text-blue-800 dark:text-blue-200">12</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">Culto de Adoración</span>
+<span class="text-slate-400 hover:text-primary cursor-pointer transition-colors material-icons-outlined text-lg">bookmark_border</span>
+</div>
+<h5 class="font-bold text-slate-900 dark:text-white mb-2 leading-tight">Servicio Dominical: "Renovados por Su Gracia"</h5>
+<div class="space-y-1.5 mb-4">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">schedule</span>
+<span>10:00 AM - 12:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">person</span>
+<span>Pastor David Rodríguez</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">location_on</span>
+<span>Santuario Principal</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition-opacity">Registrarme</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons-outlined text-sm">calendar_add_on</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all group">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-14 h-14 bg-green-50 dark:bg-green-900/30 rounded-xl flex flex-col items-center justify-center border border-green-100 dark:border-green-800">
+<span class="text-[10px] font-bold text-green-600 dark:text-green-400 uppercase">Oct</span>
+<span class="text-xl font-bold text-green-800 dark:text-green-200">15</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">Taller de Crecimiento</span>
+<span class="text-slate-400 hover:text-primary cursor-pointer transition-colors material-icons-outlined text-lg">bookmark_border</span>
+</div>
+<h5 class="font-bold text-slate-900 dark:text-white mb-2 leading-tight">Taller: Finanzas con Propósito</h5>
+<div class="space-y-1.5 mb-4">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">schedule</span>
+<span>07:00 PM - 09:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">person</span>
+<span>Hno. Luis Sánchez</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">videocam</span>
+<span>Vía Zoom / Salón B</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition-opacity">Registrarme</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons-outlined text-sm">calendar_add_on</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all group">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-14 h-14 bg-red-50 dark:bg-red-900/30 rounded-xl flex flex-col items-center justify-center border border-red-100 dark:border-red-800">
+<span class="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase">Oct</span>
+<span class="text-xl font-bold text-red-800 dark:text-red-200">18</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-1">
+<span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300">Grupo Vida</span>
+<span class="text-slate-400 hover:text-primary cursor-pointer transition-colors material-icons-outlined text-lg">bookmark_border</span>
+</div>
+<h5 class="font-bold text-slate-900 dark:text-white mb-2 leading-tight">Reunión de Jóvenes: "Enfocados"</h5>
+<div class="space-y-1.5 mb-4">
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">schedule</span>
+<span>06:30 PM</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">person</span>
+<span>Equipo de Jóvenes</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-sm">location_on</span>
+<span>Parque Central</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition-opacity">Ver Detalles</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons-outlined text-sm">calendar_add_on</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 text-sm font-bold text-primary dark:text-blue-400 hover:underline">Ver todos los eventos</button>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start">
+<img alt="MIVN Logo" class="h-16 w-auto mb-4 grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATt6JH6tQ7PLpBELKKKr6ZV5TwMHX9HJIrmrlUricHPMZJ4GGBOpZ90FXPw5_k9PcNEU_8NdSV9GE4887SM41JpwPiJRk3jSJHKxpeq_HecxU2z5YM2aiU91tS7Oi6M7Qit384rDKdb1l6h8xNoEoyEZwpbyd07vi_U4ZgW35OiSQ77xBCk2Igbhd0PvrLoSFSHhb8B9bf1SwXhlwGOQ4U4M-7UTewW3pd1dRv2hE-03VhlBGjxNbc6z30wkFpW6BAYSYTUb67IoM"/>
+<p class="text-xs text-slate-400 max-w-xs text-center md:text-left">Ministerio Internacional Vida Nueva - Transformando vidas a través del mensaje de Cristo.</p>
+</div>
+<div class="flex gap-10">
+<div class="text-center md:text-left">
+<h6 class="text-sm font-bold mb-4">Recursos</h6>
+<ul class="text-xs text-slate-500 space-y-2">
+<li><a class="hover:text-primary" href="#">Predicaciones</a></li>
+<li><a class="hover:text-primary" href="#">Devocionales</a></li>
+<li><a class="hover:text-primary" href="#">Música</a></li>
+</ul>
+</div>
+<div class="text-center md:text-left">
+<h6 class="text-sm font-bold mb-4">Síguenos</h6>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons-outlined">facebook</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons-outlined">camera_alt</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons-outlined">play_circle</span></a>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-100 dark:border-slate-800 mt-10 pt-8 text-center text-[10px] text-slate-400 uppercase tracking-widest">
+                © 2024 MIVN - Ministerio Internacional Vida Nueva. Todos los derechos reservados.
+            </div>
+</div>
+</footer>
+
+</body></html>

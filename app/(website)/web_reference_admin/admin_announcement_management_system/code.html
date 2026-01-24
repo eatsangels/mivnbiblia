@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin - Sistema de Anuncio Ministerio | MIVN</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#D4AF37", // Gold
+                        secondary: "#0056B3", // Celeste Blue derivative
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#0F172A",
+                        "bubble-light": "#FEF9E7",
+                        "bubble-dark": "#1E293B",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        #mobile-preview-modal:target {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-200">
+<nav class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center text-white font-bold text-xl">M</div>
+<div>
+<h1 class="font-bold text-lg leading-tight text-slate-900 dark:text-white">Admin MIVN</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400">Panel de Gestión de Anuncios</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-round block dark:hidden">dark_mode</span>
+<span class="material-icons-round hidden dark:block text-yellow-400">light_mode</span>
+</button>
+<button class="bg-primary hover:opacity-90 text-white px-5 py-2.5 rounded-full font-semibold flex items-center gap-2 transition-all shadow-lg shadow-primary/20">
+<span class="material-icons-round text-lg">add</span>
+                Crear Nuevo Anuncio
+            </button>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-7 space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-bold dark:text-white">Feed de Anuncios</h2>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-slate-200 dark:bg-slate-800 text-xs font-medium rounded-full">Recientes</span>
+<span class="px-3 py-1 text-slate-500 dark:text-slate-400 text-xs font-medium rounded-full cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800">Programados</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 relative group">
+<div class="absolute top-4 right-6 flex items-center gap-1">
+<span class="material-icons-round text-primary text-sm">push_pin</span>
+<span class="text-[10px] uppercase tracking-wider font-bold text-primary">Fijado</span>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0">
+<div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-inner">M</div>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white">Anuncio Ministerio</h3>
+<div class="flex items-center gap-2">
+<p class="text-xs text-slate-400 dark:text-slate-500">Publicado hace 2 horas</p>
+<span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+<span class="flex items-center gap-0.5 text-[10px] text-blue-500 font-bold uppercase"><span class="material-symbols-outlined text-xs">notifications_active</span> Push Enviada</span>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-secondary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Editar">
+<span class="material-icons-round text-lg">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Eliminar">
+<span class="material-icons-round text-lg">delete_outline</span>
+</button>
+</div>
+</div>
+<div class="mt-4 bg-bubble-light dark:bg-bubble-dark p-5 rounded-2xl rounded-tl-none border border-primary/10 dark:border-white/5 shadow-sm">
+<p class="text-slate-700 dark:text-slate-300 leading-relaxed italic">
+                                "Recuerden que este viernes tenemos nuestra vigilia mensual. ¡No falten!"
+                            </p>
+</div>
+<div class="mt-4 flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
+<span class="flex items-center gap-1"><span class="material-icons-round text-sm">people</span> Todos los miembros</span>
+<span class="flex items-center gap-1"><span class="material-icons-round text-sm">visibility</span> 124 Vistas</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 group">
+<div class="flex gap-4">
+<div class="flex-shrink-0">
+<div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-inner">M</div>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white">Anuncio Ministerio</h3>
+<p class="text-xs text-slate-400 dark:text-slate-500">Hace 1 día</p>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-secondary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+<span class="material-icons-round text-lg">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+<span class="material-icons-round text-lg">delete_outline</span>
+</button>
+</div>
+</div>
+<div class="mt-4 bg-bubble-light dark:bg-bubble-dark p-5 rounded-2xl rounded-tl-none border border-primary/10 dark:border-white/5 shadow-sm">
+<p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                                Les invitamos al taller de formación para líderes el próximo sábado a las 10:00 AM en el salón principal.
+                            </p>
+</div>
+<div class="mt-4 flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
+<span class="flex items-center gap-1 text-secondary dark:text-blue-400"><span class="material-icons-round text-sm">groups</span> Líderes de Ministerio</span>
+<span class="flex items-center gap-1"><span class="material-icons-round text-sm">visibility</span> 45 Vistas</span>
+</div>
+</div>
+</div>
+</div>
+<div class="text-center py-4">
+<button class="text-secondary dark:text-primary font-bold text-sm hover:underline transition-all">Ver todo el feed</button>
+</div>
+</div>
+<div class="lg:col-span-5">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 sticky top-28">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-primary">campaign</span>
+<h2 class="text-lg font-bold dark:text-white">Crear Anuncio</h2>
+</div>
+<a class="text-secondary dark:text-blue-400 flex items-center gap-1 text-sm font-semibold hover:opacity-80 transition-opacity" href="#mobile-preview-modal">
+<span class="material-symbols-outlined text-lg">smartphone</span>
+                        Vista previa
+                    </a>
+</div>
+<form class="space-y-5">
+<div>
+<label class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Mensaje del Anuncio</label>
+<textarea class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-slate-800 dark:text-slate-200 placeholder:text-slate-400" placeholder="Escribe el mensaje aquí..." rows="4"></textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Dirigido a:</label>
+<select class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-slate-800 dark:text-slate-200 appearance-none text-sm">
+<option>Todos los miembros</option>
+<option>Jóvenes</option>
+<option>Líderes de Ministerio</option>
+<option>Personal Administrativo</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Programar envío:</label>
+<div class="relative">
+<input class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-slate-800 dark:text-slate-200 text-sm" type="datetime-local"/>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">notifications_active</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Enviar como Notificación Push</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-3">
+<span class="material-icons-round text-slate-400">push_pin</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Anclar al inicio del feed</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="button">
+<span class="material-icons-round">send</span>
+                            Publicar y Notificar
+                        </button>
+<button class="w-full mt-3 text-slate-500 dark:text-slate-400 font-medium py-2 text-sm hover:text-slate-800 dark:hover:text-slate-200 transition-colors" type="button">
+                            Guardar como Borrador
+                        </button>
+</div>
+</form>
+</div>
+<div class="mt-6 grid grid-cols-2 gap-4">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+<p class="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 mb-1">Total Mensajes</p>
+<p class="text-2xl font-bold dark:text-white">42</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+<p class="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 mb-1">Impacto Notif.</p>
+<p class="text-2xl font-bold dark:text-white">88%</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="hidden fixed inset-0 z-[100] bg-slate-900/80 backdrop-blur-sm items-center justify-center p-4" id="mobile-preview-modal">
+<div class="relative max-w-sm w-full animate-in fade-in zoom-in duration-300">
+<a class="absolute -top-12 right-0 text-white flex items-center gap-1 text-sm" href="#">
+<span class="material-icons-round">close</span> Cerrar
+        </a>
+<div class="bg-slate-800 rounded-[3rem] p-3 border-4 border-slate-700 shadow-2xl overflow-hidden aspect-[9/19]">
+<div class="bg-black w-full h-full rounded-[2.5rem] relative overflow-hidden flex flex-col items-center pt-12 px-4">
+<div class="absolute top-0 w-full px-8 py-2 flex justify-between items-center text-[10px] text-white/80">
+<span>9:41</span>
+<div class="flex gap-1 items-center">
+<span class="material-icons-round text-[12px]">signal_cellular_4_bar</span>
+<span class="material-icons-round text-[12px]">wifi</span>
+<span class="material-icons-round text-[12px]">battery_full</span>
+</div>
+</div>
+<div class="w-full bg-white/10 backdrop-blur-md rounded-2xl p-4 mt-8 border border-white/20">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-5 h-5 bg-secondary rounded flex items-center justify-center text-[10px] text-white font-bold">M</div>
+<span class="text-[10px] font-semibold text-white/90 uppercase tracking-tight">Ministerio Vida Nueva</span>
+<span class="text-[10px] text-white/50 ml-auto">ahora</span>
+</div>
+<h4 class="text-white font-bold text-sm">Anuncio Ministerio</h4>
+<p class="text-white/80 text-xs mt-0.5 line-clamp-3">Recuerden que este viernes tenemos nuestra vigilia mensual. ¡No falten!</p>
+</div>
+<div class="mt-auto mb-10 w-full flex justify-between px-4">
+<div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md">
+<span class="material-icons-round text-xl">flashlight_on</span>
+</div>
+<div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md">
+<span class="material-icons-round text-xl">camera_alt</span>
+</div>
+</div>
+<div class="absolute bottom-1 w-24 h-1 bg-white/40 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<footer class="max-w-7xl mx-auto px-6 py-12 text-center">
+<p class="text-slate-400 dark:text-slate-600 text-sm">© 2024 Ministerio Internacional Vida Nueva. Panel de Administración.</p>
+</footer>
+
+</body></html>

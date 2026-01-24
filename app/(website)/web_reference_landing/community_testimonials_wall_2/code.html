@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard de Usuario - MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#4AA3DF",
+                "gold": "#D4AF37",
+                "background-light": "#f8fafc",
+                "sidebar-bg": "#ffffff",
+                "accent-blue": "#4AA3DF",
+              },
+              fontFamily: {
+                "display": ["Manrope", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+          .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+          }
+        }
+        .sidebar-item-active {
+            @apply bg-primary/10 text-primary border-r-4 border-primary font-bold;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(232, 236, 243, 1);
+        }
+    </style>
+</head>
+<body class="bg-background-light font-display text-[#1e293b] min-h-screen flex">
+<aside class="w-64 bg-sidebar-bg border-r border-slate-200 h-screen sticky top-0 flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3 text-primary">
+<div class="size-8">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h1 class="text-xl font-extrabold tracking-tight text-slate-800">MIVN</h1>
+</div>
+<nav class="flex-1 mt-4 px-2 space-y-1">
+<a class="sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm transition-all rounded-l-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span> Inicio
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-all rounded-l-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span> Devocionales
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-all rounded-l-lg" href="#">
+<span class="material-symbols-outlined">groups</span> Mis Grupos
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-all rounded-l-lg" href="#">
+<span class="material-symbols-outlined">calendar_month</span> Eventos
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-all rounded-l-lg" href="#">
+<span class="material-symbols-outlined">volunteer_activism</span> Donaciones
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-primary transition-all rounded-l-lg" href="#">
+<span class="material-symbols-outlined">person</span> Perfil
+            </a>
+</nav>
+<div class="p-4 border-t border-slate-100">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-all">
+<span class="material-symbols-outlined">logout</span> Cerrar Sesión
+            </button>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-h-screen max-w-[calc(100vw-256px)]">
+<header class="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-40">
+<div>
+<h2 class="text-sm font-semibold text-slate-400 uppercase tracking-widest">Panel de Miembro</h2>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-200">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-slate-800 leading-none">Andrés Mendoza</p>
+<p class="text-[11px] text-slate-500 mt-1 uppercase font-semibold">Miembro Activo</p>
+</div>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary/20" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzuhyC7pZ0m172XEVx5Z6Ql6th1xDX16GRPC93XfAFTSgOo_q2EB2QW3gl6ahsS0xxf_ZYSNXqf4t6WH4hulmlb7MlPEIwMbn8l7yuHJYNOIWto8HBqvcPuCxnx1K5pGQwTFXAia6RF1pxRxmysh_dfdqzuSIkfuaii20VEld4VLp-Dgi-XvVazdkiGp0_JCgU4UdnM_v4UkrgVXgRaMBDw-jvRtynZDzmzYP055b8KbBWW7pPIb_xjvFmBBSZJRyMw1L-iR1VSyo')"></div>
+</div>
+</div>
+</header>
+<main class="p-8 flex-1">
+<section class="mb-8">
+<div class="relative bg-primary rounded-2xl p-8 text-white overflow-hidden shadow-lg shadow-primary/20">
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="max-w-xl">
+<h3 class="text-3xl font-black mb-3">¡Bienvenido, Andrés!</h3>
+<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-xl">
+<p class="italic text-lg font-medium leading-relaxed">
+                                    "Porque yo sé muy bien los planes que tengo para ustedes —afirma el Señor—, planes de bienestar y no de calamidad, a fin de darles un futuro y una esperanza."
+                                </p>
+<p class="mt-2 text-sm font-bold text-white/80">— Jeremías 29:11</p>
+</div>
+</div>
+<div class="hidden lg:block text-right">
+<div class="text-5xl font-black text-white/20 uppercase select-none">MIVN<br/>FE Y PODER</div>
+</div>
+</div>
+<div class="absolute -top-12 -right-12 size-48 bg-white/10 rounded-full"></div>
+<div class="absolute -bottom-12 -left-12 size-64 bg-gold/20 rounded-full"></div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-8">
+<div class="glass-card rounded-2xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<h4 class="text-lg font-bold text-slate-800">Mi Progreso Espiritual</h4>
+</div>
+<span class="text-sm font-bold text-primary">Plan 2024</span>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-sm font-bold mb-2">
+<span class="text-slate-600">Lectura Bíblica Diaria</span>
+<span class="text-primary">65%</span>
+</div>
+<div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-1000" style="width: 65%"></div>
+</div>
+<p class="text-xs text-slate-400 mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> 
+                                    Vas por: Juan, Capítulo 12
+                                </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+<p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">Días Seguidos</p>
+<p class="text-2xl font-black text-gold">12</p>
+</div>
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+<p class="text-xs font-bold text-slate-500 uppercase tracking-tighter">Hitos Alcanzados</p>
+<p class="text-2xl font-black text-primary">04</p>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-2xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-gold/10 text-gold flex items-center justify-center">
+<span class="material-symbols-outlined">person_pin_circle</span>
+</div>
+<h4 class="text-lg font-bold text-slate-800">Mis Peticiones de Oración</h4>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Ver todas</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border-l-4 border-gold">
+<div>
+<p class="text-sm font-bold text-slate-800">Sanidad por la familia Rivera</p>
+<p class="text-[11px] text-slate-500">Enviada hace 2 días</p>
+</div>
+<span class="px-3 py-1 bg-gold/20 text-gold text-[10px] font-black uppercase rounded-full">En Oración</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border-l-4 border-primary">
+<div>
+<p class="text-sm font-bold text-slate-800">Provisión financiera (Nuevo local)</p>
+<p class="text-[11px] text-slate-500">Enviada hace 1 semana</p>
+</div>
+<span class="px-3 py-1 bg-primary/20 text-primary text-[10px] font-black uppercase rounded-full">Contestada</span>
+</div>
+<button class="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-sm font-bold text-slate-400 hover:border-primary hover:text-primary transition-all">
+                                + Agregar nueva petición
+                            </button>
+</div>
+</div>
+</div>
+<div class="space-y-8">
+<div class="bg-slate-900 rounded-2xl p-6 text-white shadow-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+</span>
+<h4 class="text-sm font-bold uppercase tracking-widest text-slate-400">Próximo Culto</h4>
+</div>
+<div class="text-center py-4">
+<p class="text-xs text-slate-400 mb-4 uppercase">Comienza en:</p>
+<div class="flex justify-center gap-4">
+<div class="text-center">
+<div class="text-3xl font-black text-primary">02</div>
+<div class="text-[10px] uppercase font-bold text-slate-500">Días</div>
+</div>
+<div class="text-3xl font-black text-slate-700">:</div>
+<div class="text-center">
+<div class="text-3xl font-black text-primary">14</div>
+<div class="text-[10px] uppercase font-bold text-slate-500">Hrs</div>
+</div>
+<div class="text-3xl font-black text-slate-700">:</div>
+<div class="text-center">
+<div class="text-3xl font-black text-primary">35</div>
+<div class="text-[10px] uppercase font-bold text-slate-500">Min</div>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-800">
+<p class="text-sm font-bold mb-1">Culto de Adoración y Milagros</p>
+<p class="text-xs text-slate-400">Domingo, 10:00 AM • Sede Central</p>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Acciones Rápidas</h4>
+<button class="w-full flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-primary group transition-all shadow-sm">
+<div class="size-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all">
+<span class="material-symbols-outlined">live_tv</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-black text-slate-800">Ver Culto en Vivo</p>
+<p class="text-[11px] text-slate-500">Transmisión HD</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-slate-300 group-hover:text-primary">chevron_right</span>
+</button>
+<button class="w-full flex items-center gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-gold group transition-all shadow-sm">
+<div class="size-12 rounded-xl bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-white transition-all">
+<span class="material-symbols-outlined">campaign</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-black text-slate-800">Compartir Testimonio</p>
+<p class="text-[11px] text-slate-500">Inspira a otros</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-slate-300 group-hover:text-gold">chevron_right</span>
+</button>
+<div class="p-6 bg-gradient-to-br from-primary to-[#357db5] rounded-2xl text-white">
+<h5 class="font-bold mb-2">Ayuda y Soporte</h5>
+<p class="text-xs text-white/80 leading-relaxed mb-4">
+                                ¿Necesitas hablar con un pastor o tienes dudas sobre el sistema? Estamos para servirte.
+                            </p>
+<a class="inline-flex items-center gap-2 text-xs font-black bg-white text-primary px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors" href="#">
+                                Contactar vía WhatsApp <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="p-8 border-t border-slate-200 bg-white flex flex-col md:flex-row items-center justify-between text-slate-400 text-xs">
+<p>© 2024 Ministerio Internacional Vida Nueva. Todos los derechos reservados.</p>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="hover:text-primary transition-colors" href="#">Términos</a>
+<a class="hover:text-primary transition-colors" href="#">Privacidad</a>
+<a class="hover:text-primary transition-colors" href="#">Configuración</a>
+</div>
+</footer>
+</div>
+
+</body></html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MIVN - Transmisión en Vivo y Archivo de Sermones</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#00AEEF", // Celeste Blue
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "card-light": "#ffffff",
+                        "card-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .animate-pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<div class="flex items-center gap-4">
+<img alt="MIVN Logo" class="h-14 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsH_hMuiB8S1la8VK1ODjcqOaE_H3vBoBOiDco-2MG1Z3_ZOsBQXgAydxOOa3KG9fE87LVVNYJR_-9lrC1zpP4FWq8V4cnt_v2ljRQv7Q3AHxdjhZzdgOnTAquYeq9ddNm3ZO4sygMeBkvfxX-22mKNrUfjsi8euRT3IACXZuUMg44R3tTkY6EXLIjPwVF19BOJbdqHIxcYRs92Gd5c5xbGgVPZOJLlsXePLnMLpvb_HykJlw3K97_pPZarVVXslgq7a6mvl_fzLE"/>
+<div class="hidden md:block">
+<span class="text-xl font-bold tracking-tight text-primary">MIVN</span>
+<p class="text-xs uppercase tracking-widest opacity-70">Ministerio Internacional</p>
+</div>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-medium hover:text-primary transition-colors" href="#">Inicio</a>
+<a class="font-medium text-primary border-b-2 border-primary" href="#">En Vivo</a>
+<a class="font-medium hover:text-primary transition-colors" href="#">Sermones</a>
+<a class="font-medium hover:text-primary transition-colors" href="#">Ministerios</a>
+<button class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:ring-2 ring-primary transition-all" id="theme-toggle">
+<span class="material-icons text-xl block dark:hidden">dark_mode</span>
+<span class="material-icons text-xl hidden dark:block">light_mode</span>
+</button>
+</div>
+<div class="md:hidden flex items-center">
+<button class="material-icons text-3xl">menu</button>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="relative flex h-3 w-3">
+<span class="animate-pulse-red absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+</div>
+<h2 class="text-2xl font-bold">Transmisión en Vivo</h2>
+</div>
+<div class="hidden sm:block">
+<span class="text-sm opacity-60">Servicio de Domingo - 10:00 AM</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 space-y-4">
+<div class="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl relative group">
+<div class="absolute inset-0 flex items-center justify-center bg-slate-900">
+<span class="material-icons text-8xl text-white/20 group-hover:text-primary/40 transition-colors cursor-pointer">play_circle</span>
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+<div class="flex items-center gap-4 text-white">
+<span class="material-icons cursor-pointer">play_arrow</span>
+<span class="material-icons cursor-pointer">volume_up</span>
+<div class="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3"></div>
+</div>
+<span class="text-sm">45:12 / 01:20:00</span>
+<span class="material-icons cursor-pointer">settings</span>
+<span class="material-icons cursor-pointer">fullscreen</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="text-2xl font-bold mb-1">Creciendo en la Gracia de Dios</h1>
+<p class="text-slate-500 dark:text-slate-400">Pastor Principal • Servicio General • 24 de Mayo, 2024</p>
+</div>
+<button class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-sky-500 text-white font-semibold rounded-lg shadow-lg shadow-primary/20 transition-all">
+<span class="material-icons">notifications_active</span>
+                                Recordatorio
+                            </button>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1 flex flex-col h-[500px] lg:h-auto bg-card-light dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold flex items-center gap-2">
+<span class="material-icons text-primary">chat_bubble</span>
+                            Chat en Vivo
+                        </h3>
+<span class="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-slate-500 dark:text-slate-400">1,240 Conectados</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4 text-sm scrollbar-hide">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex-shrink-0 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold">A</div>
+<div>
+<span class="font-bold">Andrés López</span>
+<p class="text-slate-600 dark:text-slate-400 mt-1">¡Bendiciones a todos desde Colombia! 🙌</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900 flex-shrink-0 flex items-center justify-center text-emerald-600 dark:text-emerald-300 font-bold">M</div>
+<div>
+<span class="font-bold">Maria García</span>
+<p class="text-slate-600 dark:text-slate-400 mt-1">Amén, qué hermosa palabra.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex-shrink-0 flex items-center justify-center text-purple-600 dark:text-purple-300 font-bold">R</div>
+<div>
+<span class="font-bold text-primary">Moderador</span>
+<p class="text-slate-600 dark:text-slate-400 mt-1 italic">Bienvenidos a la transmisión oficial de MIVN.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900 flex-shrink-0 flex items-center justify-center text-amber-600 dark:text-amber-300 font-bold">C</div>
+<div>
+<span class="font-bold">Carlos R.</span>
+<p class="text-slate-600 dark:text-slate-400 mt-1">Conectados en familia, listos para recibir.</p>
+</div>
+</div>
+</div>
+<div class="p-4 bg-slate-50 dark:bg-slate-900/50">
+<div class="relative">
+<input class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg pr-12 focus:ring-primary focus:border-primary" placeholder="Escribe un mensaje..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:text-sky-600">
+<span class="material-icons">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section class="mt-20">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="text-3xl font-bold">Cultos Pasados</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Revive nuestras transmisiones anteriores</p>
+</div>
+<a class="text-primary font-semibold hover:underline flex items-center gap-1" href="#">
+                    Ver todos <span class="material-icons text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="group bg-card-light dark:bg-card-dark rounded-xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300">
+<div class="aspect-video bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
+<img alt="Pastors preaching" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCloi0-Oor2tDimMeHfF_jL9SW7YzQAsJgJFRxcCZ5Ep9VtTAEvGPB5mxP5jDbehrGBBUe09cwUF_ml58nncXknDiSGOYGHp2z8XMhEu_lXSwpGac1gAB8PHOKuFndLfVqD5JLI0Lm3Pgf4Xs1cbN0gA4bgTYupt5H2S7ymrGzYq7h6btZ8LtyO61uI0WvSJ2GBGuAZlqAh6vX0QLSj93oUA9gV4afnIrmAdCm1G3qU-sPsXpeK-3OjNzah0h_cziQ8fUVlpi-7BLM"/>
+<div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 text-white text-xs rounded">58:20</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-icons text-5xl text-white">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-semibold px-2 py-0.5 bg-primary/10 text-primary rounded-full">DOMINICAL</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">17 May 2024</span>
+</div>
+<h3 class="font-bold text-lg mb-4 line-clamp-2 leading-snug">Restaurando los Muros de nuestra Fe</h3>
+<button class="w-full py-2.5 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2">
+                            Ver <span class="material-icons text-sm">visibility</span>
+</button>
+</div>
+</div>
+<div class="group bg-card-light dark:bg-card-dark rounded-xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300">
+<div class="aspect-video bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
+<img alt="Church worship" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW36J9gks5Pm7ksg3Wqgg0XZksWlieazAXwOHmZj8Ff0FdYnlFVeJMxgxlb9KTrF_O_eWBs0L7L84LyJ2cPrzgYNyjyFOxtY3K2At1nD8XTLC_fb7N3_Jf_hWIH25gGL__C9TzqgXfApZl8tthjxpRZOUKdFYxQsZRftJ6xV_8Ovn_ZLQm9SmVI3mphbec2q0tFYxQIx-lTv7moZR9hiJZCIS5_-7tyHiZzEuYAdiJW2Z2wNDqMlELMz0z-9flBL2ymXduq49w3iY"/>
+<div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 text-white text-xs rounded">01:12:05</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-icons text-5xl text-white">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-semibold px-2 py-0.5 bg-primary/10 text-primary rounded-full">GENERAL</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">10 May 2024</span>
+</div>
+<h3 class="font-bold text-lg mb-4 line-clamp-2 leading-snug">Viviendo bajo la Promesa de su Presencia</h3>
+<button class="w-full py-2.5 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2">
+                            Ver <span class="material-icons text-sm">visibility</span>
+</button>
+</div>
+</div>
+<div class="group bg-card-light dark:bg-card-dark rounded-xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300">
+<div class="aspect-video bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
+<img alt="Bible study" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBHKnMuXMOXR5yprSXulZ0KWuyQRWM_CsGHAMIAmk2Vawotw5g9jYcPF3jNpDCigjRNqqkAeTGufl1P4mKzWurswlgRD6i4dGoZgZjCdcqqjQgYlwZDzQk22-D71ySnrTbj-hXGI_5YSxHlpCy_1FQ4Kz_rCFBkvXZDdMJAJ-VHLYlkgz6T4pm0FlhTZ9zyFakEBImz-kJ92iBL3QBuHfv4iC1okkVDlXx-Li_3LKbhZ0ta0Zyahavjl0ywS-QIBU89iZhHxWpXTo"/>
+<div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 text-white text-xs rounded">45:10</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-icons text-5xl text-white">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-semibold px-2 py-0.5 bg-primary/10 text-primary rounded-full">JÓVENES</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">03 May 2024</span>
+</div>
+<h3 class="font-bold text-lg mb-4 line-clamp-2 leading-snug">Identidad y Propósito en Tiempos de Cambio</h3>
+<button class="w-full py-2.5 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2">
+                            Ver <span class="material-icons text-sm">visibility</span>
+</button>
+</div>
+</div>
+<div class="group bg-card-light dark:bg-card-dark rounded-xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300">
+<div class="aspect-video bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
+<img alt="Pastors preaching" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1d5c-B4QGkR3WlGeE2AQur4oQJH-O6ILsHotmmTRl2lDPqnVL8OCjqfr4NY5OhUWRFAoLcSQeJizbxeo-EIQisNPgeAJuXPM5OqG7lVZUWN2PFnNBmYQp6McmYa0o6d-rtHCFNhRFwC9AqCTZ-TqnPs92JQZ1wCiRKrZJQjYJNDTr6RVGhGGbPFIVHmjn7iHnmM47Kd088rvdI0s1L-t8GLpUjH5UNmwSc1ajZRPG81O9sM6i477uGF4f6yPs9Hri-vtuqBni27M"/>
+<div class="absolute bottom-2 right-2 px-2 py-1 bg-black/70 text-white text-xs rounded">01:05:40</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-icons text-5xl text-white">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-semibold px-2 py-0.5 bg-primary/10 text-primary rounded-full">ORACIÓN</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">26 Abr 2024</span>
+</div>
+<h3 class="font-bold text-lg mb-4 line-clamp-2 leading-snug">El Poder de la Oración Perseverante</h3>
+<button class="w-full py-2.5 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-2">
+                            Ver <span class="material-icons text-sm">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<section class="mt-20 py-16 bg-primary rounded-2xl overflow-hidden relative">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<img alt="MIVN background logo" class="w-64" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoO_IVquep6OC1nYnLQDjJ2w_EouYcx4W0751lT0tjIfUjni_mHPHsQy1NADAYeosVR5t__-g9mjAToS0_gcglt1VZkv7naBoCc4DDCJgGPnvM2eY90lWAgOFhUPn83cbKaliau1ZIz325Dm7Narzpen1ZOgyoWAJiyFhUyco1p7gBioYcTJca1YcYShUArF4np2uJOl4SHgKZFLtUXF5jOw8cjKbrGrDFka1_29w6bFELou_Ybco5fzrXifrfSIOJF2nb5-D-Yig"/>
+</div>
+<div class="relative z-10 px-8 flex flex-col items-center text-center">
+<h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¡No te pierdas ningún servicio!</h2>
+<p class="text-white/90 text-lg mb-8 max-w-2xl">Regístrate para recibir notificaciones en tu celular antes de que iniciemos nuestras transmisiones.</p>
+<div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+<input class="flex-1 rounded-lg border-transparent focus:ring-white focus:border-white" placeholder="Tu correo electrónico" type="email"/>
+<button class="px-8 py-3 bg-white text-primary font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-lg">
+                        Activar Recordatorios
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-2">
+<img alt="MIVN Footer Logo" class="h-16 mb-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADceH4sBo80XS1l4SiLwblsqcfnViYd4Vj-hBsvyX1mPwtoLcFzTTo-OzTjMrHg6h88YWfB5D30h5DkOxlmrzajH1foCgJUQVPfDSiru5YYhQidipKSQlwZS1zMR1ukMiR4BWaDRewSS6kBpTteLOOsBGF7aL24lEfN7jYP_BgtAIAeupHJKeyJ0C6fL3XpHZl9inPgTLMoDRWhNMBR3zI2AW_JQoAdIJWUmR-v-tTeJGv-uYZAg3gwLvl24fWLgWSGEdKNRiaW0k"/>
+<h3 class="text-xl font-bold mb-4">Ministerio Internacional Vida Nueva</h3>
+<p class="text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
+                        "De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas." (2 Corintios 5:17)
+                    </p>
+<div class="flex space-x-4">
+<a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-icons">facebook</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-icons">camera_alt</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-icons">play_circle</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Recursos</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">Archivo de Sermones</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Notas de Estudio</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Podcast Semanal</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Plan de Lectura</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Contacto</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li class="flex items-center gap-3">
+<span class="material-icons text-primary text-sm">location_on</span>
+                            Calle Esperanza 123, Ciudad
+                        </li>
+<li class="flex items-center gap-3">
+<span class="material-icons text-primary text-sm">phone</span>
+                            +1 234 567 890
+                        </li>
+<li class="flex items-center gap-3">
+<span class="material-icons text-primary text-sm">email</span>
+                            info@mivn.org
+                        </li>
+</ul>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
+<p>© 2024 Ministerio Internacional Vida Nueva. Todos los derechos reservados.</p>
+</div>
+</div>
+</footer>
+<script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        // Initialize theme based on preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.add('light');
+        }
+    </script>
+
+</body></html>

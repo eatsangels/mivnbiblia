@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MIVN - Gestión de Eventos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1392ec",
+                        "highlight": "#d4af37",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 lg:px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">MIVN Admin</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Gestión de Eventos</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Miembros</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Reportes</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden sm:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden">
+<div class="text-slate-400 flex bg-slate-100 dark:bg-slate-800 items-center justify-center pl-3">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-0 text-sm px-3" placeholder="Buscar evento..." value=""/>
+</div>
+</label>
+<div class="flex items-center gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700" data-alt="Avatar of the administrator" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCmIQGh6jS5BZgHYTU6HxJetGp1hw3eTzIS18dRm-Yhzt9hF_v67plMzQkakUJ3NgR9MFkZiW9dWpb49t2-9zpFxQmjAuhdbfmmmu5A-fY1dG8s7yGLmJNeDlh5U_hjz58Yv1wt4qh9udCkRD3q3d7WV3MF66DPqePUkvcVvymC7cCJ1O7JWbt77_ExjoEe4xI-JF0aCrWDvyHGMs7dQZR29S3AjCPEZ87hrc-g_m7Vx72CIeRf206Y7AVJQSkIc73LFQDkQmEgOcI");'></div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto p-4 lg:p-10">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-end gap-3 mb-8">
+<div class="flex flex-col gap-1">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black tracking-tight">Gestión de Eventos</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base">Administra y calendariza los eventos del Ministerio Internacional Vida Nueva</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-bold hover:bg-primary/90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+                    Nuevo Evento
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Sidebar: Create Event Form -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+<h2 class="text-slate-900 dark:text-white text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">edit_calendar</span>
+                        Crear Nuevo Evento
+                    </h2>
+<form class="flex flex-col gap-4">
+<div>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">Título del Evento</p>
+<input class="w-full rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Ej: Gran Congreso de Alabanza"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">Categoría</p>
+<select class="w-full rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-primary outline-none">
+<option>Culto</option>
+<option>Taller</option>
+<option>Congreso</option>
+<option>Especial</option>
+</select>
+</div>
+<div>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">Capacidad</p>
+<input class="w-full rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-primary outline-none" placeholder="0" type="number"/>
+</div>
+</div>
+<div>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">Lugar / Ubicación</p>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-3 text-slate-400 text-lg">location_on</span>
+<input class="w-full pl-10 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-primary outline-none" placeholder="Templo Principal"/>
+</div>
+</div>
+<div>
+<p class="text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">Orador / Expositor</p>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-3 text-slate-400 text-lg">person</span>
+<input class="w-full pl-10 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-slate-900 dark:text-white p-3 text-sm focus:border-primary outline-none" placeholder="Nombre del Invitado"/>
+</div>
+</div>
+<button class="w-full bg-primary text-white font-bold py-3 rounded-lg mt-2 hover:bg-primary/90 transition-all shadow-md active:scale-[0.98]" type="submit">
+                            Programar Evento
+                        </button>
+</form>
+</div>
+<!-- Mini Stats / Summary -->
+<div class="bg-primary/10 border border-primary/20 dark:bg-primary/5 dark:border-primary/30 rounded-xl p-6">
+<h3 class="text-primary font-bold text-lg mb-4">Resumen Mensual</h3>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="text-slate-600 dark:text-slate-400 text-sm">Total Eventos:</span>
+<span class="text-slate-900 dark:text-white font-bold">12</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-slate-600 dark:text-slate-400 text-sm">Congresos:</span>
+<span class="text-highlight font-bold">2</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-slate-600 dark:text-slate-400 text-sm">Total Inscritos:</span>
+<span class="text-slate-900 dark:text-white font-bold">458</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content: Calendar and List -->
+<div class="lg:col-span-8 flex flex-col gap-8">
+<!-- Full-Width Calendar Picker Component Style -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<h3 class="text-slate-900 dark:text-white font-bold text-xl">Octubre 2023</h3>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+<button class="px-4 py-1.5 rounded-md bg-white dark:bg-slate-700 shadow-sm text-sm font-bold text-slate-900 dark:text-white">Mes</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-medium text-slate-500 dark:text-slate-400">Semana</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-medium text-slate-500 dark:text-slate-400">Día</button>
+</div>
+</div>
+<div class="p-4">
+<div class="grid grid-cols-7 border-b border-slate-100 dark:border-slate-800 mb-2">
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Dom</div>
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Lun</div>
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Mar</div>
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Mié</div>
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Jue</div>
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Vie</div>
+<div class="h-10 flex items-center justify-center text-xs font-black text-slate-400 uppercase tracking-widest">Sáb</div>
+</div>
+<div class="grid grid-cols-7 gap-px bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-100 dark:border-slate-800">
+<!-- Empty days -->
+<div class="aspect-square bg-slate-50 dark:bg-slate-900 p-2"></div>
+<div class="aspect-square bg-slate-50 dark:bg-slate-900 p-2"></div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium text-slate-400">1</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium text-slate-400">2</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium text-slate-400">3</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative">
+<span class="text-sm font-medium text-slate-900 dark:text-slate-300">4</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="h-1.5 w-full bg-primary/20 rounded-full"></div>
+</div>
+</div>
+<!-- Selected Day -->
+<div class="aspect-square bg-primary/5 dark:bg-primary/10 p-2 relative ring-2 ring-primary ring-inset">
+<span class="text-sm font-black text-primary">5</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="text-[10px] bg-primary text-white px-1 py-0.5 rounded leading-none truncate">Culto Alabanza</div>
+</div>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium">6</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium">7</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium">8</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium">9</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium">10</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2">
+<span class="text-sm font-medium">11</span>
+</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 relative">
+<span class="text-sm font-medium">12</span>
+<div class="mt-1">
+<div class="text-[10px] bg-highlight text-white px-1 py-0.5 rounded leading-none truncate">Congreso MIVN</div>
+</div>
+</div>
+<!-- Filler for many more rows -->
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">13</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">14</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">15</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">16</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">17</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">18</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">19</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">20</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">21</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">22</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">23</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">24</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">25</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium text-primary font-bold bg-primary/5">26</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">27</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">28</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">29</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">30</div>
+<div class="aspect-square bg-white dark:bg-slate-900 p-2 text-sm font-medium">31</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Events List -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+<h3 class="text-slate-900 dark:text-white font-bold text-lg">Próximos Eventos</h3>
+<div class="flex gap-2">
+<button class="text-sm font-semibold text-primary flex items-center gap-1 hover:underline">
+                                 Ver todos
+                                 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50">
+<th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Evento</th>
+<th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Categoría</th>
+<th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Inscritos</th>
+<th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Event 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-white font-bold">Congreso Avivamiento 2023</span>
+<span class="text-slate-500 text-xs">12 Oct - 15 Oct, 2023</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="bg-highlight/10 text-highlight text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-highlight/20">Congreso</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full max-w-[80px]">
+<div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+</div>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">425 / 500</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-primary hover:bg-primary/90 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-auto shadow-sm transition-all group-hover:scale-105">
+<span class="material-symbols-outlined text-sm">download</span>
+                                            Descargar Lista
+                                        </button>
+</td>
+</tr>
+<!-- Event 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-white font-bold">Culto de Adoración Extrema</span>
+<span class="text-slate-500 text-xs">26 Oct, 2023 | 19:00 PM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="bg-primary/10 text-primary text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-primary/20">Culto</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full max-w-[80px]">
+<div class="h-full bg-primary rounded-full" style="width: 40%"></div>
+</div>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">120 / 300</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-primary hover:bg-primary/90 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-auto shadow-sm transition-all group-hover:scale-105">
+<span class="material-symbols-outlined text-sm">download</span>
+                                            Descargar Lista
+                                        </button>
+</td>
+</tr>
+<!-- Event 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-white font-bold">Taller: Liderazgo Moderno</span>
+<span class="text-slate-500 text-xs">30 Oct, 2023 | 09:00 AM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 text-[11px] font-bold px-2 py-1 rounded uppercase tracking-wider border border-emerald-200 dark:border-emerald-800">Taller</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full max-w-[80px]">
+<div class="h-full bg-primary rounded-full" style="width: 100%"></div>
+</div>
+<span class="text-sm font-bold text-emerald-500">LLENO</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-primary hover:bg-primary/90 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-auto shadow-sm transition-all group-hover:scale-105">
+<span class="material-symbols-outlined text-sm">download</span>
+                                            Descargar Lista
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Meta -->
+<footer class="mt-12 border-t border-slate-200 dark:border-slate-800 p-6 text-center text-slate-400 text-sm">
+<p>© 2023 Ministerio Internacional Vida Nueva. Panel de Administración de Eventos.</p>
+</footer>
+</body></html>

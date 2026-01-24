@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Member Management Database - MIVN</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Font: Manrope -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#3ea5ea", // Celeste blue
+              "accent-gold": "#D4AF37", // Gold accent
+              "background-light": "#f6f7f8",
+              "background-dark": "#111b21",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex">
+<!-- Sidebar Navigation -->
+<aside class="w-72 fixed h-screen bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-20">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-primary/10 rounded-xl p-2">
+<span class="material-symbols-outlined text-primary text-3xl">church</span>
+</div>
+<div>
+<h1 class="text-lg font-extrabold tracking-tight leading-none text-slate-900 dark:text-white">MIVN</h1>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400">Vida Nueva Admin</p>
+</div>
+</div>
+<nav class="space-y-1 mb-10">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-semibold">Gestión de Miembros</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="text-sm font-semibold">Ministerios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-sm font-semibold">Grupos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-semibold">Reportes</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+<p class="text-[10px] uppercase font-bold text-slate-400 mb-4 tracking-wider">Métricas Rápidas</p>
+<div class="space-y-4">
+<div class="flex flex-col gap-1 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+<p class="text-slate-500 text-xs font-medium">Total Members</p>
+<div class="flex items-end justify-between">
+<span class="text-xl font-bold">1,240</span>
+<span class="text-[10px] font-bold text-green-500 flex items-center bg-green-500/10 px-1.5 py-0.5 rounded">+5.2%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+<p class="text-slate-500 text-xs font-medium">Active Leaders</p>
+<div class="flex items-end justify-between">
+<span class="text-xl font-bold">85</span>
+<span class="text-[10px] font-bold text-green-500 flex items-center bg-green-500/10 px-1.5 py-0.5 rounded">+2.1%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+<p class="text-slate-500 text-xs font-medium">Growth this Month</p>
+<div class="flex items-end justify-between">
+<span class="text-xl font-bold text-accent-gold">+12%</span>
+<span class="material-symbols-outlined text-accent-gold text-sm">trending_up</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-6">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-semibold">Configuración</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 flex-1 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-10 px-8 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-6 flex-1">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white whitespace-nowrap">Gestión de Miembros</h2>
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary text-sm transition-all placeholder:text-slate-400" placeholder="Buscar por nombre, email o grupo..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-accent-gold hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg shadow-accent-gold/20 flex items-center gap-2 transition-all transform active:scale-95 whitespace-nowrap">
+<span class="material-symbols-outlined text-xl">person_add</span>
+<span>Add New Member</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:border-slate-800 mx-2"></div>
+<button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<div class="flex items-center gap-3 pl-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs ring-2 ring-primary/10">
+                                AD
+                            </div>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8">
+<!-- Filters Section -->
+<div class="flex flex-wrap gap-3 mb-6">
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 pl-3 pr-2 py-1.5 rounded-lg shadow-sm">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-tight">Ministry</span>
+<select class="bg-transparent border-none focus:ring-0 text-sm font-semibold py-0 pr-8 cursor-pointer text-slate-700 dark:text-slate-300">
+<option>All Ministries</option>
+<option>Youth Ministry</option>
+<option>Worship Team</option>
+<option>Kids Church</option>
+<option>Intercession</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 pl-3 pr-2 py-1.5 rounded-lg shadow-sm">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-tight">Status</span>
+<select class="bg-transparent border-none focus:ring-0 text-sm font-semibold py-0 pr-8 cursor-pointer text-slate-700 dark:text-slate-300">
+<option>Active</option>
+<option>New Convert</option>
+<option>Leader</option>
+<option>Inactive</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 pl-3 pr-2 py-1.5 rounded-lg shadow-sm">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-tight">Joined</span>
+<button class="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            Last 30 Days
+                            <span class="material-symbols-outlined text-sm">calendar_month</span>
+</button>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 pl-3 pr-2 py-1.5 rounded-lg shadow-sm">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-tight">Attendance</span>
+<select class="bg-transparent border-none focus:ring-0 text-sm font-semibold py-0 pr-8 cursor-pointer text-slate-700 dark:text-slate-300">
+<option>High (&gt;80%)</option>
+<option>Regular (50-80%)</option>
+<option>Low (&lt;50%)</option>
+</select>
+</div>
+<button class="ml-auto text-primary text-sm font-bold flex items-center gap-1 px-4 hover:underline">
+<span class="material-symbols-outlined text-lg">filter_alt_off</span>
+                        Clear All
+                    </button>
+</div>
+<!-- Members Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Photo</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Name &amp; Email</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Phone</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Group</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Member 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Portrait of a young male church member" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqHwWJdFGu_GX7StEFIz9puJTEkDBOhA3jtnZPpOKV0bZRav51Ip8bV5ZP0g0ngWkOQOxUbM0sXwc_fXjhVKUfy2tzfhPuKN6Q8aXzB98KyjTbATcr3m7opPUcSpJlgtDXbUm8Ts5qZB35O58XQOh-xC0VtgaiQdNiB59wNjAPhTCtI5rVhm-q7GIFeZQo0SXmu7dsh8BhmobA6Kj4vNmZJ1BtjonXGDoadgfnGRGbtjf5lUJY6YjBVdXmnh_utj4PjDRUbEpwM0Q');"></div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Juan Pérez</span>
+<span class="text-xs text-slate-500 font-medium">juan.p@email.com</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+                                        +503 2211-0000
+                                    </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-primary/10 text-primary">Youth Ministry</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-500">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="View Profile">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="Edit Member">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="Send Message">
+<span class="material-symbols-outlined text-lg">chat</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Member 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Female worship leader smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCQUOWLaIQ_Nh0hERbvBoOzEJvs3DVgmL9lfju0RM71RDbE7TQ58HnL-4pkihJJQkwOhfT4xnCq1ApzX36DV8nzfMzFp6FAEbvAdDrlRXtPB2C1G5EUaCAf32glgNmvkxUowjkg3rWZQxgA_VWoLHAjsAcnngyS-Nyg3bTEU_04WwoifTzvAV1SITxlxPRjjwHo04Foq-aKaO54fAiOGY_hnvDKzqWBquNBm8leB2iH12w_cP0uYVtIlkSuX7iYPClAw8GFOfNCswo');"></div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Maria Garcia</span>
+<span class="text-xs text-slate-500 font-medium">m.garcia@email.com</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+                                        +503 2211-0001
+                                    </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-purple-500/10 text-purple-600">Worship Team</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-accent-gold">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-gold"></span>
+                                            Leader
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">chat</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Member 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Portrait of a middle aged man" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB4FvJ82X0TXlsalKt6xikAdQAgJUCiSWLHz_TYxllOTaMe9sTyuHdDCNj4NjMMp3uYPqWMFr8yxAso2zONL61S-nBQ4CLKQRAXY85yeYo-TJiviO9pgcEEaPWs8-smw3eJrFk2Al3TBv8xbGDSvQpSqz4p9t4fcRi_xVBT4Pp2m4N3wmtvhuGLhM79_7DiM89aUhoqHr76BsFC9W80N2CIdZjy88LdxQWgdVBvMB3KzIw5QsMYB8Q8nbzxvGq5qs1VROYjX1broX4');"></div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Carlos Ruiz</span>
+<span class="text-xs text-slate-500 font-medium">c.ruiz@email.com</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+                                        +503 2211-0002
+                                    </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-orange-500/10 text-orange-600">Kids Church</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                            New Convert
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">chat</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Member 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Portrait of an elderly woman" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIrHqEEOb5u2VH3KxCr1OJTpJEhGm9j1T76JBKOhnOh6frzgBKlI1a2lEWWe01ve6NMXXTJwGOP000SZEuUJQHAh4G1V2AaLtpf2Sj0ZnJd6SaJ90tYZyUaFOSyyte-237iUGNy7IVm8ebN1qU3ftPlB5s3MJDJ-S_0uYbaXRY_rx0vbb6ONps8Or5N31ZQOWnb9i62k4dGprFBzG1fS3tx4enb9sqhiM3Ab8W23FiPtlQUXog87bUHHGdtdyGHbkrawRFKAYIf0M');"></div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Ana Lopez</span>
+<span class="text-xs text-slate-500 font-medium">a.lopez@email.com</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+                                        +503 2211-0003
+                                    </td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/10 text-blue-600">Intercession</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-500">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">chat</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+<p class="text-sm font-medium text-slate-500">
+                            Showing <span class="text-slate-900 dark:text-white font-bold">1</span> to <span class="text-slate-900 dark:text-white font-bold">10</span> of <span class="text-slate-900 dark:text-white font-bold">1,240</span> results
+                        </p>
+<div class="flex gap-2">
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold bg-white dark:bg-slate-900 disabled:opacity-50" disabled="">Previous</button>
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Footer Support -->
+<footer class="mt-8 flex items-center justify-between opacity-60">
+<p class="text-xs font-medium text-slate-500">© 2024 Ministerio Internacional Vida Nueva. Database v2.4.0</p>
+<div class="flex gap-4">
+<a class="text-xs font-bold text-slate-500 hover:text-primary" href="#">Help Center</a>
+<a class="text-xs font-bold text-slate-500 hover:text-primary" href="#">Privacy Policy</a>
+</div>
+</footer>
+</div>
+</main>
+</div>
+</body></html>

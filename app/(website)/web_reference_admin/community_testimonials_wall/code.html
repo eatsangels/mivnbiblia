@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel Administrativo - MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#4484e4",
+                "gold": "#D4AF37",
+                "sidebar-bg": "#1e293b",
+                "background-light": "#f8fafc",
+                "accent-blue": "#4AA3DF",
+              },
+              fontFamily: {
+                "display": ["Manrope", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-item-active {
+            @apply bg-primary/10 border-r-4 border-primary text-primary;
+        }
+        .sidebar-item {
+            @apply flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer;
+        }
+        .stat-card {
+            @apply bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light font-display text-slate-800 min-h-screen flex">
+<aside class="w-64 bg-sidebar-bg flex-shrink-0 flex flex-col h-screen sticky top-0">
+<div class="p-6 flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h1 class="text-xl font-extrabold text-white tracking-tight">MIVN <span class="text-xs text-gold font-normal block tracking-normal opacity-80 uppercase">Administración</span></h1>
+</div>
+<nav class="mt-6 flex-1">
+<div class="sidebar-item sidebar-item-active">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-semibold">Panel de Control</span>
+</div>
+<div class="sidebar-item">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Miembros</span>
+</div>
+<div class="sidebar-item">
+<span class="material-symbols-outlined">event</span>
+<span class="font-medium">Eventos</span>
+</div>
+<div class="sidebar-item">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium">Finanzas</span>
+</div>
+<div class="sidebar-item">
+<span class="material-symbols-outlined">live_tv</span>
+<span class="font-medium">Transmisiones</span>
+</div>
+<div class="sidebar-item">
+<span class="material-symbols-outlined">rate_review</span>
+<span class="font-medium">Testimonios</span>
+</div>
+<div class="sidebar-item">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Configuración</span>
+</div>
+</nav>
+<div class="p-6 border-t border-slate-700">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center text-white overflow-hidden">
+<img alt="Admin" class="object-cover size-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaqM9IxWLLWR_ebf41g9hXMoNdRcLJGGYobEGz3PBuB5urne7YV122c0tis2oV1-gXKV6PAkEmFwocV9iqroOGfRrs8oB8eKaq9I63bnWNQk1Q7BbXEHVDN0dK0QL6JDNy7wPdo4CQ-lt0FvDyq79-xFPZYCUbihheFiGo4JU2Z0ccOMPvbBGVWUqx-vvSuZLbeyeV9cfDf063XVEwsP5przS7y0FAaydUc4hY-AZ_QA2f7Nk3gv35mH6Ew8zF2iRKDoXMC3eSDZc"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold text-white truncate">Pastor Alberto G.</p>
+<p class="text-xs text-slate-400">Administrador Principal</p>
+</div>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-white">logout</span>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-h-screen">
+<header class="bg-white h-16 border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<span class="text-slate-400 text-sm font-medium">Dashboard</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">chevron_right</span>
+<span class="text-slate-900 font-bold">Vista General</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer">notifications</span>
+<span class="absolute -top-1 -right-1 size-4 bg-red-500 text-[10px] text-white rounded-full flex items-center justify-center font-bold">3</span>
+</div>
+<div class="h-6 w-px bg-slate-200"></div>
+<button class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+                Nuevo Registro
+            </button>
+</div>
+</header>
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto w-full">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="stat-card">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 text-primary rounded-lg">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="text-green-500 text-xs font-bold bg-green-50 px-2 py-1 rounded">+12%</span>
+</div>
+<h3 class="text-slate-500 text-sm font-semibold">Total Miembros</h3>
+<p class="text-3xl font-black text-slate-900 mt-1">2,485</p>
+</div>
+<div class="stat-card">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-purple-50 text-purple-600 rounded-lg">
+<span class="material-symbols-outlined">volunteer_activism</span>
+</div>
+<span class="text-green-500 text-xs font-bold bg-green-50 px-2 py-1 rounded">+5%</span>
+</div>
+<h3 class="text-slate-500 text-sm font-semibold">Nuevos Conversos</h3>
+<p class="text-3xl font-black text-slate-900 mt-1">42</p>
+</div>
+<div class="stat-card">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined">monetization_on</span>
+</div>
+<div class="w-16 h-8 flex items-end gap-1">
+<div class="w-1/4 h-1/2 bg-amber-200 rounded-sm"></div>
+<div class="w-1/4 h-3/4 bg-amber-300 rounded-sm"></div>
+<div class="w-1/4 h-2/3 bg-amber-400 rounded-sm"></div>
+<div class="w-1/4 h-full bg-amber-500 rounded-sm"></div>
+</div>
+</div>
+<h3 class="text-slate-500 text-sm font-semibold">Diezmos y Ofrendas (Mes)</h3>
+<p class="text-3xl font-black text-slate-900 mt-1">$14,250.00</p>
+</div>
+<div class="stat-card">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-red-50 text-red-600 rounded-lg">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+</div>
+<h3 class="text-slate-500 text-sm font-semibold">Eventos Próximos</h3>
+<p class="text-3xl font-black text-slate-900 mt-1">8</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-8">
+<section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+<div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">live_tv</span>
+<h2 class="text-lg font-bold text-slate-900">Gestión de Transmisión</h2>
+</div>
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-200 text-slate-600">Offline</span>
+</div>
+<div class="p-6 flex flex-col md:flex-row items-center gap-8">
+<div class="w-full md:w-64 aspect-video bg-slate-900 rounded-lg flex items-center justify-center text-white/20 relative">
+<span class="material-symbols-outlined text-5xl">videocam_off</span>
+<div class="absolute bottom-2 left-2 flex gap-1">
+<div class="size-1.5 rounded-full bg-red-500 animate-pulse"></div>
+<div class="text-[8px] text-white/50 uppercase font-bold">Previsualización</div>
+</div>
+</div>
+<div class="flex-1 space-y-4">
+<div>
+<label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Título del Servicio</label>
+<input class="w-full mt-1 border-slate-200 rounded-lg focus:ring-primary focus:border-primary" placeholder="Culto de Adoración y Palabra - 19:00" type="text"/>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm">
+<span class="material-symbols-outlined">radio_button_checked</span>
+                                    Iniciar Live
+                                </button>
+<button class="flex-1 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined">settings_input_component</span>
+                                    Ajustes OBS
+                                </button>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+<div class="p-6 border-b border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">rate_review</span>
+<h2 class="text-lg font-bold text-slate-900">Aprobación de Testimonios</h2>
+</div>
+<a class="text-primary text-sm font-bold hover:underline" href="#">Ver todos (12)</a>
+</div>
+<div class="divide-y divide-slate-100">
+<div class="p-6 flex items-start gap-4 hover:bg-slate-50 transition-colors">
+<div class="size-10 rounded-full overflow-hidden flex-shrink-0">
+<img alt="" class="object-cover size-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhQ2ykgpVOMXEnxaxZCyYixloKWjlqo0Z78Fsb1QFQxJ_3xtoO89v1pIdpynWG2yqdSXA6zt_rac88nPi_wLlPdAhJbA7Sk9dzOhDuLFI5tN6kVFRcVMWwWUMDhQSrEe379MZUKvegg3q4ilL6qSGCQAFkfTkHSUaFnWczTI_wWAuP1kX55Wj08g0FcqdKomGzgiKHbAv0p-dTD7T5SV5o5b8RVIDPAtFwIYX_fPEcoaWoXbDdM0EUjc1OaNp6y0Zg7pNvzCH7Wn4"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-slate-900">María González</h4>
+<span class="text-[10px] text-slate-400 font-medium">Hace 2 horas</span>
+</div>
+<p class="text-sm text-slate-600 italic line-clamp-2 mt-1">"Quiero agradecer a Dios por sanar a mi hijo de una fiebre persistente después de la oración del domingo..."</p>
+<div class="flex gap-4 mt-3">
+<button class="text-xs font-bold text-green-600 flex items-center gap-1 hover:text-green-700">
+<span class="material-symbols-outlined text-sm">check_circle</span> Aprobar
+                                    </button>
+<button class="text-xs font-bold text-red-600 flex items-center gap-1 hover:text-red-700">
+<span class="material-symbols-outlined text-sm">cancel</span> Rechazar
+                                    </button>
+<button class="text-xs font-bold text-slate-400 flex items-center gap-1 hover:text-slate-600">
+<span class="material-symbols-outlined text-sm">edit</span> Editar
+                                    </button>
+</div>
+</div>
+</div>
+<div class="p-6 flex items-start gap-4 hover:bg-slate-50 transition-colors">
+<div class="size-10 rounded-full overflow-hidden flex-shrink-0">
+<img alt="" class="object-cover size-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXM7NYP0ME8gnFH_2_-CN_Ox-7yOSgMArPDFieJbUZ3rpCQZpYM3_SZPhVwMrug6_EvS4taed11CAEh64K0IHVYoqxgPmmUxY9zt_yQPliKX_SMvzIj6J2e4QoU-0chnqgyyvGxvQYo99dyukhWHvl1ZtLYKf_YVSmlWK66WIr04n6zUscE-Ht2dk32KjN0c72aqSAUYzhwOsAxv-MeMlT_Mj8ovYQlsm0UXYpeX9_bY-Va4FToiRMgRA8ErXe9MBFsOnobUVuXSM"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-slate-900">Ricardo D.</h4>
+<span class="text-[10px] text-slate-400 font-medium">Hace 5 horas</span>
+</div>
+<div class="flex items-center gap-2 mt-1 text-primary text-xs font-bold">
+<span class="material-symbols-outlined text-sm">videocam</span> Video Testimonio
+                                </div>
+<div class="flex gap-4 mt-3">
+<button class="text-xs font-bold text-green-600 flex items-center gap-1 hover:text-green-700">
+<span class="material-symbols-outlined text-sm">check_circle</span> Aprobar
+                                    </button>
+<button class="text-xs font-bold text-red-600 flex items-center gap-1 hover:text-red-700">
+<span class="material-symbols-outlined text-sm">cancel</span> Rechazar
+                                    </button>
+<button class="text-xs font-bold text-primary flex items-center gap-1 hover:text-blue-700">
+<span class="material-symbols-outlined text-sm">visibility</span> Revisar Video
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div class="space-y-8">
+<section class="bg-white rounded-xl border border-slate-200 p-6">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+                            Agenda
+                        </h2>
+<button class="size-8 rounded-full hover:bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</div>
+<div class="space-y-4">
+<div class="border-l-4 border-primary pl-4 py-1">
+<p class="text-[10px] font-bold text-primary uppercase tracking-wider">Hoy - 19:30</p>
+<h4 class="text-sm font-bold text-slate-900">Escuela de Líderes</h4>
+<p class="text-xs text-slate-500">Salón Principal</p>
+</div>
+<div class="border-l-4 border-gold pl-4 py-1">
+<p class="text-[10px] font-bold text-gold uppercase tracking-wider">Mañana - 09:00</p>
+<h4 class="text-sm font-bold text-slate-900">Ayuno Congregacional</h4>
+<p class="text-xs text-slate-500">Templo Central</p>
+</div>
+<div class="border-l-4 border-accent-blue pl-4 py-1">
+<p class="text-[10px] font-bold text-accent-blue uppercase tracking-wider">Sáb 24 - 15:00</p>
+<h4 class="text-sm font-bold text-slate-900">Reunión de Jóvenes</h4>
+<p class="text-xs text-slate-500">Parque Municipal</p>
+</div>
+<div class="border-l-4 border-slate-200 pl-4 py-1">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dom 25 - 10:00</p>
+<h4 class="text-sm font-bold text-slate-900">Servicio Dominical</h4>
+<p class="text-xs text-slate-500">Transmisión Global</p>
+</div>
+</div>
+<button class="w-full mt-6 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                        Ver Calendario Completo
+                    </button>
+</section>
+<section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+<div class="p-6 border-b border-slate-100 bg-slate-50/50">
+<h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500">history</span>
+                            Actividad Reciente
+                        </h2>
+</div>
+<div class="p-6 space-y-6">
+<div class="flex gap-3">
+<div class="size-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0"></div>
+<div>
+<p class="text-xs text-slate-600"><span class="font-bold text-slate-900">Admin</span> registró 3 nuevos miembros.</p>
+<span class="text-[10px] text-slate-400">Hace 15 min</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="size-2 rounded-full bg-blue-500 mt-1.5 flex-shrink-0"></div>
+<div>
+<p class="text-xs text-slate-600"><span class="font-bold text-slate-900">Sistema</span> programó recordatorios de servicio.</p>
+<span class="text-[10px] text-slate-400">Hace 45 min</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="size-2 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></div>
+<div>
+<p class="text-xs text-slate-600"><span class="font-bold text-slate-900">Tesorero</span> cargó reporte financiero semanal.</p>
+<span class="text-[10px] text-slate-400">Hace 2 horas</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="size-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></div>
+<div>
+<p class="text-xs text-slate-600"><span class="font-bold text-slate-900">Soporte</span> actualizó los servidores de streaming.</p>
+<span class="text-[10px] text-slate-400">Hace 5 horas</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+<footer class="mt-auto p-8 border-t border-slate-200 bg-white">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-sm text-slate-500">© 2024 Ministerio Internacional Vida Nueva - Sistema Administrativo</p>
+<div class="flex gap-6 text-xs font-bold text-slate-400 uppercase tracking-widest">
+<a class="hover:text-primary" href="#">Manual de Uso</a>
+<a class="hover:text-primary" href="#">Soporte IT</a>
+<a class="hover:text-primary" href="#">Reportar Bug</a>
+</div>
+</div>
+</footer>
+</main>
+
+</body></html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MIVN Admin - Financial Management</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#49a3df",
+                        "gold": "#D4AF37",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#121a20",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0f161a] dark:text-white transition-colors duration-200">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 border-r border-[#e8eef2] dark:border-slate-700 bg-white dark:bg-[#1a252c] flex flex-col h-full">
+<div class="p-6 flex flex-col gap-6">
+<!-- Brand / Logo Area -->
+<div class="flex items-center gap-3">
+<div class="bg-primary rounded-lg p-2 text-white">
+<span class="material-symbols-outlined text-3xl">church</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary font-bold text-lg leading-none">MIVN Admin</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-1">Vida Nueva</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-semibold">Finanzas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-semibold">Membresía</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="text-sm font-semibold">Eventos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-semibold">Configuración</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-[#e8eef2] dark:border-slate-700">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-center bg-cover border-2 border-primary/20" data-alt="Avatar administrator profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDuYuIEY458YEeL9eXsNBW226vJAwquxxx0d8-e2WLwpJrLFe_g_icIOfDf82uwKntB-05lq73L68Y4-YSemADTe2BK03n6U2lY2MuHekSplp7uEOiiSQ3I1v33iuH92d2Qw3IvTSpk_nFFIwt3xtyNg6m3DVIKPMK8kTT5DIgq2_NOFcJvI4f5eV8kFXuQYdx37K5Qt8dmq-D1Mygtm-nzaiWdlH6bjGyLkqdpmhcfmNgaqRu0fAbnqAe1U0rnT3GiDmAeoi6od5A");'></div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-sm font-bold truncate">Admin Principal</p>
+<p class="text-xs text-slate-500 truncate">admin@mivn.org</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-white/80 dark:bg-[#1a252c]/80 backdrop-blur-md border-b border-[#e8eef2] dark:border-slate-700 px-8 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-bold tracking-tight">Gestión Financiera</h2>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-1.5 min-w-64">
+<span class="material-symbols-outlined text-slate-400 text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-400" placeholder="Buscar transacciones..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                        Nueva Transacción
+                    </button>
+</div>
+</header>
+<div class="p-8 max-w-[1400px] mx-auto flex flex-col gap-8">
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-[#1a252c] p-6 rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm flex flex-col gap-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Diezmos</p>
+<div class="flex items-baseline gap-2">
+<p class="text-2xl font-extrabold text-[#0f161a] dark:text-white">$45,200.00</p>
+<span class="text-gold text-xs font-bold uppercase tracking-wider">MIVN Gold</span>
+</div>
+<div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+5.2% vs mes anterior</span>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1a252c] p-6 rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm flex flex-col gap-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Ofrendas Especiales</p>
+<p class="text-2xl font-extrabold text-[#0f161a] dark:text-white">$12,850.00</p>
+<div class="flex items-center gap-1 text-rose-600 dark:text-rose-400 text-sm font-bold">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>-2.1% esperado</span>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1a252c] p-6 rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm flex flex-col gap-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Fondo Misionero</p>
+<p class="text-2xl font-extrabold text-[#0f161a] dark:text-white">$8,400.00</p>
+<div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+8.4%</span>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1a252c] p-6 rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm flex flex-col gap-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Crecimiento Mensual</p>
+<p class="text-2xl font-extrabold text-primary">+12.5%</p>
+<div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span>Meta alcanzada</span>
+</div>
+</div>
+</div>
+<!-- Main Section: Trends and Sidebars -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Line Chart Section -->
+<div class="lg:col-span-2 bg-white dark:bg-[#1a252c] rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-[#e8eef2] dark:border-slate-700 flex items-center justify-between">
+<h3 class="font-bold text-lg">Tendencias de Donaciones (6 meses)</h3>
+<select class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-xs font-bold py-1 px-3 focus:ring-0">
+<option>Todo el año</option>
+<option selected="">Últimos 6 meses</option>
+</select>
+</div>
+<div class="p-6">
+<div class="h-[280px] w-full relative">
+<!-- Chart Mockup -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 500 200">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#49a3df" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#49a3df" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 160 Q 50 140, 100 120 T 200 80 T 300 100 T 400 40 T 500 60 L 500 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+<path d="M0 160 Q 50 140, 100 120 T 200 80 T 300 100 T 400 40 T 500 60" fill="none" stroke="#49a3df" stroke-linecap="round" stroke-width="4"></path>
+<!-- Points -->
+<circle cx="100" cy="120" fill="#49a3df" r="4" stroke="white" stroke-width="2"></circle>
+<circle cx="200" cy="80" fill="#49a3df" r="4" stroke="white" stroke-width="2"></circle>
+<circle cx="300" cy="100" fill="#49a3df" r="4" stroke="white" stroke-width="2"></circle>
+<circle cx="400" cy="40" fill="#D4AF37" r="6" stroke="white" stroke-width="2"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="border-t border-slate-500 w-full"></div>
+<div class="border-t border-slate-500 w-full"></div>
+<div class="border-t border-slate-500 w-full"></div>
+<div class="border-t border-slate-500 w-full"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest px-2">
+<span>Ene</span>
+<span>Feb</span>
+<span>Mar</span>
+<span>Abr</span>
+<span>May</span>
+<span>Jun</span>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Reportes Generales -->
+<div class="bg-white dark:bg-[#1a252c] rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm flex flex-col">
+<div class="px-6 py-4 border-b border-[#e8eef2] dark:border-slate-700">
+<h3 class="font-bold text-lg">Reportes Generales</h3>
+</div>
+<div class="p-6 flex flex-col gap-5">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Rango de Fechas</label>
+<div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-slate-400 text-base">calendar_month</span>
+<span class="text-sm">01/01/2024 - 30/06/2024</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Formato de Exportación</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center justify-center gap-2 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-lg border-2 border-primary/40 text-primary font-bold text-sm">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span> PDF
+                                    </button>
+<button class="flex items-center justify-center gap-2 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-transparent hover:border-emerald-500/40 text-slate-600 dark:text-slate-300 font-bold text-sm transition-all">
+<span class="material-symbols-outlined text-base">description</span> Excel
+                                    </button>
+</div>
+</div>
+<button class="mt-2 w-full bg-primary text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-md">
+<span class="material-symbols-outlined">download</span> Generar Informe
+                            </button>
+<hr class="border-slate-100 dark:border-slate-700 my-1"/>
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Descargas Recientes</p>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rose-500">picture_as_pdf</span>
+<span class="text-xs font-medium">Cierre_Mayo_2024.pdf</span>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-base">visibility</span>
+</button>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-500">description</span>
+<span class="text-xs font-medium">Diezmos_Q2_2024.xlsx</span>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-base">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Transactions and Goals -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Transactions Table -->
+<div class="lg:col-span-2 bg-white dark:bg-[#1a252c] rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-[#e8eef2] dark:border-slate-700 flex items-center justify-between">
+<h3 class="font-bold text-lg">Transacciones Recientes</h3>
+<button class="text-primary text-sm font-bold hover:underline">Ver todas</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Fecha</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Miembro</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Tipo</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">Monto</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Estado</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">15 Jun 2024</td>
+<td class="px-6 py-4 text-sm font-bold">Roberto Méndez</td>
+<td class="px-6 py-4 text-sm">Diezmo</td>
+<td class="px-6 py-4 text-sm font-bold text-right">$1,200.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold rounded uppercase tracking-wide">Completado</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="flex items-center gap-1 text-slate-400 hover:text-primary transition-colors text-xs font-bold">
+<span class="material-symbols-outlined text-sm">print</span> Recibo
+                                            </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">14 Jun 2024</td>
+<td class="px-6 py-4 text-sm font-bold">Elena Castillo</td>
+<td class="px-6 py-4 text-sm">Ofrenda Especial</td>
+<td class="px-6 py-4 text-sm font-bold text-right">$500.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold rounded uppercase tracking-wide">Completado</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="flex items-center gap-1 text-slate-400 hover:text-primary transition-colors text-xs font-bold">
+<span class="material-symbols-outlined text-sm">print</span> Recibo
+                                            </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">12 Jun 2024</td>
+<td class="px-6 py-4 text-sm font-bold">Familia Morales</td>
+<td class="px-6 py-4 text-sm">Donación Templo</td>
+<td class="px-6 py-4 text-sm font-bold text-right text-gold">$2,500.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[10px] font-bold rounded uppercase tracking-wide">Pendiente</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="flex items-center gap-1 text-slate-400 hover:text-primary transition-colors text-xs font-bold">
+<span class="material-symbols-outlined text-sm">print</span> Recibo
+                                            </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">10 Jun 2024</td>
+<td class="px-6 py-4 text-sm font-bold">Juan Pérez</td>
+<td class="px-6 py-4 text-sm">Diezmo</td>
+<td class="px-6 py-4 text-sm font-bold text-right">$150.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold rounded uppercase tracking-wide">Completado</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="flex items-center gap-1 text-slate-400 hover:text-primary transition-colors text-xs font-bold">
+<span class="material-symbols-outlined text-sm">print</span> Recibo
+                                            </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Metas de Recaudación -->
+<div class="bg-white dark:bg-[#1a252c] rounded-xl border border-[#d1dde5] dark:border-slate-700 shadow-sm flex flex-col">
+<div class="px-6 py-4 border-b border-[#e8eef2] dark:border-slate-700">
+<h3 class="font-bold text-lg">Metas de Recaudación</h3>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<!-- Goal 1 -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Renovación del Templo</span>
+<span class="text-xs text-slate-400 font-medium">Meta: $100,000</span>
+</div>
+<span class="text-sm font-extrabold text-primary">75%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[75%] transition-all"></div>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Restan $25,000 p/ meta</p>
+</div>
+<!-- Goal 2 -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Misiones Locales</span>
+<span class="text-xs text-slate-400 font-medium">Meta: $15,000</span>
+</div>
+<span class="text-sm font-extrabold text-gold">45%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+<div class="bg-gold h-full rounded-full w-[45%] transition-all"></div>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Campaña de Verano</p>
+</div>
+<!-- Goal 3 -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Ministerio Juvenil</span>
+<span class="text-xs text-slate-400 font-medium">Meta: $5,000</span>
+</div>
+<span class="text-sm font-extrabold text-emerald-500">92%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full w-[92%] transition-all"></div>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">¡Casi logrado!</p>
+</div>
+<button class="mt-2 w-full border border-primary text-primary py-2.5 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-all">
+                                Gestionar Proyectos
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

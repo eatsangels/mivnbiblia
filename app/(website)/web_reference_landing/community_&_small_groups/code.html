@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comunidad y Grupos Pequeños - MIVN</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0A1D37", // Navy blue from logo
+              accent: "#D4AF37",  // Gold/Tan from logo
+              "background-light": "#FDFCF6",
+              "background-dark": "#050B14",
+            },
+            fontFamily: {
+              display: ["Playfair Display", "serif"],
+              sans: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+      }
+      .dark .glass-card {
+        background: rgba(15, 23, 42, 0.7);
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 transition-colors duration-300 font-sans">
+<nav class="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<div class="flex items-center gap-3">
+<img alt="MIVN Logo" class="h-12 w-12 rounded-full border-2 border-accent" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMnSDZm2slQm1n5FrXmMCjeY6HHmvESpRqN6X_JqiF_kDEWUjCcCBJ0Hc1NCAlR_pVgrkdWV5MO2j_A82xDbIcd5VjjBnDd2pn3DKHbT3MS4u2DBTBeUg7dfe8QkCvXFvzr383pcj6GMtdqbGySsvfwNVdxD3Gk7VPmz2MPyBKMep02j3hq9o2aq2CeE3eLlp73GLm1Bu1ydCX2SMz7lzav4pSUjsa_XAdd5tFC3WMjsYpNCoxNv3MKzrCii7wutUMl52brW9VnCU"/>
+<div>
+<span class="block font-bold text-xl tracking-tight text-primary dark:text-white leading-none">MIVN</span>
+<span class="text-[10px] uppercase tracking-widest text-slate-500">Vida Nueva</span>
+</div>
+</div>
+<div class="hidden md:flex items-center space-evenly gap-8 font-medium">
+<a class="hover:text-accent transition-colors" href="#">Inicio</a>
+<a class="text-accent" href="#">Comunidad</a>
+<a class="hover:text-accent transition-colors" href="#">Ministerios</a>
+<a class="hover:text-accent transition-colors" href="#">Eventos</a>
+<button class="bg-primary text-white px-6 py-2.5 rounded-full hover:opacity-90 transition-all shadow-md">Donar</button>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined">dark_mode</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<section class="relative py-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="People connecting in community" class="w-full h-full object-cover opacity-20 dark:opacity-10 grayscale-[0.5]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6Y86Q9waCGihkQFzuPGGB-y56zb_QGBgTrG8HkHje-qjfYX4QskFrDIKvHIVO9HlP0nUcS4FjSPPiKHk61MOhsipOLfN-QH0Audn8Gmi8QtO0qXlLoH9OGm0mviYUEv7XBa0myRhZv14a7jFmZHmNB6HABLXircyh90QVwXZdJ3A7AzlLdr2tmDYpXlklyNnK73Ws6aDuzu5wbkajUclSOGysM5OkUTUQfZtT_GZq6Tmm3rm_G0AfVqeSWawKpleVxTlBHH1ajUI"/>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-background-light/50 to-background-light dark:via-background-dark/50 dark:to-background-dark"></div>
+</div>
+<div class="max-w-7xl mx-auto px-4 relative z-10 text-center">
+<h1 class="font-display text-4xl md:text-6xl text-primary dark:text-white mb-6">Encuentra tu Comunidad</h1>
+<p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-8 italic">
+                "De modo que si alguno está en Cristo, nueva criatura es..." — 2 Cor. 5:17
+            </p>
+<div class="flex justify-center gap-4">
+<a class="bg-accent text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:translate-y-[-2px] transition-all" href="#groups">Ver Grupos</a>
+<a class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-8 py-3 rounded-full font-semibold hover:bg-slate-50 transition-all" href="#feed">Actividad Reciente</a>
+</div>
+</div>
+</section>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<div class="lg:col-span-2 space-y-10" id="groups">
+<div class="flex items-center justify-between">
+<h2 class="text-3xl font-display text-primary dark:text-white">Grupos Pequeños</h2>
+<div class="flex gap-2">
+<span class="material-icons-outlined text-slate-400">filter_list</span>
+<select class="bg-transparent border-none text-sm font-medium focus:ring-0">
+<option>Todos los tipos</option>
+<option>Jóvenes</option>
+<option>Parejas</option>
+<option>Estudio Bíblico</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+<div class="h-48 relative overflow-hidden">
+<img alt="Jóvenes Vida Nueva" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCNpXgnxQfZmXRN-w3dy5wYKwJTSwYpQnK7JUjyKCcW10BhbC71E9zAYvQTvHrQb9ALTKYZP0AaHvUyWSFLRcMjz5KeymsXAyPblUzxjO81DZEN8jrU9UW3vGiStkLENkfOHZVzHe_mZC-rblH59ZqMuLwovq34ckBTeIY6w69VSS8HHzLQBTgjtfq9UhOyH-FQcCuLXd3wLKP8w0shI0KMzDf8G8lskjPdMKfBqwwRSSCSretZKieW0LVg_s7tFlQI17MpkG2-D0"/>
+<span class="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Jóvenes</span>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2">Generación Diferente</h3>
+<div class="flex items-center gap-2 mb-4">
+<img alt="Líder" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR7iCvWXZW4a1HD4EgTJkOGf0IMdkEbbe7mOosOOfRHXDUEv_vrvduZJ21OLaM-mHeS1bOmVrK2pUlpAVkydWszBAjPD9yTP7XO6z8bUpcSXR_lhltvef2m_vwFXNsxfOnQB881A2Rngdufyd5r9FMdKtrQ86QeSX0EotBXtjqiHTDIuO2FjFa8DG_G5LoVMcVtUapPw3KRp0FVrVYSDXlXrJkj1phBuEhPFG3kHSnF8qdpN-lOabRg0PHfdAXa_G-9WtPhMaPXc8"/>
+<p class="text-sm text-slate-500 dark:text-slate-400">Líder: <span class="font-medium text-slate-700 dark:text-slate-300">Daniel &amp; Sara</span></p>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">
+                                Un espacio para jóvenes que buscan vivir su fe de manera radical y transformar su entorno.
+                            </p>
+<div class="flex items-center justify-between">
+<div class="flex items-center text-slate-400 gap-1">
+<span class="material-icons-outlined text-sm">groups</span>
+<span class="text-xs font-medium">42 Miembros</span>
+</div>
+<button class="bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">Unirme al grupo</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+<div class="h-48 relative overflow-hidden">
+<img alt="Parejas con Propósito" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsZyVlHkGKkZEBAj_cFkMttR3q40_Ep-GlEUzsIJwhcw93wIBfrBQ0gpmSPai62XAaGvZHihXwfTrdqyKZ-4SUXqGQlhHmS0_5L3yd3kmLL7bbDYDHkAKLvfhZ7EQ-zvsycXDoVINsc2Wphsf8xONHFvKhpktLdFLztVEVeHqq9B2tfH2mbAaDtvNMiJ3W2_GO5EAqYwyToBf3U_ML05auYT9T1dSVR3ChxpyF_--1vpedFhkJBvBQWjVNt_JiEhiLp68hbM6EmYY"/>
+<span class="absolute top-4 left-4 bg-rose-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Parejas</span>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2">Matrimonios Firmes</h3>
+<div class="flex items-center gap-2 mb-4">
+<img alt="Líder" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFz5FugS3R9vYpK03oGD5yzPG5741GaICRXIk_Xl7c0Fl3bkcqU1Ykc8XIsFgI6sNKQSmy_iMbzGOIXMZsBxUOtafVzIQ89DCSwnEFXyPgIcuZCNIV44MEQ4rvZiOm9KzHg4zhtI4v1rx4WBWzx-AXAMREAViHq4Nyr9K4-faV0N7Qdtv7lpnl62_ylnElDJPioV_0XEtInl2pCw5-_4-dZ4zd6XrX8f0SIqVdiDsrC86JIyx5YQZDngkOrfKepkYUTwBCuXHPCgM"/>
+<p class="text-sm text-slate-500 dark:text-slate-400">Líder: <span class="font-medium text-slate-700 dark:text-slate-300">Pastores Gómez</span></p>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">
+                                Edificando familias sólidas sobre la roca que es Cristo. Charlas, cenas y oración.
+                            </p>
+<div class="flex items-center justify-between">
+<div class="flex items-center text-slate-400 gap-1">
+<span class="material-icons-outlined text-sm">groups</span>
+<span class="text-xs font-medium">28 Parejas</span>
+</div>
+<button class="bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">Unirme al grupo</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+<div class="h-48 relative overflow-hidden">
+<img alt="Worship" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl1JRUc2a9aoqdKiwejpZEb2XwSXCgAOS4fzAua-Ljm5bzde9jmk2SMdf3WDxW-fm-h0cwuSdDzEQYWWcNatjKfJSXXY6dGqix2gjeaXOsxkc-zOwCmV95P1RBbhLgnhUqHogbo9mr550atCPWdrDLBAnYPS0UzPSv5GqclLjRwUD-20mc51FDrpwMS5KZICbFraVtexmRpvGoNjTSraxS2ij9_Yf5A-WwPnxRLL-Vu5JhEiXWFmCpMQzsrhLD9fjKmI1IA02pUro"/>
+<span class="absolute top-4 left-4 bg-indigo-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Alabanza</span>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2">Corazón de Adorador</h3>
+<div class="flex items-center gap-2 mb-4">
+<img alt="Líder" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIyRwxUBdAiw2q8wChBYbxfnPqmqC-hVKCTekrcTnHY1BvAJA8sjAztPGW61zdxw7snwIpVuj1D24aY1s0NtL2zaHAfYOI89hzs2_b8W75ydoGMIJObZ5yGFp9s-h0NIYrNW2wEjLvStvnvsZWHyhpulDltFaQG8IdZQQJWOJzWF1eDSWPbhxTcV-UX5AfOJJnVz3yTzmVOtDWi_ySkLvT9kGM2maKThzTov9BqN80E2exL3IMeLtWYo2RNuiUVAEpFg1ctg1kNu0"/>
+<p class="text-sm text-slate-500 dark:text-slate-400">Líder: <span class="font-medium text-slate-700 dark:text-slate-300">Marcos Villa</span></p>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">
+                                Más que música, buscamos la presencia de Dios en cada nota y cada palabra.
+                            </p>
+<div class="flex items-center justify-between">
+<div class="flex items-center text-slate-400 gap-1">
+<span class="material-icons-outlined text-sm">groups</span>
+<span class="text-xs font-medium">15 Miembros</span>
+</div>
+<button class="bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">Unirme al grupo</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+<div class="h-48 relative overflow-hidden">
+<img alt="Intercession" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_WyDVeL2fSGuzMLWFLKuw5MjW0Xce3Dw7oGXdeO-I2f4G-AhvSiTNK9bswiNKmzSOPH0iJYxnjVuA9ftDJPFD0bu_rMHFKdY2lQ7aa-Z5kBBIUlECdjVKqwpnaeZFHYjxVzX5BQWH-oS6WUS-28yehr9DFWH-uz3CyS-9_mniwtgwYinhGdtruVYyIZ_lk0wkKA-oyc4PXScnoPx-sAF9PMBSXh3-EJL_Ss_ECBaxbQOkZ98gudm8JyDmyezPKd2vw2rLb0aMcz8"/>
+<span class="absolute top-4 left-4 bg-emerald-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Oración</span>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-bold mb-2">Guerreros de Oración</h3>
+<div class="flex items-center gap-2 mb-4">
+<img alt="Líder" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA61KfSY1e6npwROVYLTmlrZzu8Y95YkgFeu1D7E21bKOT3gdO6gJKH7sqgzY1-HF-yca5WxqWBH1RC01w87NkLpfivUfPE4aGT5y1tqpWQfoNLouxwrg4WR9OyeWdBc867I4dikeCP2-NrXL1QP4VeTVyIluYRzgGu5imo261KXzgXDhyMXi5WB0A6h-UKQqfObE4R9OwvvanLn4PMg40QMAH7tXx13CH4Tq-zw_9qK6XcQkyN98diNMH3y1aTDvKceC32jWUje2w"/>
+<p class="text-sm text-slate-500 dark:text-slate-400">Líder: <span class="font-medium text-slate-700 dark:text-slate-300">Hna. Martha</span></p>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">
+                                Intercediendo por nuestra comunidad, nación y las peticiones de cada hermano.
+                            </p>
+<div class="flex items-center justify-between">
+<div class="flex items-center text-slate-400 gap-1">
+<span class="material-icons-outlined text-sm">groups</span>
+<span class="text-xs font-medium">50+ Miembros</span>
+</div>
+<button class="bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">Unirme al grupo</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="space-y-8" id="feed">
+<div>
+<h3 class="text-2xl font-display text-primary dark:text-white mb-6">Actividad Reciente</h3>
+<div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+<div class="flex gap-4 mb-8">
+<img alt="User" class="w-10 h-10 rounded-full flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzGyUmf4tniVAHAf_Ls1x_NEmpa2e-66syXDjmG-zchKjvvQ-mGmYzHtXQcdT9vS-o1m-nEF2r8LuUXQHOzoOAfA4XLnmM9IuSKUkDsjEIsrUzkv-A7al_8mL3vwlwk9QpexnjujLqdSegiIX1KhbwLuAtMfh6xINPqRsUPiWMApjlj2V1YR8WwaSyj6r2VvDbXonM4PS83ThgIAcX5jlFZ8c65jlRvPPun8pccPpgkVWA5VHybbdu6EdFe8Oz6o6c-zEj05mDEUI"/>
+<div>
+<p class="text-sm font-semibold">Ricardo Torres <span class="text-slate-400 font-normal">en</span> Generación Diferente</p>
+<p class="text-xs text-slate-400 mb-2">Hace 2 horas</p>
+<p class="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+                                    ¡Increíble tiempo de estudio anoche! Gracias a todos los que asistieron. 🙌
+                                </p>
+</div>
+</div>
+<div class="flex gap-4 mb-8">
+<img alt="User" class="w-10 h-10 rounded-full flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1tDPLlpE1GMumRXmYdyXcOi4jSwovZmCH1lyP9zXvl5foLm9bC26wlymD-SC-3HH4N1mgUL1ymn9vcUfwaq4N0GsK9RJpifw8X7XS8EgtJPdkqkLOyVltaFYYIAyHWnmG0molcjk7hP9BgQ69BFYRw3ZtT1EeZCmBHPbE8ElF2dMwiwf72FrbdL45exUtOSpmB4JVbWFYJGWJrhWkaY40wxrLpTX6d719Ze1f-6jjehB8PKGVC4XvuY6xpWaHtD61goJMlhF4VuE"/>
+<div>
+<p class="text-sm font-semibold">Elena Ruiz <span class="text-slate-400 font-normal">subió una foto</span></p>
+<p class="text-xs text-slate-400 mb-2">Hace 5 horas</p>
+<img alt="Meeting" class="w-full rounded-lg mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCXP05QC4XfA1a0QoThCrYpBgEA680cS7I1q2ugZTmWv2zBpSV-hvsD5TthR8eKnl2PrmtPO1uGF5bf5SHp8S6Y2b-QNb5CpNUaU3ZjKfw0nZutrqxXn5aFBr7T5z3SZeA5sYupCOb-jsz0MBu7ejl3hVi0EiK1-vcgy8Io-5qGgtF2km4Zvr-WtIPT9mbOLV3lQlF-xdOJJCrOcdG4WQdbUbutG0kzGVjxgD2y2dbt7e8u0Dnkmg5uycUcpaYa0-vtRmNqrC_VYY"/>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">M</div>
+<div>
+<p class="text-sm font-semibold">Anuncio Ministerio <span class="text-slate-400 font-normal"></span></p>
+<p class="text-xs text-slate-400 mb-2">Hace 1 día</p>
+<p class="text-sm text-slate-600 dark:text-slate-400 bg-accent/10 p-3 rounded-lg border border-accent/20">
+                                    Recuerden que este viernes tenemos nuestra vigilia mensual. ¡No falten!
+                                </p>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-sm font-bold text-primary dark:text-accent border-t border-slate-100 dark:border-slate-800 hover:opacity-75 transition-opacity">
+                            Ver todo el feed
+                        </button>
+</div>
+</div>
+<div class="bg-primary text-white p-8 rounded-2xl shadow-xl relative overflow-hidden group">
+<span class="material-icons-outlined absolute -right-4 -bottom-4 text-white/10 text-9xl group-hover:rotate-12 transition-transform">church</span>
+<h4 class="text-xl font-bold mb-2 relative z-10">¿No encuentras tu lugar?</h4>
+<p class="text-primary-100 text-sm mb-6 relative z-10 opacity-90">
+                        Escríbenos y te ayudaremos a encontrar el grupo que mejor se adapte a tu etapa de vida y dones.
+                    </p>
+<a class="inline-block bg-accent px-6 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-white hover:text-primary transition-all relative z-10" href="#">Contactar Líder</a>
+</div>
+</aside>
+</div>
+</main>
+<footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-12 mt-20">
+<div class="max-w-7xl mx-auto px-4 text-center">
+<div class="flex justify-center items-center gap-3 mb-8">
+<img alt="MIVN" class="h-10 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXQFQAIQ54uWOyWjSsXzSo2o-BBM2iYmp9gBpo6DR2wjzJxl-8NgVkeMnFLfFrLG6QGc4LXrDqEY3uK0avIhVkgBzTSTCqmUF1k6Pfunoyvx1rimTu7lhWlGiVBAfyWg_TQvVxm5JW0FseuzH7PVzJKQYj1qdXzrf28hEqlYiwy9rO4Vd--o21BKjwRHQAsJL3k2wiq6eKq1Mp2iHOo9Tmq-AqmdSE_AsgzyvbSAxn2h--NGNOKLa3WvMKbIN0Z5dlIsvI8-mfKgw"/>
+<h2 class="text-2xl font-display text-primary dark:text-white">Ministerio Internacional Vida Nueva</h2>
+</div>
+<p class="text-slate-500 max-w-lg mx-auto mb-8 text-sm">
+                Comprometidos con llevar el mensaje de restauración y esperanza a cada rincón del mundo.
+            </p>
+<div class="flex justify-center gap-6 mb-8 text-slate-400">
+<a class="hover:text-primary dark:hover:text-white" href="#"><span class="material-icons-outlined">facebook</span></a>
+<a class="hover:text-primary dark:hover:text-white" href="#"><span class="material-icons-outlined">camera_alt</span></a>
+<a class="hover:text-primary dark:hover:text-white" href="#"><span class="material-icons-outlined">play_circle</span></a>
+</div>
+<p class="text-[10px] uppercase tracking-widest text-slate-400">
+                © 2024 MIVN - Transformando vidas por el poder del evangelio.
+            </p>
+</div>
+</footer>
+
+</body></html>

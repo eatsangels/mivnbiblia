@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perfil de Crecimiento Espiritual - MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3ea5ea",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111b21",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-4 lg:px-20 py-3">
+<div class="max-w-[1440px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">church</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-extrabold tracking-tight">MIVN Portal</h2>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Comunidad</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors" href="#">Grupos</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Mi Crecimiento</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-1.5 border border-transparent focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-slate-400 text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 placeholder:text-slate-400" placeholder="Buscar recursos..." type="text"/>
+</div>
+<button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="size-10 rounded-full border-2 border-primary p-0.5">
+<div class="size-full rounded-full bg-center bg-cover" data-alt="Foto de perfil del usuario" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA60b3Abea-S2cAnKkOIUgXsCtq5TkyaPTM-d1UgY-fptjVxpMlyPu_tq9SEfEJ9-gJgWIgbw-yfMeDYg_HWhbFHevM-vUtI7aYApRv9D-tgt_zOcNFvoMoT1_yvA2CmuzrvKntoo_6AsJc0pADQucVNTeRr3XYrcN6wrJT3szCaqpw2lGjWL6eu8e_bkiQGWfHT0jzNYCNzWdzj0gK_hK4R4FlbuaFEVmzKo7FvhX9m4cEB19p9Z_6rXAh7fT62hab-zCR9xXCY3U')"></div>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-4 lg:px-20 py-8">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Sidebar Navigation -->
+<aside class="w-full lg:w-64 flex flex-col gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex flex-col items-center text-center mb-6">
+<div class="size-20 rounded-full bg-center bg-cover mb-4 shadow-lg ring-4 ring-primary/10" data-alt="Foto de perfil grande del usuario" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDOi2YmCBq9QZCu5xehLvCB7RW_vfY995iWoAzxJU2Dz4aCh6miWMlmwSvi0FiXfI002FNpjyGoVciKxzHmCtrxFdOpkdkZoPt7X1CRGBozvCFu8Ysan31kNbZdpijZ3_zQLWK4B6eC48abULTs-TktlfqyCxQrzEyT-J5xu5S0xruAGJYP_eSh5VNbtWAihoLSoMVbQhnC4oZk6HOs3dESHAS7KrHXrVU9SuMwUwC80Gt3z20HXcGCt3_t1uK_OLpFgctirSpNmcA')"></div>
+<h1 class="text-xl font-bold text-slate-900 dark:text-white">Juan Pérez</h1>
+<p class="text-primary text-sm font-medium">Liderazgo 101</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">person</span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Mi Perfil</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined filled-icon">trending_up</span>
+<span class="text-sm font-bold">Crecimiento Espiritual</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">calendar_month</span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Mis Eventos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">menu_book</span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Devocionales</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">card_membership</span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Certificados</span>
+</a>
+</nav>
+</div>
+<!-- Daily Verse Card -->
+<div class="bg-gradient-to-br from-primary to-blue-600 p-6 rounded-xl text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined mb-3 opacity-80">format_quote</span>
+<p class="text-sm italic font-medium leading-relaxed mb-4">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."</p>
+<p class="text-xs font-bold uppercase tracking-widest opacity-80">Salmos 119:105</p>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 space-y-8">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Mi Camino de Fe</h2>
+<p class="text-slate-500 dark:text-slate-400">Visualiza tu crecimiento y trayectoria espiritual en MIVN</p>
+</div>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md shadow-primary/25">
+<span class="material-symbols-outlined text-xl">download</span>
+                        Descargar Reporte
+                    </button>
+</div>
+<!-- Camino de Fe Timeline -->
+<section class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<h3 class="text-lg font-bold mb-8 text-slate-800 dark:text-slate-200">Hitos de Crecimiento</h3>
+<div class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-4 px-4">
+<!-- Connecting Line -->
+<div class="absolute top-[18px] left-8 right-8 h-0.5 bg-slate-100 dark:bg-slate-800 hidden md:block"></div>
+<div class="absolute top-[18px] left-8 w-[60%] h-0.5 bg-primary hidden md:block"></div>
+<!-- Timeline Items -->
+<div class="relative z-10 flex flex-row md:flex-col items-center gap-4 md:text-center">
+<div class="size-9 bg-primary text-white rounded-full flex items-center justify-center shadow-md ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-lg filled-icon">check_circle</span>
+</div>
+<div class="flex flex-col md:items-center">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Primera Visita</p>
+<p class="text-xs text-slate-500">Ene 2023</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-row md:flex-col items-center gap-4 md:text-center">
+<div class="size-9 bg-primary text-white rounded-full flex items-center justify-center shadow-md ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-lg filled-icon">check_circle</span>
+</div>
+<div class="flex flex-col md:items-center">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Bautismo</p>
+<p class="text-xs text-slate-500">Mar 2023</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-row md:flex-col items-center gap-4 md:text-center">
+<div class="size-9 bg-primary text-white rounded-full flex items-center justify-center shadow-md ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-lg filled-icon">check_circle</span>
+</div>
+<div class="flex flex-col md:items-center">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Membresía</p>
+<p class="text-xs text-slate-500">Jun 2023</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-row md:flex-col items-center gap-4 md:text-center">
+<div class="size-9 bg-white dark:bg-slate-800 text-primary border-2 border-primary rounded-full flex items-center justify-center shadow-sm ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-lg animate-pulse">hourglass_empty</span>
+</div>
+<div class="flex flex-col md:items-center">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Liderazgo 101</p>
+<p class="text-xs text-primary font-semibold">En Curso</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-row md:flex-col items-center gap-4 md:text-center opacity-40">
+<div class="size-9 bg-slate-100 dark:bg-slate-700 text-slate-400 rounded-full flex items-center justify-center ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-lg">flag</span>
+</div>
+<div class="flex flex-col md:items-center">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Líder de Grupo</p>
+<p class="text-xs text-slate-500">Pendiente</p>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+<!-- Mis Devocionales -->
+<section class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Mis Devocionales</h3>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">Racha Actual</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative size-24 flex items-center justify-center">
+<svg class="size-full transform -rotate-90">
+<circle class="text-slate-100 dark:text-slate-800" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-black text-slate-900 dark:text-white">7</span>
+<span class="text-[10px] uppercase font-bold text-slate-500">Días</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="mb-4">
+<p class="text-sm text-slate-500 mb-1">Capítulos leídos este año</p>
+<p class="text-3xl font-black text-slate-900 dark:text-white">145</p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full w-3/4"></div>
+</div>
+<p class="text-[10px] text-slate-400 mt-2">75% de tu meta mensual alcanzada</p>
+</div>
+</div>
+</section>
+<!-- Mis Peticiones -->
+<section class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Mis Peticiones</h3>
+<button class="text-primary hover:text-primary/80">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 rounded-lg bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-500">prayer_times</span>
+<p class="text-sm font-semibold text-slate-700 dark:text-slate-200">Salud de mi Familia</p>
+</div>
+<span class="text-[10px] font-bold uppercase text-orange-600 bg-orange-100 px-2 py-0.5 rounded">En Oración</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-500">verified</span>
+<p class="text-sm font-semibold text-slate-700 dark:text-slate-200">Nuevo Empleo</p>
+</div>
+<span class="text-[10px] font-bold uppercase text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">Respondida</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Historial de Eventos & Workshops -->
+<section class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-6">Actividad Reciente</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-xs uppercase text-slate-400 font-bold border-b border-slate-100 dark:border-slate-800">
+<th class="pb-3 px-2">Evento / Taller</th>
+<th class="pb-3 px-2">Fecha</th>
+<th class="pb-3 px-2">Categoría</th>
+<th class="pb-3 px-2 text-right">Estado</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="py-4 px-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Servicio Dominical: Viviendo en Gracia</p>
+</td>
+<td class="py-4 px-2 text-sm text-slate-500">Oct 20, 2023</td>
+<td class="py-4 px-2">
+<span class="text-xs font-medium bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">Servicio</span>
+</td>
+<td class="py-4 px-2 text-right">
+<span class="material-symbols-outlined text-primary text-xl filled-icon">check_circle</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="py-4 px-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Workshop: Corazón de Siervo</p>
+</td>
+<td class="py-4 px-2 text-sm text-slate-500">Oct 12, 2023</td>
+<td class="py-4 px-2">
+<span class="text-xs font-medium bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">Taller</span>
+</td>
+<td class="py-4 px-2 text-right">
+<span class="material-symbols-outlined text-primary text-xl filled-icon">check_circle</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="py-4 px-2">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Retiro: Renuevo Espiritual</p>
+</td>
+<td class="py-4 px-2 text-sm text-slate-500">Sep 28, 2023</td>
+<td class="py-4 px-2">
+<span class="text-xs font-medium bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">Retiro</span>
+</td>
+<td class="py-4 px-2 text-right">
+<span class="material-symbols-outlined text-primary text-xl filled-icon">check_circle</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Mis Certificados Area -->
+<section>
+<div class="flex items-center justify-between mb-6 px-2">
+<h3 class="text-lg font-bold text-slate-800 dark:text-slate-200">Mis Certificados</h3>
+<a class="text-sm font-bold text-primary hover:underline" href="#">Ver todos</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Diploma Card 1 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all">
+<div class="aspect-[1.41] bg-slate-50 dark:bg-slate-800 relative flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
+<span class="material-symbols-outlined text-6xl text-slate-300 group-hover:scale-110 transition-transform">school</span>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-slate-900/40 backdrop-blur-[2px] transition-opacity">
+<button class="bg-white text-slate-900 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span> Descargar PDF
+                                    </button>
+</div>
+</div>
+<div class="p-4">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Membresía MIVN</h4>
+<p class="text-xs text-slate-500">Completado: Junio 2023</p>
+</div>
+</div>
+<!-- Diploma Card 2 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all">
+<div class="aspect-[1.41] bg-slate-50 dark:bg-slate-800 relative flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
+<span class="material-symbols-outlined text-6xl text-slate-300 group-hover:scale-110 transition-transform">water_drop</span>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-slate-900/40 backdrop-blur-[2px] transition-opacity">
+<button class="bg-white text-slate-900 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span> Descargar PDF
+                                    </button>
+</div>
+</div>
+<div class="p-4">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Certificado de Bautismo</h4>
+<p class="text-xs text-slate-500">Completado: Marzo 2023</p>
+</div>
+</div>
+<!-- Diploma Placeholder -->
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-6 text-center opacity-60">
+<span class="material-symbols-outlined text-3xl text-slate-400 mb-2">lock</span>
+<p class="text-xs font-bold text-slate-500">Liderazgo 101</p>
+<p class="text-[10px] text-slate-400">Completa el curso para obtener el diploma</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark py-12 px-4">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3 text-slate-400">
+<span class="material-symbols-outlined">church</span>
+<p class="text-sm font-medium">© 2023 Ministerio Internacional Vida Nueva. Todos los derechos reservados.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">social_leaderboard</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">mail</span></a>
+</div>
+</div>
+</footer>
+</body></html>

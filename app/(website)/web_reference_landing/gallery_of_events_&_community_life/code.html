@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Galería de Momentos | MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#49a3df",
+              "gold": "#d4af37",
+              "background-light": "#f6f7f8",
+              "background-dark": "#121a20",
+            },
+            fontFamily: {
+              "display": ["Noto Serif", "serif"],
+              "sans": ["Noto Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 1.5rem;
+        }
+        @media (max-width: 1024px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (max-width: 640px) {
+            .masonry-grid { column-count: 1; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+        .media-hover-overlay {
+            background: rgba(73, 163, 223, 0.85);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .group:hover .media-hover-overlay {
+            opacity: 1;
+        }
+        body {
+            font-family: "Noto Serif", serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0f161a] dark:text-white transition-colors duration-300">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-solid border-[#e8eef2] dark:border-gray-800">
+<div class="max-w-[1200px] mx-auto px-4 lg:px-10 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="text-primary size-8">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h1 class="text-xl font-bold tracking-tight">MIVN</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Inicio</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Nosotros</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Ministerios</a>
+<a class="text-sm font-medium text-primary" href="#">Galería</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Donaciones</a>
+<a class="px-5 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-sm hover:bg-primary/90 transition-all" href="#">Contacto</a>
+</nav>
+<button class="md:hidden material-symbols-outlined">menu</button>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto px-4 lg:px-10 py-12">
+<!-- Page Heading -->
+<div class="mb-10 text-center md:text-left">
+<h2 class="text-[#0f161a] dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-tight mb-4">Nuestra Vida en Comunidad</h2>
+<p class="text-[#537993] dark:text-gray-400 text-lg max-w-2xl font-normal leading-relaxed">Un registro visual de la fe, el amor y los momentos que definen nuestra familia espiritual en el Ministerio Internacional Vida Nueva.</p>
+</div>
+<!-- Filter Tabs -->
+<div class="mb-10 border-b border-[#d1dde5] dark:border-gray-800">
+<div class="flex flex-wrap items-center gap-2 md:gap-8 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center border-b-[3px] border-primary text-primary pb-3 pt-4 whitespace-nowrap" href="#">
+<p class="text-sm font-bold tracking-wide">Todos</p>
+</a>
+<a class="flex flex-col items-center border-b-[3px] border-transparent text-[#537993] hover:text-primary pb-3 pt-4 transition-all whitespace-nowrap" href="#">
+<p class="text-sm font-bold tracking-wide">Cultos</p>
+</a>
+<a class="flex flex-col items-center border-b-[3px] border-transparent text-[#537993] hover:text-primary pb-3 pt-4 transition-all whitespace-nowrap" href="#">
+<p class="text-sm font-bold tracking-wide">Eventos Especiales</p>
+</a>
+<a class="flex flex-col items-center border-b-[3px] border-transparent text-[#537993] hover:text-primary pb-3 pt-4 transition-all whitespace-nowrap" href="#">
+<p class="text-sm font-bold tracking-wide">Misiones</p>
+</a>
+<a class="flex flex-col items-center border-b-[3px] border-transparent text-[#537993] hover:text-primary pb-3 pt-4 transition-all whitespace-nowrap" href="#">
+<p class="text-sm font-bold tracking-wide">Videos</p>
+</a>
+</div>
+</div>
+<!-- Masonry Grid -->
+<div class="masonry-grid">
+<!-- Item 1: Photo -->
+<div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+<img class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-110" data-alt="Community gathering for a worship service" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyxOiElUEkpswZ9p_2BhVHhSaqs45Pk2d-yhDBHyUV06mJH6ZtkLAMXFxfr0bkLvxw_5lKXgz9AJ0AxQU9hR8DvtbHh7301ZpmsE-AfjAxTdn2cK9ejEHLqyEyYVlk_kE342VHEUeafC0Nn2ql58hSRvS81labU6Yshz1JMEpQ9hIEiSlxzboGWSWg0Dr4sfNOU19fWlaC1034xO4lmO1-7DoP32EiAZprQUTSkYoXONWTfJBj2a0Rb5aVoYh0179HT0s9trVPue8"/>
+<div class="media-hover-overlay absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+<h3 class="text-white text-xl font-bold mb-2">Culto de Adoración Dominical</h3>
+<p class="text-white/80 text-sm italic">Octubre 22, 2023</p>
+<div class="mt-4 flex gap-3">
+<span class="material-symbols-outlined text-white hover:text-gold cursor-pointer">share</span>
+<span class="material-symbols-outlined text-white hover:text-gold cursor-pointer">zoom_in</span>
+</div>
+</div>
+</div>
+<!-- Item 2: Video -->
+<div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+<div class="absolute inset-0 flex items-center justify-center z-10">
+<div class="w-16 h-16 bg-gold text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl fill-1">play_arrow</span>
+</div>
+</div>
+<img class="w-full h-auto object-cover brightness-75" data-alt="Crowd at a Christian concert event" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNmO_RFlOSgTxutJ-siYpHnFR7W3AyUuxbavNgvvsv-MagobrKAuha4W2BsGtfcYduAJEjdTLh7zoUb5R2ySQvpHFc75lSHgzCZv_82I_jJGkBSSl-Iq6MdHqZDh0XZbASYRFtqz_Fgn2va3An7bv2t7XovSR_QaQjGo0DMFf8CYsWbLOOKoxI29B_B3DKFMknC4OMrGlGz6quXrzxNpE6xCT5KkIGagOhPOJ3j_-SUwxkQ3FVvUy62fX68HIQIJQ3aeMn8hg2Me4"/>
+<div class="media-hover-overlay absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-20">
+<h3 class="text-white text-xl font-bold mb-2">Congreso de Jóvenes "Vida"</h3>
+<p class="text-white/80 text-sm italic">Septiembre 15, 2023</p>
+</div>
+</div>
+<!-- Item 3: Photo -->
+<div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+<img class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-110" data-alt="Missions work in a small rural village" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgddV9FBiVk5JWyORDsU9yxMNQaT9Gfr0dXRrbdO0qZZzYsezcPCKeZqmXApYaciuTdQXjIxag0xb4jY5NoKIW7R5P0V9TPF9fp6eqnQDeMTAlpktO47go9C2NOMOy6mNYvQo1zDaPqRyVl2By8x25HOpKG4pFe79cM67mc8lWfRz5vFZ5wm_nVE_wddjnNBMYzBNfkEeiswrvNvqdwWyw1Pv6BeocnvohiewwmcL4KHo308XRsU_9i-aUnLC7GuQ2WZmHrbFdEOg"/>
+<div class="media-hover-overlay absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+<h3 class="text-white text-xl font-bold mb-2">Misión Amazonas: Salud y Fe</h3>
+<p class="text-white/80 text-sm italic">Agosto 05, 2023</p>
+</div>
+</div>
+<!-- Item 4: Photo -->
+<div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+<img class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-110" data-alt="People praying together in a circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5vrGB9d95YKOCYBXx4b9Yz-OcwNpSGg2AOR4tYfN76rAqcLHeLcz6_RmgHu4CwXssrGdgYXeMOpT5_tNZ34GRiiE0lXRjo5k-rOyukCxXmf-wLSAfR-VLPBVkShbfU8HA0IqKIJr66_poAixwd3iJ7lBPzs5PjE8TGYlojHIU1nLX5LvqdrEnERu4GJBdHCfosTc_H5k2hNBV-vZ1zTOb4w_A2AhKb08bRb6oYsnKC2Givfx14uHJpLlFOdeuxrs9BTxXNlYvbOQ"/>
+<div class="media-hover-overlay absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+<h3 class="text-white text-xl font-bold mb-2">Noche de Clamor</h3>
+<p class="text-white/80 text-sm italic">Noviembre 12, 2023</p>
+</div>
+</div>
+<!-- Item 5: Video -->
+<div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+<div class="absolute inset-0 flex items-center justify-center z-10">
+<div class="w-16 h-16 bg-gold text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl fill-1">play_arrow</span>
+</div>
+</div>
+<img class="w-full h-auto object-cover brightness-75" data-alt="Outdoor baptism ceremony in a lake" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgLhjNt90iZAHQaoOK5n4QeC7DMtaUBEKiJPYGbf6gV-oafxoGqy-3sC88MGiExcAokqONgrc7QHgh4UPFYr5hu4-fbEALVmOkN1Ce1iKojzQVC1nxKdRtCHEuiO6qvq6g8Gc9P97huCu-Qk4q1roJP1LRh-Ua-i2ozKP9ulWlBcm_NEb_xbwKDd__4sOur8TybGpDQm_Z6948eREGAg6KtIid4ker3msm6DZdVSShJubUnxUMOisNl2aC9mhNhYm-ColI7iIiIdE"/>
+<div class="media-hover-overlay absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-20">
+<h3 class="text-white text-xl font-bold mb-2">Bautizos 2023: Nueva Vida</h3>
+<p class="text-white/80 text-sm italic">Julio 20, 2023</p>
+</div>
+</div>
+<!-- Item 6: Photo -->
+<div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+<img class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-110" data-alt="Elegant gala event with decorated tables" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT8CUt7OtvhJROXi3Cs5oMTS7Hj5w6z4tBNWIOjl57rFnUNIRRejvRrMoOUZVQjslLI70VKx5HE3j7exsSmdgY6VIBZSvfvGz34NEbv5akdXlHHJz55CPR519dS0nZg-jgS2lozCFpErZGM-B2amOaZ-btE2Zj99y5fAyik7H8Wj5-HurxmcSnkpZyemH_36z-q6mXFez0lCv5OMTCyACLvh8HFqyode3S3L9dt3QWHXL8kt6mOdDSa5pHCD-vWcACop3FQysQKVw"/>
+<div class="media-hover-overlay absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+<h3 class="text-white text-xl font-bold mb-2">Cena de Gala Pro-Fondos</h3>
+<p class="text-white/80 text-sm italic">Diciembre 01, 2023</p>
+</div>
+</div>
+</div>
+<!-- Section Header for Videos -->
+<div class="mt-20 flex items-center justify-between border-b border-[#e8eef2] dark:border-gray-800 pb-4 mb-8">
+<h2 class="text-2xl font-bold tracking-tight">Videos Destacados</h2>
+<a class="text-primary font-bold text-sm flex items-center gap-1 hover:underline" href="#">
+                Ver todos los videos <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Video Grid (Standard) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="flex flex-col gap-3 group cursor-pointer">
+<div class="relative aspect-video bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Preacher speaking on a stage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl8Ggk64jgI6kGTSN2Az9sM0xo34sKuGva2RZrEyQ-vQlJScV5HN3u3rbzsS7yVs1MYcpxvx_tz12DhKLV8-OTlqy7obUrvqAWe83jOHNnXW7CBBdMK3o1PKZ0JjF09iqsuFj402HbhX8GSE9XzpJvx9KKIguPYVtBBymdL-KQemiMUkkOUxTVT6yjFJkGDsl5tUzX3tCn83TNgFyMDNfI3vctcNI1xQ2apSsnl1fi0wobPIitJPQngWcnQgCwXKYiJGD0ZJZwVts"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl opacity-80 group-hover:opacity-100 transition-opacity">play_circle</span>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Resumen Convención "Fuego Santo"</h4>
+<p class="text-sm text-[#537993] dark:text-gray-400 mt-1">Ministerio de Alabanza • 12:45</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 group cursor-pointer">
+<div class="relative aspect-video bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Film clapperboard on set" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHU9FUAcLiHjaryS_VbQCa_TUQ4iAc3xYSrsQxWwn3xOYV6luI6g2c-GJkvZofQiafWGd7wNYlOTxy9DiP4-_eV5RaQxfS8cBEfpw58cb1YY8vd41GA6tq7drpQVtQcxpjQC2vGX6PaYmFrip2Y0sJtlquSNpcN_Huu-2YVDpJmAOTCsI4YP4DWn4mZzrWmYdcAURH8QzekPd9nm8USl4hoiN2jFRBvmXAR-VMBYo1BkJAd7xvl036y3YgrU-CQEjk8XbTZ-T1zmw"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl opacity-80 group-hover:opacity-100 transition-opacity">play_circle</span>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Testimonios: Milagros en el Amazonas</h4>
+<p class="text-sm text-[#537993] dark:text-gray-400 mt-1">Misiones Internacionales • 08:20</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 group cursor-pointer">
+<div class="relative aspect-video bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Concert stage with lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYjqlndbmGcYKOetiqToiyOeMZHhj774xIUVT75NsZGVtFAj-wf_hiv9Sa9WuW5HzornNk5bFsYIF9DOynpwX3js7KTLQvx0iSqiBSytdtUlIgZe6Myla2ZdsBzhNXpAedV5ofmr8dOML1gJT4XPExubmhWyNPizqRYYT2Xs93lAXUO8pQlD7WuyfspPszxi5rmtp240ZEfiKRl03QTNU7yaCFxOu2UsjFDPKT2Igr5mv1Af7m-t3nWmdosmoDevcoBviLurFlADM"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl opacity-80 group-hover:opacity-100 transition-opacity">play_circle</span>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Concierto Aniversario MIVN 15 Años</h4>
+<p class="text-sm text-[#537993] dark:text-gray-400 mt-1">Eventos Especiales • 45:30</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple Lightbox Mockup (Hidden by default, used for structural design representation) -->
+<div class="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center hidden">
+<button class="absolute top-6 right-6 text-white text-4xl material-symbols-outlined">close</button>
+<button class="absolute left-6 text-white text-5xl material-symbols-outlined">chevron_left</button>
+<button class="absolute right-6 text-white text-5xl material-symbols-outlined">chevron_right</button>
+<div class="max-w-4xl w-full p-4 flex flex-col gap-6">
+<img class="w-full rounded-lg shadow-2xl" data-alt="Full screen view of worship service" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmbnEzKlFJnYRXo5IP8LMw_VqwEVakix5Bx5mUerY1zf7XdfUqKaBYQazjuoyqED9SgBkYW8L5GeYaSXNruA2i1CJOWQJ7u-dhaYlDmDeAH0PSM5HJQZphxdjKDmxWaHeLURHpYpPrVzi97acwyGFXA5EMfRkp5EGnf8JY-O28fYfZ2wbtUWb1UDc7qcKVBglzYN57TchvWvBZ_rGzs3YFQavVoSAyWTxU5njaSrEkYpMoi2FyMA-1ePQkI5GvoA4GI5sLVaM-Pg0"/>
+<div class="flex justify-between items-end text-white px-2">
+<div>
+<h3 class="text-2xl font-bold">Culto de Adoración Dominical</h3>
+<p class="text-primary font-medium">Octubre 22, 2023</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-all">
+<span class="material-symbols-outlined">share</span> Compartir
+                    </button>
+<button class="flex items-center gap-2 bg-primary px-4 py-2 rounded-lg transition-all font-bold">
+<span class="material-symbols-outlined">download</span> Guardar
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-white dark:bg-background-dark border-t border-[#e8eef2] dark:border-gray-800 py-12">
+<div class="max-w-[1200px] mx-auto px-10 text-center">
+<div class="text-primary size-10 mx-auto mb-4">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold mb-2">Ministerio Internacional Vida Nueva</h2>
+<p class="text-[#537993] dark:text-gray-400 text-sm mb-6">Llevando la palabra de esperanza a cada rincón de la comunidad.</p>
+<div class="flex justify-center gap-6 mb-8">
+<a class="text-[#537993] hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">social_leaderboard</span></a>
+<a class="text-[#537993] hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">photo_camera</span></a>
+<a class="text-[#537993] hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">play_circle</span></a>
+</div>
+<p class="text-[#537993] dark:text-gray-500 text-xs uppercase tracking-widest">© 2024 MIVN - Todos los derechos reservados</p>
+</div>
+</footer>
+</body></html>

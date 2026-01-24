@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Libre_Baskerville } from "next/font/google";
+import { Geist, Geist_Mono, Libre_Baskerville, Playfair_Display, Lexend } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,10 +20,22 @@ const libreBaskerville = Libre_Baskerville({
   style: ["normal", "italic"],
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
+const lexend = Lexend({
+  variable: "--font-lexend",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Ministerio Internacional Vida Nueva | Santuario Digital",
   description: "Plataforma de estudio bíblico profundo y crecimiento espiritual del Ministerio Internacional Vida Nueva (MIVN).",
 };
+
+import { TopBanner } from "@/components/institute/TopBanner";
 
 export default function RootLayout({
   children,
@@ -30,11 +43,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${libreBaskerville.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${libreBaskerville.variable} ${playfair.variable} ${lexend.variable} antialiased`}
       >
+        <TopBanner />
         {children}
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

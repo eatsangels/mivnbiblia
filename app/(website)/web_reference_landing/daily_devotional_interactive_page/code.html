@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Devocional Diario | MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#49a3df",
+                        "gold": "#D4AF37",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#121a20",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .gold-text { color: #D4AF37; }
+        .bg-gold { background-color: #D4AF37; }
+        .border-gold { border-color: #D4AF37; }
+        .shadow-soft { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0f161a] dark:text-slate-100 min-h-screen transition-colors duration-300">
+<!-- Header / Nav -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-solid border-[#e8eef2] dark:border-slate-800 px-4 md:px-10 lg:px-40 py-3">
+<div class="max-w-[1200px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-[#0f161a] dark:text-white text-xl font-bold leading-tight tracking-tight">MIVN</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-8">
+<a class="text-[#0f161a] dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Inicio</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Devocionales</a>
+<a class="text-[#0f161a] dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Ministerios</a>
+<a class="text-[#0f161a] dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Eventos</a>
+</nav>
+<div class="flex items-center gap-4 border-l border-slate-200 dark:border-slate-700 pl-8">
+<button class="text-[#0f161a] dark:text-white flex items-center justify-center p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">search</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border-2 border-primary/20" data-alt="User profile avatar portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCT0Mk5RXzVLwpYadU4cn7rb1e4yvfaBfn4PFEskAW_m4E6bgYBAmp0Wb1V3yJA-dRuk1n6ZWp2Kz_BYPCVoI7EKHzyZ8M0PYzbTbYtuiNzhz9-h1Kv2Mm9sVBkzXbU1AdctA-FD3zUBIx76Zq181wSiQOYgH8MBHmenjraVeGvgLJYhxqmQp5k66p4RUzeuT1GjrPrtyNkJuGo3avlX5jPzORGxBeQYBtx4yfLYVsBecpWWvie-yzJlSCwCeS0tzmxrtL8aX4pAs");'></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex flex-col items-center">
+<!-- Hero Section -->
+<section class="w-full relative">
+<div class="w-full min-h-[520px] flex flex-col items-center justify-center p-6 text-center bg-cover bg-center relative" data-alt="Peaceful morning landscape with mountains and soft sunlight" style='background-image: linear-gradient(rgba(15, 22, 26, 0.6), rgba(15, 22, 26, 0.6)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDPSn5ixI_b3Uv8Ge3nO7Z5XkfAXCzuYOyvyOdxAMHCBDec9SWiOQ04tkfJ0xbbInn4iGC5ClF-R5mKNlqVCr_ncwyhrVtLNzceMDInvtLC_6n5vL3Uf3VJNO9jH6v9hKlqzPTtLoG4ATbqLzHM9U-1PsWlnalWPUIZofDyPK_rRNOFRyPICvJg3MYSjUf2nM_7FMWF5ghycmd7QyncAgmucKC91j4kLt89MhJtUpCwtYY0oK6lsRasikkdEXDIzUR0H3jIphgtAP4");'>
+<div class="max-w-[800px] space-y-6">
+<div class="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-medium mb-4">
+                        12 de Octubre, 2023
+                    </div>
+<h1 class="text-white text-4xl md:text-6xl font-black leading-tight tracking-tight drop-shadow-lg">
+                        "Todo lo puedo en Cristo que me <span class="gold-text italic">fortalece</span>"
+                    </h1>
+<p class="text-primary text-lg md:text-xl font-semibold tracking-widest uppercase">
+                        Filipenses 4:13
+                    </p>
+<div class="pt-8">
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-bold shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-2 mx-auto">
+<span class="material-symbols-outlined">menu_book</span>
+                            Comenzar Lectura
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Breadcrumbs -->
+<div class="max-w-[800px] w-full px-6 py-6">
+<nav class="flex items-center gap-2 text-sm">
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">Inicio</a>
+<span class="text-slate-400">/</span>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#">Devocionales</a>
+<span class="text-slate-400">/</span>
+<span class="text-primary font-bold">Fortaleza en la Tormenta</span>
+</nav>
+</div>
+<!-- Main Content Area -->
+<article class="max-w-[840px] w-full px-6 pb-24">
+<h2 class="text-3xl md:text-4xl font-extrabold text-[#0f161a] dark:text-white mb-8">Fortaleza en la Tormenta</h2>
+<div class="prose prose-slate dark:prose-invert max-w-none space-y-6 text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+<p>
+                    En la travesía de la vida, a menudo nos encontramos con tormentas inesperadas que desafían nuestra fe y agotan nuestras fuerzas. Estas situaciones pueden manifestarse como dificultades financieras, problemas de salud o crisis emocionales que parecen insuperables.
+                </p>
+<p>
+                    Sin embargo, la promesa de Dios no es la ausencia de la tormenta, sino Su presencia constante en medio de ella. Jesús mismo les dijo a sus discípulos en la barca: "Tened ánimo; yo soy, no temáis". No detuvo el viento inmediatamente; primero se reveló como Aquel que camina sobre las aguas.
+                </p>
+<p>
+                    Hoy reflexionamos sobre cómo descansar en Su soberanía. La fortaleza espiritual no viene de nuestra capacidad para resistir el viento, sino de nuestra disposición para aferrarnos a la Roca que es Cristo. Cuando nuestras fuerzas fallan, Su poder se perfecciona en nuestra debilidad.
+                </p>
+</div>
+<!-- Lectura de Hoy (Scripture Block) -->
+<section class="my-12 p-8 rounded-2xl bg-primary/5 border border-primary/20 relative overflow-hidden">
+<div class="absolute -right-8 -top-8 text-primary/10 select-none">
+<span class="material-symbols-outlined !text-[120px]">format_quote</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4 text-primary font-bold text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-xl">auto_stories</span>
+                        Lectura de hoy: Filipenses 4:10-20
+                    </div>
+<div class="space-y-4 italic text-slate-800 dark:text-slate-200 text-xl font-medium leading-relaxed">
+<p>
+                            "11 No lo digo porque tenga escasez, pues he aprendido a contentarme, cualquiera que sea mi situación. 12 Sé vivir humildemente, y sé tener abundancia; en todo y por todo estoy enseñado, así para estar saciado como para tener hambre, así para tener abundancia como para padecer necesidad. 13 Todo lo puedo en Cristo que me fortalece."
+                        </p>
+</div>
+<div class="mt-6 pt-6 border-t border-primary/10 flex items-center gap-4">
+<span class="text-slate-500 text-sm italic">Versión: Reina-Valera 1960</span>
+</div>
+</div>
+</section>
+<!-- Personal Reflection Area -->
+<section class="mt-12 mb-16">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+<h3 class="text-xl font-bold text-[#0f161a] dark:text-white">Mi Reflexión Personal</h3>
+</div>
+<div class="relative group">
+<textarea class="w-full min-h-[200px] p-6 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-soft" placeholder="¿Qué te dice Dios hoy a través de esta palabra? Escribe tus pensamientos aquí..."></textarea>
+<div class="mt-4 flex justify-end">
+<button class="flex items-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-slate-700 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors shadow-lg">
+<span class="material-symbols-outlined text-sm">save</span>
+                            Guardar Pensamientos
+                        </button>
+</div>
+</div>
+</section>
+<!-- Navigation Buttons -->
+<div class="flex items-center justify-between pt-12 border-t border-slate-100 dark:border-slate-800">
+<button class="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-bold hover:text-primary transition-colors group">
+<span class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
+                    Anterior
+                </button>
+<div class="hidden sm:flex items-center gap-2">
+<div class="size-2 rounded-full bg-primary"></div>
+<div class="size-2 rounded-full bg-slate-200"></div>
+<div class="size-2 rounded-full bg-slate-200"></div>
+</div>
+<button class="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-bold hover:text-primary transition-colors group">
+                    Siguiente
+                    <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</article>
+</main>
+<!-- Floating Action Bar -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[500px] z-50">
+<div class="bg-white/90 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-2 flex items-center justify-between gap-2">
+<div class="flex items-center gap-1 pl-2">
+<button class="p-3 text-slate-400 hover:text-red-500 transition-colors rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800" title="Guardar en Favoritos">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="p-3 text-slate-400 hover:text-primary transition-colors rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800" title="Compartir">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-3 text-slate-400 hover:text-primary transition-colors rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800" title="Descargar PDF">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+<button class="bg-gold hover:bg-[#c4a030] text-slate-900 font-bold px-6 py-3 rounded-xl flex items-center gap-2 shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="hidden sm:inline">Marcar como completado</span>
+<span class="sm:hidden">Completar</span>
+</button>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 py-16 px-6 mt-12">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+<div>
+<div class="flex items-center gap-3 text-primary mb-6">
+<div class="size-6">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<span class="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter">MIVN</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Ministerio Internacional Vida Nueva: Llevando esperanza y palabra de vida a las naciones. Un espacio para crecer juntos en la fe.
+                </p>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-widest text-xs">Enlaces Rápidos</h4>
+<ul class="space-y-4 text-slate-600 dark:text-slate-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Archivo de Devocionales</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Peticiones de Oración</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Ministerios Infantiles</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Donaciones Online</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-widest text-xs">Contacto</h4>
+<ul class="space-y-4 text-slate-600 dark:text-slate-400 text-sm">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">location_on</span>
+                        Av. Central 123, Ciudad de Fe
+                    </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">mail</span>
+                        contacto@mivn.org
+                    </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">phone</span>
+                        +1 (234) 567-890
+                    </li>
+</ul>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto mt-16 pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-slate-400 text-xs">
+            © 2023 Ministerio Internacional Vida Nueva. Todos los derechos reservados.
+        </div>
+</footer>
+</body></html>

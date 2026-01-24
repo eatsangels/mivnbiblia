@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Donaciones &amp; Diezmos | MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1a237e", // Deep Navy Blue from logo
+              secondary: "#d4af37", // Gold accent
+              "background-light": "#f8f9fa",
+              "background-dark": "#0f172a",
+            },
+            fontFamily: {
+              sans: ["Montserrat", "sans-serif"],
+              display: ["Playfair Display", "serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .dark .glass-effect {
+            background: rgba(30, 41, 59, 0.8);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f1d592 50%, #d4af37 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 min-h-screen font-sans transition-colors duration-300">
+<nav class="sticky top-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<div class="flex items-center gap-3">
+<img alt="MIVN Logo" class="h-12 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQj_R3YthJ3Jl_f5MmqUGtuq5kBqY7CWMiY41ROG4GhYKEKaSBX-HBo7XBBNPmCtK8xW4zoPp8Z-QqvnqdaGaLN-zkSe3kH-1DWmOh3WTcOFXCwXK7dtXbbm0VMpYU1HyMg7cZkWwVgfF8HRStbfKc8Gjz0-8hFjWYHDpqQ57g5Qv72FSgTZXSvt1hinFyLBMnEWQ_NsSU_3F2D7SqjP8fJXRrioqukTLH_ieZGcm3wOOV1EDTh4Vg4FYYpsojHP9-kjjI62kc_pc"/>
+<span class="font-display text-xl font-bold tracking-tight text-primary dark:text-secondary hidden sm:block">MIVN</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-symbols-outlined dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined hidden dark:block">light_mode</span>
+</button>
+<div class="flex items-center gap-2 cursor-pointer group">
+<div class="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border-2 border-transparent group-hover:border-secondary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="text-sm font-medium hidden md:block">Mi Cuenta</span>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<header class="text-center mb-12">
+<h1 class="font-display text-4xl md:text-5xl font-bold text-primary dark:text-white mb-4">Portal de Donaciones &amp; Diezmos</h1>
+<p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto italic">
+                "De modo que si alguno está en Cristo, nueva criatura es..." (2 Cor. 5:17)
+            </p>
+</header>
+<div class="grid lg:grid-cols-12 gap-12 items-start">
+<section class="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-800">
+<div class="p-8 md:p-12">
+<div class="mb-10">
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">volunteer_activism</span>
+                            Detalles de tu Aporte
+                        </h2>
+<div class="grid grid-cols-3 gap-4 mb-6">
+<button class="py-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-secondary hover:bg-secondary/5 dark:hover:bg-secondary/10 transition-all font-bold text-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">$25</button>
+<button class="py-4 border-2 border-secondary bg-secondary/10 dark:bg-secondary/20 rounded-2xl transition-all font-bold text-lg text-primary dark:text-white outline-none ring-2 ring-secondary">$50</button>
+<button class="py-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-secondary hover:bg-secondary/5 dark:hover:bg-secondary/10 transition-all font-bold text-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">$100</button>
+<button class="py-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-secondary hover:bg-secondary/5 dark:hover:bg-secondary/10 transition-all font-bold text-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">$250</button>
+<button class="py-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-secondary hover:bg-secondary/5 dark:hover:bg-secondary/10 transition-all font-bold text-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none">$500</button>
+<button class="py-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-secondary hover:bg-secondary/5 dark:hover:bg-secondary/10 transition-all font-bold text-lg focus:ring-2 focus:ring-secondary focus:border-secondary outline-none text-slate-500">Otro</button>
+</div>
+<div class="relative group mb-8">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-slate-400 group-focus-within:text-primary">$</span>
+<input class="w-full pl-10 pr-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-primary dark:focus:ring-secondary text-xl font-bold" placeholder="Monto personalizado" type="number"/>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl mb-8">
+<h3 class="font-semibold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">repeat</span>
+                                Tipo de Contribución
+                            </h3>
+<div class="flex flex-wrap gap-4">
+<label class="flex items-center gap-2 cursor-pointer bg-white dark:bg-slate-700 px-4 py-2 rounded-xl border-2 border-transparent has-[:checked]:border-secondary">
+<input checked="" class="text-secondary focus:ring-secondary" name="freq" type="radio"/>
+<span>Única vez</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer bg-white dark:bg-slate-700 px-4 py-2 rounded-xl border-2 border-transparent has-[:checked]:border-secondary">
+<input class="text-secondary focus:ring-secondary" name="freq" type="radio"/>
+<span>Semanal</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer bg-white dark:bg-slate-700 px-4 py-2 rounded-xl border-2 border-transparent has-[:checked]:border-secondary">
+<input class="text-secondary focus:ring-secondary" name="freq" type="radio"/>
+<span>Mensual</span>
+</label>
+</div>
+</div>
+<div>
+<h3 class="font-semibold mb-4">Método de Pago</h3>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 p-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">credit_card</span>
+<span class="font-medium">Tarjeta</span>
+</button>
+<button class="flex items-center justify-center gap-3 p-4 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-blue-600 transition-all group">
+<svg class="h-6 w-auto fill-slate-400 group-hover:fill-blue-600" viewBox="0 0 24 24"><path d="M20.067 8.178c-.622-2.316-2.522-4.14-5.362-4.14H8.72a.855.855 0 0 0-.85.735L5.755 18.04c-.035.24.15.46.393.46h3.297l.865-5.465h.01l.46-2.9h.012c.162-1.018 1.04-1.785 2.083-1.785h.927c2.515 0 4.45 1.022 5.03 3.864.28 1.365.1 2.66-.543 3.652-.638.986-1.765 1.597-3.328 1.597h-1.04a.853.853 0 0 0-.843.725l-.367 2.315-.224 1.41a.417.417 0 0 0 .41.482h3.585c.78 0 1.455-.54 1.583-1.3l.012-.07 1.13-7.142.013-.082c.153-.967-.043-1.956-.563-2.774-.356-.56-.84-.984-1.396-1.25z"></path></svg>
+<span class="font-medium">PayPal</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-white py-5 rounded-2xl font-bold text-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-3">
+                        Realizar Donación
+                        <span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="mt-6 flex items-center justify-center gap-2 text-sm text-slate-500">
+<span class="material-symbols-outlined text-green-500">lock</span>
+                        Transacción Segura Encriptada SSL
+                    </div>
+</div>
+</section>
+<aside class="lg:col-span-5 space-y-8">
+<div class="bg-gradient-to-br from-primary to-blue-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-center gap-4 mb-8">
+<div class="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
+<span class="material-symbols-outlined text-3xl">person</span>
+</div>
+<div>
+<h3 class="text-xl font-bold">¡Bendiciones, Juan!</h3>
+<p class="text-white/70 text-sm">Miembro desde 2022</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+<p class="text-xs text-white/60 uppercase tracking-wider mb-1">Total 2024</p>
+<p class="text-2xl font-bold">$1,450.00</p>
+</div>
+<div class="bg-white/10 rounded-2xl p-4 border border-white/10">
+<p class="text-xs text-white/60 uppercase tracking-wider mb-1">Próximo</p>
+<p class="text-2xl font-bold">Diezmo</p>
+</div>
+</div>
+</div>
+<div class="absolute -right-20 -bottom-20 w-64 h-64 bg-secondary/20 rounded-full blur-3xl"></div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-lg">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-lg">Historial Reciente</h3>
+<a class="text-primary dark:text-secondary text-sm font-semibold hover:underline" href="#">Ver todo</a>
+</div>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-green-500">receipt_long</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold">Ofrenda General</p>
+<p class="text-xs text-slate-500">12 Oct, 2024</p>
+</div>
+<p class="font-bold text-slate-700 dark:text-slate-200">$50.00</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-blue-500">stars</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold">Diezmo Mensual</p>
+<p class="text-xs text-slate-500">01 Oct, 2024</p>
+</div>
+<p class="font-bold text-slate-700 dark:text-slate-200">$200.00</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-amber-500">hand_heart</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold">Misiones MIVN</p>
+<p class="text-xs text-slate-500">15 Sep, 2024</p>
+</div>
+<p class="font-bold text-slate-700 dark:text-slate-200">$100.00</p>
+</div>
+</div>
+<button class="w-full mt-8 py-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center gap-2 hover:border-secondary hover:text-secondary transition-all text-slate-500">
+<span class="material-symbols-outlined">download</span>
+                        Descargar Recibo Fiscal (PDF)
+                    </button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+<span class="text-xs font-medium text-slate-500">Seguridad Grado Bancario</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl">
+<span class="material-symbols-outlined text-secondary">church</span>
+<span class="text-xs font-medium text-slate-500">Entidad sin Fines de Lucro</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<footer class="bg-slate-900 text-white mt-20 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid md:grid-cols-3 gap-12 text-center md:text-left">
+<div>
+<div class="flex items-center justify-center md:justify-start gap-3 mb-6">
+<img alt="MIVN Logo" class="h-10 w-auto brightness-0 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKHBiS-t8hslgv3UhmRROA_Ei6Ox2L3hy7-gRyCjhWPepDvEPumuCplG0A5KLp2N2Pno6nxnDPn-XcxQpAD3pDaUT7XKcX1ycW0_cn3ydta4xAf-9ME2wxrzvAMSWhg9g1w69q1VxbWbqpD8P4QYn4qD8pjGXb12vV1ns2qf-IveazvgiX8JnvCmFWMhWP1hYQXBaxLUZkI5JTI3GMLOfKDqN5HBRbjlLe41ZonfpQEUd0N4gJo16VHG3TjTDw4Lc00E0NbcSuftY"/>
+<span class="font-display text-xl font-bold">MIVN</span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">
+                        Ministerio Internacional Vida Nueva está comprometido con la transparencia y la mayordomía de cada aporte recibido para la expansión del Reino.
+                    </p>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-secondary">Contacto</h4>
+<ul class="space-y-4 text-sm text-slate-400">
+<li class="flex items-center justify-center md:justify-start gap-3">
+<span class="material-symbols-outlined text-sm">mail</span>
+                            donaciones@mivn.org
+                        </li>
+<li class="flex items-center justify-center md:justify-start gap-3">
+<span class="material-symbols-outlined text-sm">call</span>
+                            +1 (800) 123-4567
+                        </li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-secondary">Información Legal</h4>
+<p class="text-slate-400 text-sm mb-4">
+                        Toda donación es deducible de impuestos bajo las regulaciones locales vigentes.
+                    </p>
+<div class="flex justify-center md:justify-start gap-4">
+<a class="p-2 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors" href="#">
+<svg class="h-5 w-5 fill-white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="p-2 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors" href="#">
+<svg class="h-5 w-5 fill-white" viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.717.01 3.67.053 1.11.05 1.81.24 2.19.38a4.777 4.777 0 0 1 1.77 1.15c.53.53.85 1 1.15 1.77.14.38.33 1.08.38 2.19.043.953.053 1.24.053 3.67s-.01 2.717-.053 3.67c-.05 1.11-.24 1.81-.38 2.19-.3.77-.62 1.24-1.15 1.77-.53.53-1 1.15-1.77 1.15-.38.14-1.08.33-2.19.38-.953.043-1.24.053-3.67.053s-2.717-.01-3.67-.053c-1.11-.05-1.81-.24-2.19-.38a4.777 4.777 0 0 1-1.77-1.15c-.53-.53-.85-1-1.15-1.77-.14-.38-.33-1.08-.38-2.19C2.01 14.717 2 14.43 2 12s.01-2.717.053-3.67c.05-1.11.24-1.81.38-2.19.3-.77.62-1.24 1.15-1.77.53-.53 1-1.15 1.77-1.15.38-.14 1.08-.33 2.19-.38.953-.043 1.24-.053 3.67-.053zm0 1.802c-2.39 0-2.674.01-3.618.052-.93.042-1.435.193-1.77.323-.445.174-.763.38-1.1.715-.335.336-.54.654-.715 1.1-.13.334-.28.84-.323 1.77-.042.944-.052 1.228-.052 3.618s.01 2.674.052 3.618c.042.93.193 1.435.323 1.77.174.445.38.763.715 1.1.336.335.654.54 1.1.715.334.13.84.28 1.77.323.944.042 1.228.052 3.618.052s2.674-.01 3.618-.052c.93-.042 1.435-.193 1.77-.323.445-.174.763-.38 1.1-.715.335-.336.54-.654.715-1.1.13-.334.28-.84.323-1.77.042-.944.052-1.228.052-3.618s-.01-2.674-.052-3.618c-.042-.93-.193-1.435-.323-1.77-.174-.445-.38-.763-.715-1.1-.336-.335-.654-.54-1.1-.715-.334-.13-.84-.28-1.77-.323-.944-.042-1.228-.052-3.618-.052zM12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16.36a4.198 4.198 0 1 1 0-8.396 4.198 4.198 0 0 1 0 8.396zm7.846-10.405a1.441 1.441 0 1 1-2.881 0 1.441 1.441 0 0 1 2.881 0z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-800 mt-12 pt-8 text-center text-slate-500 text-xs">
+                © 2024 Ministerio Internacional Vida Nueva. Todos los derechos reservados.
+            </div>
+</div>
+</footer>
+
+</body></html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contacto - Ministerio Internacional Vida Nueva</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#001f3f", // Deep Navy from the logo
+                        accent: "#e63946",  // Red from the Bible icon
+                        success: "#2d6a4f", // Green from the laurel wreath
+                        "background-light": "#fcfaf7",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        display: ["Montserrat", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hero-pattern {
+            background-color: #fcfaf7;
+            background-image:  radial-gradient(#001f3f 0.5px, transparent 0.5px), radial-gradient(#001f3f 0.5px, #fcfaf7 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0,10px 10px;
+        }
+        .dark .hero-pattern {
+            background-color: #0f172a;
+            background-image:  radial-gradient(#ffffff11 0.5px, transparent 0.5px), radial-gradient(#ffffff11 0.5px, #0f172a 0.5px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<div class="flex items-center gap-3">
+<img alt="MIVN Logo" class="h-14 w-14 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPK2pHBtIrGTh8VQxFb5UTe2hjNRq1-MiWSqQ2gXPiShtfYRjbgLyViQYUNDhK1cLB8JzEJ0R_LJLqXRGAA0fzrTb2Aj6v1guRjFlTtQ3m5cTNSptTqHSSQxGggCUnSxg_an59JqjS_C-_rDLcM7xaIMWe9igHXT-edEJ2_hakhx5_UKT8Wv-nE076fYqj8fXerE3m-GnADUeMzwbgKKn9-_U47-NOBOCokDCISvLCuzzw8o4uUqUEy5iAHVd91bqx6yua-d57O9w"/>
+<div class="hidden sm:block">
+<span class="block text-lg font-display font-bold text-primary dark:text-white leading-tight uppercase tracking-wider">Ministerio Internacional</span>
+<span class="block text-sm font-medium text-accent">Vida Nueva</span>
+</div>
+</div>
+<nav class="hidden md:flex space-x-8 items-center">
+<a class="font-medium hover:text-primary dark:hover:text-white" href="#">Inicio</a>
+<a class="font-medium hover:text-primary dark:hover:text-white" href="#">Ministerios</a>
+<a class="font-medium hover:text-primary dark:hover:text-white" href="#">Sermones</a>
+<a class="text-primary dark:text-white font-bold border-b-2 border-primary dark:border-white pb-1" href="#">Contacto</a>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined block dark:hidden">dark_mode</span>
+<span class="material-icons-outlined hidden dark:block text-yellow-400">light_mode</span>
+</button>
+</nav>
+<div class="md:hidden">
+<button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800">
+<span class="material-icons-outlined">menu</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="min-h-screen pb-20">
+<section class="relative py-16 overflow-hidden hero-pattern">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-background-light dark:to-background-dark"></div>
+<div class="max-w-7xl mx-auto px-4 relative">
+<div class="text-center max-w-3xl mx-auto">
+<h1 class="text-4xl md:text-5xl font-display font-bold text-primary dark:text-white mb-6">Estamos para servirte</h1>
+<p class="text-lg text-slate-600 dark:text-slate-400 mb-8 italic">
+                        "De modo que si alguno está en Cristo, nueva criatura es..." (2 Cor. 5:17)
+                    </p>
+</div>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 -mt-10 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none p-8 md:p-12 border border-slate-100 dark:border-slate-800">
+<div class="mb-10">
+<h2 class="text-3xl font-display font-bold mb-2">Envíanos un mensaje</h2>
+<p class="text-slate-500 dark:text-slate-400">Completa el formulario y nos pondremos en contacto contigo lo antes posible.</p>
+</div>
+<form action="#" class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold mb-2 ml-1">Nombre Completo</label>
+<input class="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Tu nombre" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2 ml-1">Correo Electrónico</label>
+<input class="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="tu@email.com" required="" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2 ml-1">Asunto</label>
+<select class="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">
+<option>Información General</option>
+<option>Petición de Oración</option>
+<option>Visitas y Horarios</option>
+<option>Voluntariado</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2 ml-1">Mensaje</label>
+<textarea class="w-full px-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none" placeholder="¿En qué podemos ayudarte?" required="" rows="5"></textarea>
+</div>
+<button class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-2" type="submit">
+<span>Enviar mensaje</span>
+<span class="material-icons-outlined">send</span>
+</button>
+</form>
+</div>
+<div class="lg:col-span-5 space-y-8">
+<div class="bg-slate-200 dark:bg-slate-800 rounded-3xl overflow-hidden h-80 relative shadow-lg group">
+<img alt="Mapa de ubicación" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYtu0umNF17AwGj-mtzQYSbILfWH7PWX8ov3xYnhkFrSPk-UtfGN0UU2zcub9WVJgRcCkNypREq7pBP5zCDwCXJCPkYmUNL1FgC7UEtAFfsIAQfHan6KRWUXBdk24grgymnfh06L-YON7812ceFzwQqId1SR2m1i8Uc8fl9kFfnwh-uEZEdaHsDkHLdiJCE2pcM7ORgyuMUoQvk0gkfihcDZdEzDdYg-4RZXmeow-bTrwvPjiQvzex7emMAaJpJOPWCy6tZQpdmm8"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 dark:bg-primary/90 p-4 rounded-2xl shadow-2xl flex flex-col items-center">
+<span class="material-icons-outlined text-accent text-4xl mb-1">location_on</span>
+<span class="font-bold text-sm">Abrir en Google Maps</span>
+</div>
+</div>
+</div>
+<div class="bg-primary text-white rounded-3xl p-8 shadow-xl">
+<h3 class="text-2xl font-display font-bold mb-6">Información de Contacto</h3>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="bg-white/10 p-3 rounded-xl">
+<span class="material-icons-outlined">place</span>
+</div>
+<div>
+<h4 class="font-bold opacity-70 text-sm">Dirección</h4>
+<p class="text-lg">Av. Principal 123, Ciudad de Fe, <br/>Edo. Gracia, C.P. 00000</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-white/10 p-3 rounded-xl">
+<span class="material-icons-outlined">schedule</span>
+</div>
+<div>
+<h4 class="font-bold opacity-70 text-sm">Horarios de Servicio</h4>
+<p class="text-lg">Domingos: 10:00 AM &amp; 6:00 PM <br/>Miércoles: 7:30 PM</p>
+</div>
+</div>
+</div>
+<div class="mt-10">
+<a class="w-full bg-accent hover:bg-red-600 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3" href="tel:+1234567890">
+<span class="material-icons-outlined">phone_in_talk</span>
+<span>Llamar ahora</span>
+</a>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-100 dark:border-slate-800">
+<h4 class="font-display font-bold mb-4 text-center">Nuestras Redes Sociales</h4>
+<div class="flex justify-center gap-6">
+<a class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary dark:text-white hover:bg-primary hover:text-white transition-all" href="#">
+<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary dark:text-white hover:bg-primary hover:text-white transition-all" href="#">
+<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.947.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.947-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.947 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+<a class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary dark:text-white hover:bg-primary hover:text-white transition-all" href="#">
+<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-4xl mx-auto px-4 mt-24">
+<h2 class="text-3xl font-display font-bold text-center mb-12">Preguntas Frecuentes</h2>
+<div class="space-y-4">
+<details class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 transition-all">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<span class="font-bold text-lg">¿Cómo puedo llegar al templo?</span>
+<span class="material-icons-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-6 pb-6 text-slate-600 dark:text-slate-400">
+                        Estamos ubicados en el corazón de la ciudad. Contamos con estacionamiento amplio y acceso para personas con discapacidad. Puedes ver nuestra ubicación exacta en el mapa de arriba.
+                    </div>
+</details>
+<details class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 transition-all">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<span class="font-bold text-lg">¿Tienen actividades para niños?</span>
+<span class="material-icons-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-6 pb-6 text-slate-600 dark:text-slate-400">
+                        ¡Sí! Durante cada servicio general, contamos con el Ministerio Infantil donde los niños aprenden la palabra de Dios de una manera divertida y segura.
+                    </div>
+</details>
+</div>
+</section>
+</main>
+<footer class="bg-primary text-white py-12">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-4">
+<img alt="MIVN Footer Logo" class="h-16 w-16 brightness-0 invert opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhDExmG6cDONae38Oig4S3Fg3JpavDRJU5IeHvvwHuD3ddK31rqgXVfPuOytOxDLjdaRph4wqlJ9iQf8XJULKtTffvTTqgnSnG37W_jgLjr8ay8D3cMz-RXERCRU-0kTZz2eN_l0n3Rq8RcAvqpiNqdgl2w8dkJWGX28xpq_foeDBIf-yJCa3m4_T9CuKc9n15anfJGGEOgLDiJqMJ9h3P3WFFGWGT7tJ4bBFgBNr3ePwUy0TBiIE6pyaS5698bGJywR1TJlLjO7k"/>
+<div>
+<h4 class="font-display font-bold text-xl uppercase tracking-widest">MIVN</h4>
+<p class="text-xs opacity-50 uppercase font-medium">Ministerio Internacional Vida Nueva</p>
+</div>
+</div>
+<div class="text-center md:text-right">
+<p class="opacity-70 text-sm">© 2024 Ministerio Internacional Vida Nueva. <br class="md:hidden"/> Todos los derechos reservados.</p>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>

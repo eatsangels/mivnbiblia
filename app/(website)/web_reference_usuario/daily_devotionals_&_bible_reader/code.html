@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard de Miembros | MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --celeste: #4AA3DF;
+            --gold: #D4AF37;
+            --gold-light: #F4EBD0;
+            --navy: #1E293B;
+        }
+        @layer base {
+            body {
+                @apply bg-slate-50 text-slate-900 font-['Inter'];
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC]">
+<header class="sticky top-0 z-50 bg-white border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img alt="MIVN Logo" class="h-12 w-12 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK7NuAYSYyAe9V8neff50lWkosZo9y_a9vD9Sj7r0o23K_eNfa29bdWYmS0JSAOiSgAZiMpPgUNYdThn6p_7WPK_9kDEHmfGwm1lqcT-nOMI5rW-bY5r8LTo9Khryljh14PshrkbAZ6kdEhGQsIQBIdUkULOrC3BrRW1B9QUjj_bfw4fOqoygy9KSR4qv88SIOEtVM_6Bcc-vJaaYvoAF7MsyA8ridEN5RTx8LWqHp8ND0FRX9skG_ULfTmRqsAzB69YlWrLjSPgg"/>
+<div>
+<h1 class="text-xl font-bold tracking-tight text-[var(--celeste)]">MIVN</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] font-bold">Vida Nueva</p>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<nav class="flex items-center gap-8">
+<a class="text-sm font-semibold text-[var(--celeste)] border-b-2 border-[var(--celeste)] pb-1" href="#">Dashboard</a>
+<a class="text-sm font-medium text-slate-500 hover:text-[var(--celeste)] transition-colors" href="#">Devocionales</a>
+<a class="text-sm font-medium text-slate-500 hover:text-[var(--celeste)] transition-colors" href="#">Comunidad</a>
+<a class="text-sm font-medium text-slate-500 hover:text-[var(--celeste)] transition-colors" href="#">Eventos</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:text-[var(--celeste)]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-slate-900">Bienvenido, Ricardo</p>
+<p class="text-[11px] text-slate-500 font-medium">Miembro Activo</p>
+</div>
+<div class="h-10 w-10 rounded-full bg-[var(--celeste)] flex items-center justify-center text-white font-bold">
+                        R
+                    </div>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-8 space-y-8">
+<section class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[var(--celeste)] to-[#3b8bc2] p-8 text-white">
+<div class="relative z-10">
+<h2 class="text-3xl font-bold mb-2">¡Hola, Ricardo!</h2>
+<p class="text-white/80 max-w-md">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino." Hoy tienes 3 nuevos mensajes del pastor esperándote.</p>
+<div class="mt-6 flex gap-3">
+<button class="bg-white text-[var(--celeste)] px-6 py-2 rounded-full font-bold text-sm shadow-sm hover:bg-slate-50 transition-colors">Ver Devocional de Hoy</button>
+</div>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[180px] opacity-10 rotate-12">auto_stories</span>
+</section>
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-[var(--gold)]">military_tech</span>
+                            Mi Progreso Espiritual
+                        </h3>
+<a class="text-sm font-semibold text-[var(--celeste)]" href="#">Ver detalles</a>
+</div>
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="space-y-2">
+<p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Devocionales este mes</p>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold text-slate-900">24</span>
+<span class="text-slate-400 font-medium mb-1">/ 31 días</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full">
+<div class="bg-[var(--celeste)] h-full rounded-full" style="width: 77%"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl">
+<div class="w-12 h-12 rounded-full bg-[var(--gold-light)] flex items-center justify-center">
+<span class="material-symbols-outlined text-[var(--gold)]">workspace_premium</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">Racha actual</p>
+<p class="text-xs text-slate-500">12 días seguidos</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 p-4 rounded-xl">
+<div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-[var(--celeste)]">group</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">Grupos Activos</p>
+<p class="text-xs text-slate-500">2 Grupos de vida</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-[var(--celeste)]">hub</span>
+                            Mis Grupos
+                        </h3>
+<button class="text-sm font-semibold text-[var(--celeste)]">+ Unirse a otro</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-[var(--celeste)] transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-[var(--celeste)]">home_max</span>
+</div>
+<span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded uppercase">Próxima: Mañana</span>
+</div>
+<h4 class="font-bold text-slate-900 mb-1">Grupo de Vida: Jóvenes Adultos</h4>
+<p class="text-sm text-slate-500 mb-4">Lunes • 19:30 PM • Modalidad Híbrida</p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-300"></div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-400 flex items-center justify-center text-[8px] text-white font-bold">+12</div>
+</div>
+<button class="text-xs font-bold text-[var(--celeste)] uppercase tracking-wider">Entrar al grupo</button>
+</div>
+</div>
+<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-[var(--celeste)] transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-[var(--celeste)]">menu_book</span>
+</div>
+<span class="px-2 py-1 bg-slate-50 text-slate-400 text-[10px] font-bold rounded uppercase">Jueves</span>
+</div>
+<h4 class="font-bold text-slate-900 mb-1">Estudio Bíblico: Romanos</h4>
+<p class="text-sm text-slate-500 mb-4">Jueves • 20:00 PM • Zoom</p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-300"></div>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-slate-400 flex items-center justify-center text-[8px] text-white font-bold">+8</div>
+</div>
+<button class="text-xs font-bold text-[var(--celeste)] uppercase tracking-wider">Entrar al grupo</button>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-red-400">favorite</span>
+                            Peticiones de Oración
+                        </h3>
+</div>
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100">
+<form class="space-y-4">
+<textarea class="w-full p-4 rounded-xl bg-slate-50 border-transparent focus:border-[var(--celeste)] focus:ring-0 text-sm placeholder:text-slate-400 min-h-[100px]" placeholder="¿Cómo podemos orar por ti hoy?"></textarea>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<input class="rounded text-[var(--celeste)] focus:ring-[var(--celeste)]" id="private" type="checkbox"/>
+<label class="text-xs text-slate-500" for="private">Petición privada (solo pastores)</label>
+</div>
+<button class="bg-[var(--celeste)] text-white px-6 py-2 rounded-lg font-bold text-sm hover:shadow-lg transition-all">Enviar Petición</button>
+</div>
+</form>
+</div>
+<div class="max-h-60 overflow-y-auto custom-scrollbar">
+<div class="divide-y divide-slate-100">
+<div class="p-4 flex gap-4">
+<div class="w-8 h-8 rounded-full bg-[var(--gold-light)] flex-shrink-0 flex items-center justify-center text-[var(--gold)] font-bold text-xs">M</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<p class="text-sm font-bold text-slate-900">María G.</p>
+<span class="text-[10px] text-slate-400">Hace 2 horas</span>
+</div>
+<p class="text-sm text-slate-600">Pido oración por la salud de mi madre que será operada mañana.</p>
+<button class="mt-2 flex items-center gap-1 text-[var(--celeste)] text-xs font-bold">
+<span class="material-symbols-outlined text-sm">folded_hands</span> Estoy orando (12)
+                                        </button>
+</div>
+</div>
+<div class="p-4 flex gap-4">
+<div class="w-8 h-8 rounded-full bg-blue-50 flex-shrink-0 flex items-center justify-center text-[var(--celeste)] font-bold text-xs">J</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<p class="text-sm font-bold text-slate-900">Juan P.</p>
+<span class="text-[10px] text-slate-400">Hace 5 horas</span>
+</div>
+<p class="text-sm text-slate-600">Agradecimiento por un nuevo empleo después de 4 meses de búsqueda. ¡Dios es fiel!</p>
+<button class="mt-2 flex items-center gap-1 text-slate-400 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">folded_hands</span> Estoy orando (5)
+                                        </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div class="lg:col-span-4 space-y-8">
+<section>
+<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[var(--gold)]">record_voice_over</span>
+                        Mensajes del Pastor
+                    </h3>
+<div class="space-y-4">
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group cursor-pointer">
+<div class="aspect-video bg-slate-200 relative">
+<img alt="Thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUoRMgLsLKGpzO5LM9_LUui8odmZLXGgZ3F5Y1bnsX0uGlajBGAmYPpqS_IlYZ824pA_8ZyNPM_A3AAKeZQLuhMzI_tvoFsa6xtYwaQ0W8rfgnrBzoFx_WYXElSHFVuV7d73gsoJ11ODapg_ltklisyKCdp8VyRDhJFzfOXv87XsPggVxMAWUVM1EhO0flVGP-F-8ViCUy1qtNYj6fx7VpKVMHFsHypzExwXPMTzmnNxMIA6gTw1S3bpR3I6oLKvuQePTfDghFhM4"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/20 transition-all">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 bg-black/60 text-white text-[10px] rounded">4:12</div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-sm text-slate-900 mb-1 leading-snug">Caminando en Fe en Tiempos de Incertidumbre</h4>
+<p class="text-xs text-slate-500">Subido hace 2 días • Pastor Samuel</p>
+</div>
+</div>
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group cursor-pointer">
+<div class="aspect-video bg-slate-200 relative">
+<img alt="Thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2TJqSWMzlxR4NfTwaV7zV1dxRQO9ydgU_NjhkA3QMPa8DcgOicSWhhz_JhxqZBGpBklB8iHgdGc-TLAzoINW8thwOyk58Bi3Nz3shdnfoKZ1LRMqqVwIgCBFngtQKxR6sYFmoB4gkcZ0StHcNeJaM3UbzcyUbpKMWhRSicQNNbg-Xg2zqglI6-Oa5bWnbVwuREMGxKQmQFDbxlYvD2hQFbWRhAe4k0iI26ydtAF2x9Alb4YmtQM4HyvEvVsMjH4k200WcHj6mygk"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/20 transition-all">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 bg-black/60 text-white text-[10px] rounded">3:45</div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-sm text-slate-900 mb-1 leading-snug">Reflexión corta: El poder de la reconciliación</h4>
+<p class="text-xs text-slate-500">Subido hace 5 días • Pastor Samuel</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 text-sm font-bold text-[var(--celeste)] border-2 border-[var(--celeste)] border-dashed rounded-xl hover:bg-blue-50 transition-colors">
+                        Ver todos los mensajes
+                    </button>
+</section>
+<section class="bg-[var(--navy)] rounded-2xl p-6 text-white shadow-xl shadow-slate-200">
+<h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[var(--gold)]">calendar_month</span>
+                        Próximos Eventos
+                    </h3>
+<div class="space-y-4">
+<div class="flex gap-4 border-l-2 border-[var(--celeste)] pl-4">
+<div>
+<p class="text-[var(--gold)] text-xs font-bold uppercase">Domingo 26</p>
+<p class="font-bold text-sm">Servicio de Celebración</p>
+<p class="text-xs text-white/60">10:00 AM • Templo Central</p>
+</div>
+</div>
+<div class="flex gap-4 border-l-2 border-slate-600 pl-4">
+<div>
+<p class="text-slate-400 text-xs font-bold uppercase">Martes 28</p>
+<p class="font-bold text-sm">Noche de Adoración</p>
+<p class="text-xs text-white/60">19:00 PM • Auditorio A</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 bg-[var(--celeste)] text-white py-2 rounded-lg text-xs font-bold hover:bg-[#3b8bc2] transition-colors">
+                        Calendario Completo
+                    </button>
+</section>
+<section class="bg-white rounded-2xl border border-slate-200 p-6">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Enlaces Rápidos</h3>
+<ul class="space-y-3">
+<li>
+<a class="flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-[var(--celeste)]" href="#">
+<span class="material-symbols-outlined text-[var(--celeste)]">volunteer_activism</span>
+                                Donaciones y Diezmos
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-[var(--celeste)]" href="#">
+<span class="material-symbols-outlined text-[var(--celeste)]">contact_support</span>
+                                Soporte Pastoral
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-[var(--celeste)]" href="#">
+<span class="material-symbols-outlined text-[var(--celeste)]">policy</span>
+                                Recursos Digitales
+                            </a>
+</li>
+</ul>
+</section>
+</div>
+</div>
+</main>
+<div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-3 flex justify-between items-center z-50">
+<button class="p-2 text-[var(--celeste)]"><span class="material-symbols-outlined">dashboard</span></button>
+<button class="p-2 text-slate-400"><span class="material-symbols-outlined">menu_book</span></button>
+<button class="p-2 text-slate-400"><span class="material-symbols-outlined">groups</span></button>
+<button class="p-2 text-slate-400"><span class="material-symbols-outlined">person</span></button>
+</div>
+
+</body></html>

@@ -1,7 +1,16 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
+
 @theme {
   --font-libre: var(--font-libre-baskerville);
+  --font-playfair: var(--font-playfair);
+
+  --color-mivn-blue: #4AA3DF;
+  --color-mivn-gold: #D4AF37;
+  --color-mivn-bg-dark: #0A0F1D;
+  --color-mivn-bg-light: #FDFDFF;
 
   --color-gold-50: #fbf8eb;
   --color-gold-100: #f5eccb;
@@ -44,22 +53,27 @@
   @apply bg-gradient-to-r from-gold-300 via-gold-100 to-gold-400 bg-clip-text text-transparent;
 }
 
-@utility font-libre {
-  font-family: var(--font-libre-baskerville), serif;
+@utility font-playfair {
+  font-family: var(--font-playfair), serif;
 }
 
 :root {
-  --foreground-rgb: 230, 235, 255;
-  --background-start-rgb: 13, 17, 23;
-  /* GitHub Dim / Midnight feel */
-  --background-end-rgb: 10, 12, 16;
+  --foreground-rgb: 15, 22, 26;
+  --background-rgb: 253, 253, 255;
+  color-scheme: light;
+}
+
+.dark {
+  --foreground-rgb: 220, 230, 240;
+  --background-rgb: 10, 15, 29;
+  color-scheme: dark;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #0d1117;
-  /* Solid fallback/base */
+  background: rgb(var(--background-rgb));
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Scrollbar Customization */
@@ -87,6 +101,7 @@ body {
     filter: blur(10px);
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     filter: blur(0px);
@@ -100,6 +115,7 @@ body {
     filter: blur(10px);
     transform: translateX(-40px);
   }
+
   to {
     opacity: 1;
     filter: blur(0px);
@@ -113,6 +129,7 @@ body {
     filter: blur(10px);
     transform: translateY(40px) scale(0.95);
   }
+
   to {
     opacity: 1;
     filter: blur(0px);
@@ -135,15 +152,50 @@ body {
   animation: testimonialIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@utility animate-delay-100 { animation-delay: 100ms; }
-@utility animate-delay-200 { animation-delay: 200ms; }
-@utility animate-delay-300 { animation-delay: 300ms; }
-@utility animate-delay-400 { animation-delay: 400ms; }
-@utility animate-delay-500 { animation-delay: 500ms; }
-@utility animate-delay-600 { animation-delay: 600ms; }
-@utility animate-delay-700 { animation-delay: 700ms; }
-@utility animate-delay-800 { animation-delay: 800ms; }
-@utility animate-delay-900 { animation-delay: 900ms; }
-@utility animate-delay-1000 { animation-delay: 1000ms; }
-@utility animate-delay-1200 { animation-delay: 1200ms; }
-@utility animate-delay-1400 { animation-delay: 1400ms; }
+@utility animate-delay-100 {
+  animation-delay: 100ms;
+}
+
+@utility animate-delay-200 {
+  animation-delay: 200ms;
+}
+
+@utility animate-delay-300 {
+  animation-delay: 300ms;
+}
+
+@utility animate-delay-400 {
+  animation-delay: 400ms;
+}
+
+@utility animate-delay-500 {
+  animation-delay: 500ms;
+}
+
+@utility animate-delay-600 {
+  animation-delay: 600ms;
+}
+
+@utility animate-delay-700 {
+  animation-delay: 700ms;
+}
+
+@utility animate-delay-800 {
+  animation-delay: 800ms;
+}
+
+@utility animate-delay-900 {
+  animation-delay: 900ms;
+}
+
+@utility animate-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+@utility animate-delay-1200 {
+  animation-delay: 1200ms;
+}
+
+@utility animate-delay-1400 {
+  animation-delay: 1400ms;
+}

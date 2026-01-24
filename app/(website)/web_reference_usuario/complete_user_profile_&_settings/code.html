@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perfil de Usuario - MIVN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4a85de",
+                        "accent-gold": "#D4AF37",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#121820",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav {
+            background-color: #e8ecf2;
+            color: #4a85de;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0f131a] dark:text-white">
+<div class="relative flex min-h-screen flex-col">
+<!-- TopNavBar Component -->
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-solid border-[#e8ecf2] bg-white dark:bg-background-dark px-6 py-3 md:px-10 lg:px-40">
+<div class="flex items-center gap-4">
+<div class="text-primary size-8">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em] text-primary">MIVN</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Eventos</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Sermones</a>
+</nav>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-[#e8ecf2] dark:bg-gray-800 text-[#0f131a] dark:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="Official profile portrait of Juan Pérez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvS8_yq4fimD2LIzc7jEV1Gc8OUk44RGr7dEpkv4BxoMpO-WzkZ7o0537htLo2iI9MW_IPgm0NEWJJCbjZ8uvoceeBkY22dNRxdDpx62dRULty3rtnhDy4gmXVmAkZJ5bC7Otji_kAX9FjGVr9jIeMMqDmPhI5mk8ZCHRJ9s1G5guBC__sz5T9bHH8lWyoDRqyrBilCeZhpST5U3kUB8C8wMsTsqGc8n3yu8uXtdvsiZbgSqFmyk99WK6M3ZF68cTXo8yQDxhL5B4");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 px-4 py-8 md:px-10 lg:px-40">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Left Sidebar Navigation -->
+<aside class="w-full lg:w-80 flex flex-col gap-6">
+<!-- SideNavBar Logic Content -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-[#e8ecf2] dark:border-gray-700">
+<div class="flex flex-col items-center gap-4 text-center mb-8">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-24 border-4 border-[#e8ecf2] dark:border-gray-700" data-alt="Juan Pérez profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDFjfr-94oA7nHDIrvza4EiSFdz35wZYDPM0t1OX4PKh-md3YQ3sD8AOesZ_c7QMCbQXhX0Sck4R1BOAYz1rwzhCvZA4UnC7BXdRRK-rKhXLRJMe1if_JTcl90C0cFHo_0We3YqTvdCFJRjHnwYKbMVFOWTkOpsnRXAysVph50yDByy_11mc4zp_voezjbpSyXhM0inuLcby3MV3qM_40Lz739WFModfER6EkiybphORp4-JsoHyD6_W7AesY0U0vRj97aEM4SG93M");'></div>
+<div class="flex flex-col">
+<h1 class="text-lg font-bold">Juan Pérez</h1>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Miembro Activo</span>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-sm font-semibold">Información Personal</p>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#e8ecf2] dark:hover:bg-gray-700 transition-colors" href="#">
+<span class="material-symbols-outlined">church</span>
+<p class="text-sm font-medium">Historial Espiritual</p>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#e8ecf2] dark:hover:bg-gray-700 transition-colors" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<p class="text-sm font-medium">Mis Donaciones</p>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#e8ecf2] dark:hover:bg-gray-700 transition-colors" href="#">
+<span class="material-symbols-outlined">security</span>
+<p class="text-sm font-medium">Seguridad</p>
+</a>
+</nav>
+<div class="mt-10 pt-6 border-t border-[#e8ecf2] dark:border-gray-700">
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-11 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 font-bold transition-colors">
+<span class="material-symbols-outlined text-lg">logout</span>
+<span>Cerrar Sesión</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col gap-6">
+<!-- PageHeading -->
+<div class="flex flex-col gap-2 p-4 bg-white dark:bg-gray-800 rounded-xl border border-[#e8ecf2] dark:border-gray-700">
+<h2 class="text-3xl font-black leading-tight tracking-tight text-primary">Perfil de Usuario</h2>
+<p class="text-[#536c93] dark:text-gray-400 text-base font-normal">Gestiona tu información personal y compromiso ministerial con MIVN.</p>
+</div>
+<!-- Personal Information Form -->
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-[#e8ecf2] dark:border-gray-700 overflow-hidden">
+<div class="border-b border-[#e8ecf2] dark:border-gray-700 px-6 py-4 bg-gray-50 dark:bg-gray-800/50">
+<h3 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">contact_page</span>
+                                Información Personal
+                            </h3>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-[#0f131a] dark:text-gray-200">Nombre Completo</label>
+<input class="flex w-full rounded-lg border-[#d1d9e5] dark:border-gray-600 bg-white dark:bg-gray-900 h-12 px-4 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" type="text" value="Juan Pérez"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-[#0f131a] dark:text-gray-200">Correo Electrónico</label>
+<input class="flex w-full rounded-lg border-[#d1d9e5] dark:border-gray-600 bg-white dark:bg-gray-900 h-12 px-4 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" type="email" value="juan.perez@example.com"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-[#0f131a] dark:text-gray-200">Teléfono</label>
+<input class="flex w-full rounded-lg border-[#d1d9e5] dark:border-gray-600 bg-white dark:bg-gray-900 h-12 px-4 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" type="tel" value="+1 (555) 123-4567"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-[#0f131a] dark:text-gray-200">Fecha de Nacimiento</label>
+<input class="flex w-full rounded-lg border-[#d1d9e5] dark:border-gray-600 bg-white dark:bg-gray-900 h-12 px-4 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" type="date" value="1990-05-15"/>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="text-sm font-bold text-[#0f131a] dark:text-gray-200">Dirección</label>
+<input class="flex w-full rounded-lg border-[#d1d9e5] dark:border-gray-600 bg-white dark:bg-gray-900 h-12 px-4 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" type="text" value="Calle de la Esperanza 123, Ciudad de México"/>
+</div>
+</div>
+</div>
+<!-- Ministerial Life Section -->
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-[#e8ecf2] dark:border-gray-700 overflow-hidden">
+<div class="border-b border-[#e8ecf2] dark:border-gray-700 px-6 py-4 bg-gray-50 dark:bg-gray-800/50">
+<h3 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">diversity_3</span>
+                                Vida Ministerial
+                            </h3>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-[#f8fafb] dark:bg-gray-900/50 p-4 rounded-lg border border-[#e8ecf2] dark:border-gray-700 flex flex-col gap-1">
+<p class="text-xs font-bold text-[#536c93] uppercase">Grupo Pequeño</p>
+<p class="text-base font-bold text-primary">Roca Firme</p>
+</div>
+<div class="bg-[#f8fafb] dark:bg-gray-900/50 p-4 rounded-lg border border-[#e8ecf2] dark:border-gray-700 flex flex-col gap-1">
+<p class="text-xs font-bold text-[#536c93] uppercase">Ministerio</p>
+<div class="flex items-center gap-2">
+<p class="text-base font-bold text-primary">Worship Team</p>
+<span class="material-symbols-outlined text-accent-gold text-sm">stars</span>
+</div>
+</div>
+<div class="bg-[#f8fafb] dark:bg-gray-900/50 p-4 rounded-lg border border-[#e8ecf2] dark:border-gray-700 flex flex-col gap-1">
+<p class="text-xs font-bold text-[#536c93] uppercase">Fecha de Bautismo</p>
+<p class="text-base font-bold text-primary">12 Oct, 2018</p>
+</div>
+</div>
+</div>
+<!-- Privacy & Notifications -->
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-[#e8ecf2] dark:border-gray-700 overflow-hidden">
+<div class="border-b border-[#e8ecf2] dark:border-gray-700 px-6 py-4 bg-gray-50 dark:bg-gray-800/50">
+<h3 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+                                Privacidad y Notificaciones
+                            </h3>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<p class="font-bold">Alertas por Correo</p>
+<p class="text-sm text-[#536c93]">Recibe noticias sobre sermones y devocionales.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<p class="font-bold">Notificaciones Push</p>
+<p class="text-sm text-[#536c93]">Alertas inmediatas de eventos y peticiones de oración.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="flex items-center justify-end gap-4 pt-4 pb-12">
+<button class="px-6 py-3 text-sm font-bold text-[#536c93] hover:text-[#0f131a] transition-colors">Descartar</button>
+<button class="flex items-center gap-2 px-8 py-3 bg-accent-gold text-white rounded-lg font-bold shadow-lg shadow-accent-gold/20 hover:scale-[1.02] transition-transform active:scale-100">
+<span class="material-symbols-outlined">save</span>
+<span>Guardar Cambios</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
