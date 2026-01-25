@@ -17,22 +17,43 @@ export type PrayerRequest = {
 /**
  * Get all approved prayer requests (non-anonymous)
  */
-export const getPrayerRequests = cache(async (limit?: number) => {
+export type PaginatedResponse<T> = {
+    data: T[];
+    meta: {
+        total: number;
+        page: number;
+        last_page: number;
+    };
+};
+
+/**
+ * Get all approved prayer requests (paginated)
+ */
+export const getPrayerRequests = cache(async (page: number = 1, limit: number = 6) => {
     const supabase = await createClient();
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
     let query = supabase
         .from("prayer_requests")
-        .select("*")
+        .select("*", { count: "exact" })
         .eq("is_approved", true)
-        .order("created_at", { ascending: false });
+        .eq("is_private", false) // Only show public requests
+        .order("created_at", { ascending: false })
+        .range(from, to);
 
-    if (limit) {
-        query = query.limit(limit);
-    }
-
-    const { data, error } = await query;
+    const { data, error, count } = await query;
 
     if (error) throw error;
-    return data as PrayerRequest[];
+
+    return {
+        data: data as PrayerRequest[],
+        meta: {
+            total: count || 0,
+            page,
+            last_page: Math.ceil((count || 0) / limit)
+        }
+    };
 });
 
 /**

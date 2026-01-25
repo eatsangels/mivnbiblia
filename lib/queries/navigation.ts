@@ -23,7 +23,6 @@ export type NavigationItem = {
  * Get navigation menu with items by menu name
  */
 export const getNavigationMenu = cache(async (menuName: string) => {
-    console.log("DEBUG [Query]: Buscando menú:", menuName);
     const supabase = await createClient();
 
     // Get menu
@@ -34,19 +33,17 @@ export const getNavigationMenu = cache(async (menuName: string) => {
         .maybeSingle();
 
     if (menuError) {
-        console.error("DEBUG [Query Error]: Fallo al obtener menú:", menuError);
         throw menuError;
     }
 
     if (!menu) {
-        console.warn("DEBUG [Query Warn]: Menú no encontrado, devolviendo vacío:", menuName);
+        // console.warn("DEBUG [Query Warn]: Menú no encontrado, devolviendo vacío:", menuName);
         return {
             menu: { id: '', name: menuName, created_at: '' } as NavigationMenu,
             items: [] as NavigationItem[],
         };
     }
 
-    console.log("DEBUG [Query Success]: Menú encontrado ID:", menu.id);
 
     // Get items
     const { data: items, error: itemsError } = await supabase
@@ -56,11 +53,9 @@ export const getNavigationMenu = cache(async (menuName: string) => {
         .order("order", { ascending: true });
 
     if (itemsError) {
-        console.error("DEBUG [Query Error]: Fallo al obtener items:", itemsError);
         throw itemsError;
     }
 
-    console.log("DEBUG [Query Success]: Items encontrados:", items?.length);
 
     return {
         menu: menu as NavigationMenu,

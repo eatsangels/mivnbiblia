@@ -9,8 +9,15 @@ import { es } from "date-fns/locale";
 import type { PrayerRequest } from "@/lib/queries/prayer-requests";
 import Swal from 'sweetalert2';
 
+import Link from "next/link";
+
 interface PrayerWallProps {
     initialRequests: PrayerRequest[];
+    pagination?: {
+        total: number;
+        page: number;
+        last_page: number;
+    };
 }
 
 function SubmitButton() {
@@ -27,7 +34,7 @@ function SubmitButton() {
     );
 }
 
-export const PrayerWall = ({ initialRequests = [] }: PrayerWallProps) => {
+export const PrayerWall = ({ initialRequests = [], pagination }: PrayerWallProps) => {
     const [activeTab, setActiveTab] = useState("Recientes");
 
     // Server Action Handler
@@ -50,17 +57,26 @@ export const PrayerWall = ({ initialRequests = [] }: PrayerWallProps) => {
             });
             // Optionally reset form here
         } else {
+            const isAuthError = result.message.includes("iniciar sesión");
+
             Swal.fire({
-                title: 'Error',
+                title: isAuthError ? '¡Atención!' : 'Error',
                 text: result.message,
-                icon: 'error',
-                confirmButtonText: 'Entendido',
-                confirmButtonColor: '#ef4444',
+                icon: isAuthError ? 'warning' : 'error',
+                showCancelButton: isAuthError,
+                confirmButtonText: isAuthError ? 'Iniciar Sesión' : 'Entendido',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: isAuthError ? '#4AA3DF' : '#ef4444',
                 background: '#fff',
                 color: '#1e293b',
                 customClass: {
                     popup: 'rounded-[2rem]',
-                    confirmButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3'
+                    confirmButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3',
+                    cancelButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3 text-slate-500'
+                }
+            }).then((submitResult) => {
+                if (isAuthError && submitResult.isConfirmed) {
+                    window.location.href = "/login?redirect=/oracion";
                 }
             });
         }
@@ -247,12 +263,28 @@ export const PrayerWall = ({ initialRequests = [] }: PrayerWallProps) => {
                         )}
                     </div>
 
-                    <div className="flex justify-center pt-8">
-                        <button className="group flex items-center gap-4 px-12 py-5 rounded-[2.5rem] border-2 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-black uppercase tracking-widest text-[10px] hover:border-mivn-blue hover:text-mivn-blue transition-all">
-                            Ver más peticiones
-                            <ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
-                        </button>
-                    </div>
+                    {/* Pagination Controls */}
+                    {pagination && pagination.last_page > 1 && (
+                        <div className="flex justify-center items-center gap-4 pt-8">
+                            <Link
+                                href={`/oracion?page=${pagination.page - 1}`}
+                                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${pagination.page <= 1 ? "opacity-50 pointer-events-none bg-slate-100 text-slate-400" : "bg-white text-mivn-blue hover:bg-mivn-blue hover:text-white shadow-lg"}`}
+                            >
+                                Anterior
+                            </Link>
+
+                            <span className="text-slate-400 font-bold text-xs uppercase tracking-widest">
+                                Página {pagination.page} de {pagination.last_page}
+                            </span>
+
+                            <Link
+                                href={`/oracion?page=${pagination.page + 1}`}
+                                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${pagination.page >= pagination.last_page ? "opacity-50 pointer-events-none bg-slate-100 text-slate-400" : "bg-white text-mivn-blue hover:bg-mivn-blue hover:text-white shadow-lg"}`}
+                            >
+                                Siguiente
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
             </main>
