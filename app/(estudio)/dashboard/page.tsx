@@ -32,6 +32,8 @@ import {
 import Link from 'next/link';
 import Image from "next/image";
 import { ResetProgressButton } from '@/components/dashboard/ResetProgressButton';
+import { getPrayerRequests } from '@/lib/queries/prayer-requests';
+import { DashboardPrayerSection } from '@/components/dashboard/DashboardPrayerSection';
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -60,6 +62,9 @@ export default async function DashboardPage() {
     const verseOffset = count ? (dayOfYear * 12345) % count : 0;
     const { data: verses } = await supabase.from('scriptures').select('*').range(verseOffset, verseOffset) as any;
     const verseOfTheDay = verses?.[0];
+
+    // Fetch prayer requests
+    const { data: prayerRequests } = await getPrayerRequests(1, 10);
 
     const sidebarLinks: any[] = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", active: true },
@@ -258,56 +263,10 @@ export default async function DashboardPage() {
                         </section>
 
                         {/* 4. Prayer Requests Section */}
-                        <section className="space-y-8">
-                            <div className="flex items-center gap-4">
-                                <Heart className="w-6 h-6 text-rose-500" />
-                                <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white">Peticiones de Oración</h3>
-                            </div>
-
-                            <div className="bg-white dark:bg-slate-900 rounded-[3.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden">
-                                <div className="p-10 border-b border-slate-50 dark:border-white/5">
-                                    <form className="space-y-6">
-                                        <textarea
-                                            className="w-full p-8 rounded-3xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-mivn-blue outline-none text-sm placeholder:text-slate-400 min-h-[140px] italic font-light transition-all"
-                                            placeholder="¿Cómo podemos clamar por ti hoy, Ricardo?"
-                                        ></textarea>
-                                        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                                            <div className="flex items-center gap-4">
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" className="sr-only peer" />
-                                                    <div className="w-12 h-6 bg-slate-200 dark:bg-white/10 rounded-full peer peer-checked:bg-mivn-blue transition-all" />
-                                                    <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-6" />
-                                                </label>
-                                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">Petición Privada</span>
-                                            </div>
-                                            <button className="bg-mivn-blue text-white px-12 py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all">Enviar Petición</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
-                                    <div className="divide-y divide-slate-50 dark:divide-white/5">
-                                        {[
-                                            { name: "María G.", time: "Hace 2 horas", text: "Pido oración por la salud de mi madre que será operada mañana.", color: "bg-mivn-gold/10 text-mivn-gold", initials: "M" },
-                                            { name: "Juan P.", time: "Hace 5 horas", text: "Agradecimiento por un nuevo empleo después de 4 meses. ¡Dios es fiel!", color: "bg-mivn-blue/10 text-mivn-blue", initials: "J" }
-                                        ].map((p, i) => (
-                                            <div key={i} className="p-10 flex gap-8 items-start hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-                                                <div className={`w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center font-bold text-lg ${p.color} border border-current shadow-sm`}>{p.initials}</div>
-                                                <div className="space-y-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <p className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-tight">{p.name}</p>
-                                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">{p.time}</span>
-                                                    </div>
-                                                    <p className="text-slate-600 dark:text-slate-400 font-light italic leading-relaxed">"{p.text}"</p>
-                                                    <button className="flex items-center gap-3 text-mivn-blue text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all bg-mivn-blue/5 px-6 py-2.5 rounded-full border border-mivn-blue/10">
-                                                        <HandHeart className="w-4 h-4" /> Estoy Orando (12)
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                        <DashboardPrayerSection
+                            initialRequests={prayerRequests}
+                            userName={profile?.full_name || 'Ricardo'}
+                        />
 
                     </div>
 
