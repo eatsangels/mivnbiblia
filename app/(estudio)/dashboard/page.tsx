@@ -68,11 +68,12 @@ export default async function DashboardPage() {
 
     const sidebarLinks: any[] = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", active: true },
+        { name: "En Vivo (Chat)", icon: MessageSquare, href: "/en-vivo" },
+        { name: "Comunidad", icon: Users, href: "/grupos" },
         { name: "Instituto", icon: School, href: "/instituto" },
         { name: "Mi Crecimiento", icon: TrendingUp, href: "/dashboard/growth" },
         { name: "Devocionales", icon: BookOpen, href: "/devocionales" },
-        { name: "Mis Grupos", icon: Users, href: "/ministerios" },
-        { name: "Eventos", icon: Calendar, href: "/eventos" },
+        { name: "Ministerios", icon: HandHeart, href: "/ministerios" },
         { name: "Donaciones", icon: Heart, href: "/dashboard/donations" },
         { name: "Perfil", icon: User, href: "/dashboard/profile" },
     ];
@@ -374,9 +375,9 @@ export default async function DashboardPage() {
             {/* Mobile Bottom Navigation */}
             <div className="lg:hidden fixed bottom-6 left-6 right-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 px-8 py-5 rounded-[2.5rem] flex justify-between items-center z-50 shadow-2xl">
                 <Link href="/dashboard" className="text-mivn-blue"><LayoutDashboard className="w-6 h-6" /></Link>
-                <Link href="/instituto" className="text-slate-400"><School className="w-6 h-6" /></Link>
-                <Link href="/devocionales" className="text-slate-400"><BookOpen className="w-6 h-6" /></Link>
-                <Link href="/ministerios" className="text-slate-400"><Users className="w-6 h-6" /></Link>
+                <Link href="/read" className="text-slate-400"><BookOpen className="w-6 h-6" /></Link>
+                <Link href="/en-vivo" className="text-slate-400"><MessageSquare className="w-6 h-6" /></Link>
+                <Link href="/grupos" className="text-slate-400"><Users className="w-6 h-6" /></Link>
                 <Link href="/dashboard/profile" className="text-slate-400"><User className="w-6 h-6" /></Link>
                 {isAdmin && <Link href="/admin" className="text-mivn-gold animate-pulse"><Shield className="w-6 h-6" /></Link>}
             </div>

@@ -10,19 +10,56 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export const SpiritualGrowth = ({ profile }: { profile: any }) => {
-    const milestones = [
-        { title: "Primera Visita", date: "Ene 2024", completed: true },
-        { title: "Bautismo", date: profile.baptism_date || "Mar 2024", completed: !!profile.baptism_date },
-        { title: "Membresía", date: "Jun 2024", completed: true },
-        { title: "Liderazgo 101", date: "En Curso", completed: false, inProgress: true },
-        { title: "Líder de Grupo", date: "Pendiente", completed: false }
+import { Milestone as GrowthMilestone, Certificate as GrowthCertificate } from "@/lib/queries/growth";
+import { PrayerRequest } from "@/lib/queries/prayer-requests";
+
+interface SpiritualGrowthProps {
+    profile: any;
+    progress?: any;
+    milestones: GrowthMilestone[];
+    certificates: GrowthCertificate[];
+    activity: any[];
+    prayerRequests: PrayerRequest[];
+}
+
+export const SpiritualGrowth = ({
+    profile,
+    progress,
+    milestones,
+    certificates,
+    activity,
+    prayerRequests
+}: SpiritualGrowthProps) => {
+    // Merge base milestones with user data
+    const baseMilestones = [
+        { slug: "primera-visita", title: "Primera Visita", date: "Completado" },
+        { slug: "bautismo", title: "Bautismo", date: profile.baptism_date || "Pendiente" },
+        { slug: "membresia", title: "Membresía", date: "Pendiente" },
+        { slug: "liderazgo-101", title: "Liderazgo 101", date: "En Curso" },
+        { slug: "lider-de-grupo", title: "Líder de Grupo", date: "Pendiente" }
     ];
 
-    const certificates = [
-        { id: 1, title: "Membresía MIVN", date: "Junio 2024", icon: Award, color: "text-mivn-blue" },
-        { id: 2, title: "Certificado de Bautismo", date: "Marzo 2024", icon: Waves, color: "text-mivn-gold" },
+    const displayMilestones = baseMilestones.map(bm => {
+        const userMs = milestones.find(m => m.milestone_slug === bm.slug);
+        return {
+            ...bm,
+            completed: userMs?.is_completed || false,
+            date: userMs?.completed_at ? new Date(userMs.completed_at).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }) : bm.date,
+            inProgress: bm.slug === 'liderazgo-101' && !userMs?.is_completed // Mock progress for education
+        };
+    });
+
+    const displayCertificates = certificates.length > 0 ? certificates.map(c => ({
+        id: c.id,
+        title: c.title,
+        date: new Date(c.issued_at).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }),
+        icon: c.type === 'baptism' ? Waves : Award,
+        color: c.type === 'baptism' ? "text-mivn-gold" : "text-mivn-blue"
+    })) : [
+        { id: '1', title: "Próximo paso", date: "Pendiente", icon: Award, color: "text-slate-300" }
     ];
+
+    const progressPercentage = progress?.total_chapters_read ? Math.min(Math.round((progress.total_chapters_read / 200) * 100), 100) : 0;
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -58,7 +95,7 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                     <div className="absolute top-[22px] left-12 w-[60%] h-1 bg-gradient-to-r from-mivn-blue to-mivn-gold hidden lg:block transition-all duration-1000" />
 
                     {/* Timeline Items */}
-                    {milestones.map((ms, i) => (
+                    {displayMilestones.map((ms, i) => (
                         <div key={i} className="relative z-10 flex flex-row lg:flex-col items-center gap-6 lg:text-center group/ms">
                             <div className={`size-12 rounded-[1.25rem] flex items-center justify-center shadow-xl ring-8 ring-white dark:ring-slate-900 transition-all duration-500 ${ms.completed
                                 ? "bg-mivn-blue text-white scale-110"
@@ -98,7 +135,7 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                                     className="text-mivn-blue drop-shadow-[0_0_8px_rgba(74,163,223,0.5)] transition-all duration-1000"
                                     cx="64" cy="64" r="56"
                                     fill="transparent" stroke="currentColor" strokeWidth="12"
-                                    strokeDasharray="351.8" strokeDashoffset="88"
+                                    strokeDasharray="351.8" strokeDashoffset={351.8 - (351.8 * progressPercentage / 100)}
                                 />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -108,10 +145,10 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                         <div className="flex-1 space-y-6 w-full">
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">Capítulos leídos este año</p>
-                                <p className="text-4xl font-black text-slate-900 dark:text-white">145</p>
+                                <p className="text-4xl font-black text-slate-900 dark:text-white">{progress?.total_chapters_read || 0}</p>
                             </div>
                             <div className="w-full bg-slate-50 dark:bg-white/5 h-3 rounded-full overflow-hidden border border-slate-100 dark:border-white/5">
-                                <div className="bg-mivn-blue h-full rounded-full transition-all duration-1000 w-3/4" />
+                                <div className="bg-mivn-blue h-full rounded-full transition-all duration-1000" style={{ width: `${progressPercentage}%` }} />
                             </div>
                             <p className="text-[10px] text-slate-400 italic">Estás a solo 4 capítulos de tu meta semanal. ¡Sigue adelante!</p>
                         </div>
@@ -128,22 +165,24 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                     </div>
 
                     <div className="space-y-4">
-                        {[
-                            { title: "Salud de mi Familia", status: "En Oración", color: "text-amber-500", bg: "bg-amber-500/10", icon: Waves },
-                            { title: "Nuevo Empleo", status: "Respondida", color: "text-emerald-500", bg: "bg-emerald-500/10", icon: Check }
-                        ].map((request, i) => (
-                            <div key={i} className={`flex items-center justify-between p-6 rounded-3xl border border-transparent shadow-sm hover:border-slate-100 dark:hover:border-white/5 transition-all ${request.bg.replace('/10', '/5')}`}>
+                        {prayerRequests.length > 0 ? prayerRequests.map((request, i) => (
+                            <div key={i} className={`flex items-center justify-between p-6 rounded-3xl border border-transparent shadow-sm hover:border-slate-100 dark:hover:border-white/5 transition-all bg-mivn-blue/5`}>
                                 <div className="flex items-center gap-5">
-                                    <div className={`w-12 h-12 rounded-2xl ${request.bg} flex items-center justify-center ${request.color}`}>
-                                        <request.icon className="w-5 h-5" />
+                                    <div className={`w-12 h-12 rounded-2xl bg-mivn-blue/10 flex items-center justify-center text-mivn-blue`}>
+                                        <Heart className="w-5 h-5" />
                                     </div>
-                                    <p className="font-bold text-slate-800 dark:text-white uppercase tracking-tight">{request.title}</p>
+                                    <div className="space-y-0.5">
+                                        <p className="font-bold text-slate-800 dark:text-white uppercase tracking-tight truncate max-w-[150px]">{request.request}</p>
+                                        <p className="text-[9px] text-slate-400 italic">Enviada el {new Date(request.created_at).toLocaleDateString()}</p>
+                                    </div>
                                 </div>
-                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${request.bg} ${request.color}`}>
-                                    {request.status}
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${request.is_answered ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                                    {request.is_answered ? "Respondida" : "En Oración"}
                                 </span>
                             </div>
-                        ))}
+                        )) : (
+                            <p className="text-center py-10 text-slate-400 italic text-sm">No tienes peticiones de oración registradas.</p>
+                        )}
                     </div>
                 </section>
 
@@ -165,17 +204,13 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50 dark:divide-white/5">
-                            {[
-                                { title: "Servicio Dominical: Viviendo en Gracia", date: "Oct 20, 2024", cat: "Servicio" },
-                                { title: "Workshop: Corazón de Siervo", date: "Oct 12, 2024", cat: "Taller" },
-                                { title: "Retiro: Renuevo Espiritual", date: "Sep 28, 2024", cat: "Retiro" }
-                            ].map((activity, i) => (
+                            {activity.length > 0 ? activity.map((act, i) => (
                                 <tr key={i} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group cursor-pointer">
-                                    <td className="px-12 py-8 text-sm font-bold text-slate-800 dark:text-white uppercase tracking-tight">{activity.title}</td>
-                                    <td className="px-12 py-8 text-sm text-slate-500 italic">{activity.date}</td>
+                                    <td className="px-12 py-8 text-sm font-bold text-slate-800 dark:text-white uppercase tracking-tight">{act.title}</td>
+                                    <td className="px-12 py-8 text-sm text-slate-500 italic">{new Date(act.date).toLocaleDateString()}</td>
                                     <td className="px-12 py-8">
                                         <span className="text-[10px] font-black uppercase tracking-widest bg-slate-100 dark:bg-white/5 px-4 py-1.5 rounded-full text-slate-500">
-                                            {activity.cat}
+                                            {act.category}
                                         </span>
                                     </td>
                                     <td className="px-12 py-8 text-right">
@@ -186,7 +221,11 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            )) : (
+                                <tr>
+                                    <td colSpan={4} className="px-12 py-10 text-center text-slate-400 italic text-sm">No hay actividad reciente.</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -200,20 +239,24 @@ export const SpiritualGrowth = ({ profile }: { profile: any }) => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {certificates.map((cert) => (
+                    {displayCertificates.map((cert) => (
                         <div key={cert.id} className="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-2xl hover:border-mivn-blue/30 transition-all">
                             <div className="aspect-[1.41] bg-slate-50 dark:bg-slate-800/50 relative flex items-center justify-center overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-tr from-mivn-blue/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <cert.icon className={`w-16 h-16 ${cert.color} opacity-40 group-hover:scale-110 transition-transform duration-700`} />
-                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-slate-900/40 backdrop-blur-[2px] transition-all">
-                                    <button className="bg-white text-slate-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-2xl">
-                                        <Download className="w-4 h-4" /> Descargar PDF
-                                    </button>
-                                </div>
+                                {cert.date !== 'Pendiente' && (
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-slate-900/40 backdrop-blur-[2px] transition-all">
+                                        <button className="bg-white text-slate-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-2xl">
+                                            <Download className="w-4 h-4" /> Descargar PDF
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                             <div className="p-8 space-y-2">
                                 <h4 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-tight">{cert.title}</h4>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">Completado: {cert.date}</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">
+                                    {cert.date === 'Pendiente' ? 'Tú puedes lograrlo' : `Completado: ${cert.date}`}
+                                </p>
                             </div>
                         </div>
                     ))}

@@ -15,13 +15,10 @@ export const Navbar = ({ user }: NavbarProps) => {
     const navLinks = [
         { name: "Inicio", href: "/" },
         { name: "Estudio", href: "/read" },
-        { name: "Cultos", href: "/cultos" },
-        { name: "Recursos", href: "/recursos" },
-        { name: "Oración", href: "/oracion" },
-        { name: "Ministerios", href: "/ministerios" },
+        { name: "Donar", href: "/donaciones" },
+        { name: "En Vivo", href: "/en-vivo" },
         { name: "Comunidad", href: "/grupos" },
-        { name: "Eventos", href: "/eventos" },
-        { name: "Boletín", href: "/boletin" },
+        { name: "Ministerios", href: "/ministerios" },
         { name: "Devocional", href: "/devocionales" },
         { name: "Nosotros", href: "/sobre-nosotros" },
     ];
@@ -65,12 +62,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                         <Sun className="w-5 h-5 hidden dark:block text-yellow-400" />
                     </button>
 
-                    <Link
-                        href="/donaciones"
-                        className="text-slate-600 dark:text-slate-300 font-medium hover:text-mivn-blue transition-colors"
-                    >
-                        Donar
-                    </Link>
+
 
                     {user ? (
                         <Link href="/dashboard" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-mivn-blue hover:bg-mivn-blue hover:text-white transition-all">

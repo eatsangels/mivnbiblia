@@ -1,10 +1,107 @@
 "use client";
 
-import { Play, Volume2, Settings, Maximize, MessageSquare, Send, Users, Radio, Calendar, Bell, History, Share2, Heart, ExternalLink, Sparkles as SparklesIcon } from "lucide-react";
-import { useState } from "react";
+import { Play, Volume2, Settings, Maximize, MessageSquare, Send, Users, Radio, Calendar, Bell, History, Share2, Heart, ExternalLink, Sparkles as SparklesIcon, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export const LiveStream = () => {
     const [chatMessage, setChatMessage] = useState("");
+    const [messages, setMessages] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSending, setIsSending] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+    const supabase = createClient();
+
+    useEffect(() => {
+        fetchMessages();
+
+        const channel = supabase
+            .channel('chat_general')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'messages',
+                },
+                async (payload) => {
+                    // Fetch profile for the new message
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('full_name, avatar_url')
+                        .eq('id', payload.new.user_id)
+                        .single();
+
+                    const newMessage = {
+                        ...payload.new,
+                        profiles: profile
+                    };
+
+                    setMessages((prev) => [...prev, newMessage]);
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
+    const fetchMessages = async () => {
+        const { data, error } = await supabase
+            .from('messages')
+            .select('*, profiles(full_name, avatar_url)')
+            .eq('channel', 'general')
+            .order('created_at', { ascending: true })
+            .limit(50);
+
+        if (!error && data) {
+            setMessages(data);
+        }
+        setIsLoading(false);
+    };
+
+    const handleSendMessage = async (e?: React.FormEvent) => {
+        e?.preventDefault();
+        if (!chatMessage.trim() || isSending) return;
+
+        setIsSending(true);
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            alert("Debes iniciar sesión para comentar.");
+            setIsSending(false);
+            return;
+        }
+
+        const { error } = await supabase
+            .from('messages')
+            .insert({
+                user_id: user.id,
+                content: chatMessage,
+                channel: 'general'
+            });
+
+        if (error) {
+            console.error("Error sending message:", error);
+        } else {
+            setChatMessage("");
+        }
+        setIsSending(false);
+    };
+
+    const getInitials = (name: string) => {
+        return name
+            ? name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
+            : "?";
+    };
 
     return (
         <section className="bg-background-light dark:bg-background-dark py-12 lg:py-24 px-4 overflow-hidden">
@@ -104,8 +201,8 @@ export const LiveStream = () => {
                     </div>
 
                     {/* Chat Sidebar Area */}
-                    <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3.5rem] overflow-hidden flex flex-col h-[500px] lg:h-auto shadow-2xl">
-                        <div className="p-8 border-b border-slate-50 dark:border-white/5 flex items-center justify-between">
+                    <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3.5rem] overflow-hidden flex flex-col h-[600px] lg:h-auto shadow-2xl">
+                        <div className="p-8 border-b border-slate-50 dark:border-white/5 flex items-center justify-between bg-gradient-to-r from-mivn-blue/5 to-transparent">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-2xl bg-mivn-blue/10 flex items-center justify-center text-mivn-blue">
                                     <MessageSquare className="w-5 h-5" />
@@ -116,44 +213,71 @@ export const LiveStream = () => {
                         </div>
 
                         {/* Chat Messages */}
-                        <div className="flex-1 p-8 space-y-8 overflow-y-auto custom-scrollbar">
-                            {[
-                                { user: "Andrés López", msg: "¡Bendiciones a todos desde Colombia! 🙌", initial: "A", color: "text-blue-500" },
-                                { user: "Maria García", msg: "Amén, qué hermosa palabra la de hoy.", initial: "M", color: "text-emerald-500" },
-                                { user: "Moderador", msg: "Bienvenidos a la transmisión oficial de MIVN.", initial: "R", color: "text-mivn-gold", italic: true, premium: true },
-                                { user: "Carlos R.", msg: "Conectados en familia, listos para recibir.", initial: "C", color: "text-purple-500" },
-                                { user: "Elena M.", msg: "Intercedo por sanidad para mi familia.", initial: "E", color: "text-pink-500" }
-                            ].map((c, i) => (
-                                <div key={i} className="flex gap-4 group">
-                                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all group-hover:scale-110 ${c.premium ? "bg-mivn-gold text-white shadow-lg shadow-mivn-gold/20" : "bg-slate-100 dark:bg-white/5 text-slate-400 border border-slate-100 dark:border-white/5"}`}>
-                                        {c.initial}
-                                    </div>
-                                    <div className="space-y-1">
-                                        <p className={`text-[10px] font-black uppercase tracking-widest ${c.color} flex items-center gap-2`}>
-                                            {c.user} {c.premium && <SparklesIcon className="w-3 h-3 fill-current" />}
-                                        </p>
-                                        <p className={`text-sm text-slate-600 dark:text-gray-400 leading-relaxed font-light ${c.italic ? "italic text-slate-400" : ""}`}>
-                                            {c.msg}
-                                        </p>
-                                    </div>
+                        <div ref={chatContainerRef} className="flex-1 p-6 space-y-4 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-950/30">
+                            {isLoading ? (
+                                <div className="flex flex-col items-center justify-center h-full gap-4 text-slate-400 italic text-xs">
+                                    <Loader2 className="w-6 h-6 animate-spin text-mivn-blue" />
+                                    Cargando bendiciones...
                                 </div>
-                            ))}
+                            ) : messages.length === 0 ? (
+                                <div className="text-center text-slate-400 italic text-xs py-10">Sé el primero en enviar una bendición.</div>
+                            ) : (
+                                messages.map((m, i) => (
+                                    <div key={m.id || i} className="flex gap-3 group animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                        {/* Profile Picture */}
+                                        <div className="flex-shrink-0">
+                                            {m.profiles?.avatar_url ? (
+                                                <img
+                                                    src={m.profiles.avatar_url}
+                                                    alt={m.profiles?.full_name || "Usuario"}
+                                                    className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-800 shadow-md"
+                                                />
+                                            ) : (
+                                                <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs bg-gradient-to-br from-mivn-blue to-mivn-gold text-white border-2 border-white dark:border-slate-800 shadow-md">
+                                                    {getInitials(m.profiles?.full_name)}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Message Bubble */}
+                                        <div className="flex-1 max-w-[75%]">
+                                            <div className="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:shadow-md transition-shadow">
+                                                <p className="text-[10px] font-bold text-mivn-blue mb-1">
+                                                    {m.profiles?.full_name || "MIVN Miembro"}
+                                                </p>
+                                                <p className="text-sm text-slate-700 dark:text-gray-300 leading-relaxed break-words">
+                                                    {m.content}
+                                                </p>
+                                                <p className="text-[9px] text-slate-400 mt-1.5 text-right">
+                                                    {new Date(m.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                            <div ref={messagesEndRef} />
                         </div>
 
                         {/* Chat Input */}
-                        <div className="p-8 border-t border-slate-50 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
-                            <div className="relative">
+                        <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+                            <form onSubmit={handleSendMessage} className="relative">
                                 <input
                                     type="text"
                                     placeholder="Escribe una bendición..."
-                                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-8 py-5 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-mivn-blue transition-all italic font-light"
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-6 py-4 pr-14 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-mivn-blue/50 transition-all placeholder:text-slate-400"
                                     value={chatMessage}
                                     onChange={(e) => setChatMessage(e.target.value)}
+                                    disabled={isSending}
                                 />
-                                <button className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-mivn-blue text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-mivn-blue/20">
-                                    <Send className="w-4 h-4" />
+                                <button
+                                    type="submit"
+                                    disabled={!chatMessage.trim() || isSending}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-mivn-blue text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-mivn-blue/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                                 </button>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -161,3 +285,4 @@ export const LiveStream = () => {
         </section>
     );
 };
+

@@ -519,6 +519,38 @@ export type Database = {
                 }
                 Relationships: []
             }
+            messages: {
+                Row: {
+                    channel: string
+                    created_at: string
+                    id: string
+                    user_id: string | null
+                    content: string
+                }
+                Insert: {
+                    channel?: string
+                    created_at?: string
+                    id?: string
+                    user_id?: string | null
+                    content: string
+                }
+                Update: {
+                    channel?: string
+                    created_at?: string
+                    id?: string
+                    user_id?: string | null
+                    content?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "messages_user_id_fkey"
+                        columns: ["user_id"]
+                        isOneToOne: false
+                        referencedRelation: "profiles"
+                        referencedColumns: ["id"]
+                    },
+                ]
+            }
             ministries: {
                 Row: {
                     created_at: string | null

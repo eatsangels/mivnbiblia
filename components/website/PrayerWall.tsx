@@ -3,7 +3,7 @@
 import { Send, Lock, Globe, Star, Heart, MessageCircle, User, Edit3, ShieldCheck, CheckCircle2, ChevronDown, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { createPrayerRequest } from "@/app/(website)/oracion/actions";
+import { createPrayerRequest, joinPrayerRequest } from "@/app/(website)/oracion/actions";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import type { PrayerRequest } from "@/lib/queries/prayer-requests";
@@ -36,6 +36,7 @@ function SubmitButton() {
 
 export const PrayerWall = ({ initialRequests = [], pagination }: PrayerWallProps) => {
     const [activeTab, setActiveTab] = useState("Recientes");
+    const [joiningPrayer, setJoiningPrayer] = useState<string | null>(null);
 
     // Server Action Handler
     async function handleSubmit(formData: FormData) {
@@ -90,6 +91,47 @@ export const PrayerWall = ({ initialRequests = [], pagination }: PrayerWallProps
             .join("")
             .toUpperCase();
     };
+
+    async function handleJoinPrayer(requestId: string) {
+        setJoiningPrayer(requestId);
+        const result = await joinPrayerRequest(requestId);
+        setJoiningPrayer(null);
+
+        if (result.success) {
+            Swal.fire({
+                title: '¡Amén!',
+                text: 'Te has unido en oración por esta petición.',
+                icon: 'success',
+                confirmButtonText: 'Continuar Orando',
+                confirmButtonColor: '#4AA3DF',
+                timer: 2000,
+                customClass: {
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3'
+                }
+            });
+        } else {
+            const isAuthError = result.message?.includes("iniciar sesión");
+            Swal.fire({
+                title: isAuthError ? '¡Atención!' : 'Aviso',
+                text: result.message,
+                icon: isAuthError ? 'warning' : 'info',
+                showCancelButton: isAuthError,
+                confirmButtonText: isAuthError ? 'Iniciar Sesión' : 'Entendido',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4AA3DF',
+                customClass: {
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3',
+                    cancelButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3 text-slate-500'
+                }
+            }).then((submitResult) => {
+                if (isAuthError && submitResult.isConfirmed) {
+                    window.location.href = "/login?redirect=/oracion";
+                }
+            });
+        }
+    }
 
     return (
         <div className="bg-background-light dark:bg-background-dark min-h-screen font-lexend">
@@ -252,10 +294,14 @@ export const PrayerWall = ({ initialRequests = [], pagination }: PrayerWallProps
                                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mivn-blue opacity-75" />
                                                 <Heart className="relative inline-flex h-3 w-3 fill-current" />
                                             </div>
-                                            <span className="text-[10px] font-black uppercase tracking-widest">0 Orando</span>
+                                            <span className="text-[10px] font-black uppercase tracking-widest">{r.intersession_count || 0} Orando</span>
                                         </div>
-                                        <button className={`px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${r.is_answered ? "bg-slate-100 dark:bg-white/5 text-slate-400" : "bg-mivn-blue text-white shadow-xl shadow-mivn-blue/20 hover:scale-105"}`}>
-                                            {r.is_answered ? "Amén" : "Me uno en oración"}
+                                        <button
+                                            onClick={() => handleJoinPrayer(r.id)}
+                                            disabled={r.is_answered || joiningPrayer === r.id}
+                                            className={`px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${r.is_answered || joiningPrayer === r.id ? "bg-slate-100 dark:bg-white/5 text-slate-400 cursor-not-allowed" : "bg-mivn-blue text-white shadow-xl shadow-mivn-blue/20 hover:scale-105 active:scale-95"}`}
+                                        >
+                                            {joiningPrayer === r.id ? "Uniéndome..." : r.is_answered ? "Amén" : "Me uno en oración"}
                                         </button>
                                     </div>
                                 </div>

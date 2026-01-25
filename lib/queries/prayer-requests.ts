@@ -87,6 +87,22 @@ export const getUnansweredPrayerRequests = cache(async (limit?: number) => {
 });
 
 /**
+ * Get prayer requests for a specific user
+ */
+export const getUserPrayerRequests = cache(async (userId: string, limit: number = 5) => {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("prayer_requests")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+    if (error) throw error;
+    return data as PrayerRequest[];
+});
+
+/**
  * Submit a new prayer request
  */
 export async function submitPrayerRequest(data: {

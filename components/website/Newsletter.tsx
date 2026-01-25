@@ -1,14 +1,37 @@
 "use client";
 
-import { Search, Mail, Send, CheckCircle2, ArrowRight, Download, BookOpen, Share2, Facebook, Instagram, Twitter, Sparkles, Newspaper, Globe, Users } from "lucide-react";
+import { Search, Mail, Send, CheckCircle2, ArrowRight, Download, BookOpen, Share2, Facebook, Instagram, Twitter, Sparkles, Newspaper, Globe, Users, Loader2 } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
+import { subscribeToNewsletter } from "@/app/actions/newsletter";
+import { toast } from "sonner";
 
 export const Newsletter = () => {
     const [subscribed, setSubscribed] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [activeCategory, setActiveCategory] = useState("Ministerio");
 
     const categories = ["Ministerio", "Comunidad", "Misiones"];
+
+    const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        const formData = new FormData(e.currentTarget);
+
+        try {
+            const result = await subscribeToNewsletter(formData);
+            if (result.success) {
+                setSubscribed(true);
+                toast.success("¡Gracias por suscribirte!");
+            } else {
+                toast.error(result.error || "Algo salió mal.");
+            }
+        } catch (error) {
+            toast.error("Error al suscribirse.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const newsItems = [
         {
@@ -89,15 +112,19 @@ export const Newsletter = () => {
                     </div>
 
                     {!subscribed ? (
-                        <form className="flex flex-col md:flex-row gap-6 max-w-2xl mx-auto relative z-10" onSubmit={(e) => { e.preventDefault(); setSubscribed(true); }}>
+                        <form className="flex flex-col md:flex-row gap-6 max-w-2xl mx-auto relative z-10" onSubmit={handleSubscribe}>
                             <input
                                 type="email"
+                                name="email"
                                 required
                                 placeholder="Tu correo electrónico..."
                                 className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-6 px-10 text-slate-800 dark:text-white focus:border-mivn-blue outline-none transition-all placeholder:text-slate-400 italic"
                             />
-                            <button className="bg-mivn-blue text-white px-12 py-6 rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] hover:bg-slate-900 transition-all shadow-2xl shadow-mivn-blue/20 flex items-center justify-center gap-3 active:scale-95">
-                                Unirme ahora <Send className="w-4 h-4" />
+                            <button
+                                disabled={loading}
+                                className="bg-mivn-blue text-white px-12 py-6 rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] hover:bg-slate-900 transition-all shadow-2xl shadow-mivn-blue/20 flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
+                            >
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Unirme ahora"} <Send className="w-4 h-4" />
                             </button>
                         </form>
                     ) : (
