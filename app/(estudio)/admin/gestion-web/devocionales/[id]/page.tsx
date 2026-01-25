@@ -1,0 +1,190 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect, notFound } from "next/navigation";
+import { getDevotionalById } from "@/lib/queries/devotionals";
+import { updateDevotional } from "../actions";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+
+interface EditDevotionalPageProps {
+    params: {
+        id: string;
+    };
+}
+
+export default async function EditDevotionalPage({ params }: EditDevotionalPageProps) {
+    const { id } = await params;
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        redirect('/login');
+    }
+
+    let devotional;
+
+    try {
+        devotional = await getDevotionalById(id);
+    } catch (error) {
+        console.error("Error fetching devotional:", error);
+        notFound();
+    }
+
+    if (!devotional) {
+        notFound();
+    }
+
+    const updateDevotionalWithId = updateDevotional.bind(null, id);
+
+    return (
+        <div className="space-y-8">
+            {/* Header */}
+            <div className="flex items-center gap-4">
+                <Link
+                    href="/admin/gestion-web/devocionales"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                </Link>
+                <div>
+                    <h1 className="text-3xl font-playfair font-bold text-slate-900 dark:text-white">
+                        Editar Devocional
+                    </h1>
+                    <p className="text-slate-600 dark:text-slate-400 mt-2">
+                        Modifica la información de "{devotional.title}"
+                    </p>
+                </div>
+            </div>
+
+            {/* Form */}
+            <div className="bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 p-8">
+                <form action={updateDevotionalWithId} className="space-y-6">
+                    {/* Title */}
+                    <div>
+                        <label htmlFor="title" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Título *
+                        </label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            required
+                            defaultValue={devotional.title}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
+                            placeholder="Ej: Un Nuevo Comienzo en Cristo"
+                        />
+                    </div>
+
+                    {/* Scripture Reference */}
+                    <div>
+                        <label htmlFor="scripture_reference" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Referencia Bíblica *
+                        </label>
+                        <input
+                            type="text"
+                            id="scripture_reference"
+                            name="scripture_reference"
+                            required
+                            defaultValue={devotional.scripture_reference}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
+                            placeholder="Ej: 2 Corintios 5:17"
+                        />
+                    </div>
+
+                    {/* Content */}
+                    <div>
+                        <label htmlFor="content" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Contenido *
+                        </label>
+                        <textarea
+                            id="content"
+                            name="content"
+                            required
+                            rows={12}
+                            defaultValue={devotional.content}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all font-mono text-sm"
+                            placeholder="Escribe el contenido del devocional aquí. Puedes usar HTML básico para formato."
+                        />
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                            Puedes usar HTML para formato: &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;br&gt;, etc.
+                        </p>
+                    </div>
+
+                    {/* Author */}
+                    <div>
+                        <label htmlFor="author_name" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Autor
+                        </label>
+                        <input
+                            type="text"
+                            id="author_name"
+                            name="author_name"
+                            defaultValue={devotional.author_name || ''}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
+                            placeholder="Nombre del autor"
+                        />
+                    </div>
+
+                    {/* Publish Date */}
+                    <div>
+                        <label htmlFor="publish_date" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Fecha de Publicación *
+                        </label>
+                        <input
+                            type="date"
+                            id="publish_date"
+                            name="publish_date"
+                            required
+                            defaultValue={devotional.publish_date}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
+                        />
+                    </div>
+
+                    {/* Image URL */}
+                    <div>
+                        <label htmlFor="image" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            URL de Imagen
+                        </label>
+                        <input
+                            type="url"
+                            id="image"
+                            name="image"
+                            defaultValue={devotional.image || ''}
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
+                            placeholder="https://ejemplo.com/imagen.jpg"
+                        />
+                    </div>
+
+                    {/* Published Toggle */}
+                    <div className="flex items-center gap-3">
+                        <input
+                            type="checkbox"
+                            id="is_published"
+                            name="is_published"
+                            defaultChecked={devotional.is_published}
+                            className="w-5 h-5 rounded border-slate-300 text-mivn-blue focus:ring-mivn-blue"
+                        />
+                        <label htmlFor="is_published" className="text-sm font-semibold text-slate-900 dark:text-white">
+                            Publicado
+                        </label>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+                        <button
+                            type="submit"
+                            className="bg-mivn-blue text-white px-8 py-3 rounded-xl font-semibold hover:bg-mivn-blue/90 transition-all shadow-lg shadow-mivn-blue/20"
+                        >
+                            Guardar Cambios
+                        </button>
+                        <Link
+                            href="/admin/gestion-web/devocionales"
+                            className="px-8 py-3 rounded-xl font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                        >
+                            Cancelar
+                        </Link>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}

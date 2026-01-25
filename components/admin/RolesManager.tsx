@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { createClient } from "@/lib/supabase/client";
 import {
     ShieldCheck, Users, Lock, ChevronRight, Plus,
     Search, Filter, MoreHorizontal, Check, X,
@@ -17,35 +18,23 @@ interface ModulePermissions {
     enabled: Permission[];
 }
 
-interface Role {
-    id: string;
-    name: string;
-    description: string;
-    usersCount: number;
-    color: string;
-    isSystem?: boolean;
+export interface RolesManagerProps {
+    rolesSummary: Record<string, number>;
+    initialUsers: any[];
 }
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    roleId: string;
-    avatar?: string;
-    status: "active" | "inactive";
-}
-
-export function RolesManager() {
+export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) {
     const [activeRole, setActiveRole] = useState<string>("admin");
     const [searchQuery, setSearchQuery] = useState("");
+    const [localRolesSummary, setLocalRolesSummary] = useState(rolesSummary);
 
-    // Mock Data
-    const roles: Role[] = [
-        { id: "super_admin", name: "Súper Admin", description: "Acceso total al sistema", usersCount: 2, color: "bg-purple-500", isSystem: true },
-        { id: "admin", name: "Administrador", description: "Gestión general y configuración", usersCount: 5, color: "bg-blue-500" },
-        { id: "editor", name: "Editor de Contenido", description: "Publicación de eventos y noticias", usersCount: 8, color: "bg-emerald-500" },
-        { id: "treasurer", name: "Tesorero", description: "Gestión de finanzas y donaciones", usersCount: 3, color: "bg-amber-500" },
-        { id: "pastor", name: "Pastor", description: "Acceso a datos de miembros y reportes", usersCount: 4, color: "bg-slate-500" },
+    const roles: any[] = [
+        { id: "super_admin", name: "Súper Admin", description: "Acceso total al sistema", usersCount: localRolesSummary.super_admin || 0, color: "bg-purple-500", isSystem: true },
+        { id: "admin", name: "Administrador", description: "Gestión general y configuración", usersCount: localRolesSummary.admin || 0, color: "bg-blue-500" },
+        { id: "editor", name: "Editor de Contenido", description: "Publicación de eventos y noticias", usersCount: localRolesSummary.editor || 0, color: "bg-emerald-500" },
+        { id: "treasurer", name: "Tesorero", description: "Gestión de finanzas y donaciones", usersCount: localRolesSummary.treasurer || 0, color: "bg-amber-500" },
+        { id: "pastor", name: "Pastor", description: "Acceso a datos de miembros y reportes", usersCount: localRolesSummary.pastor || 0, color: "bg-slate-500" },
+        { id: "member", name: "Miembro", description: "Usuario regular con acceso limitado", usersCount: localRolesSummary.member || 0, color: "bg-slate-400" },
     ];
 
     const modules: ModulePermissions[] = [
@@ -57,11 +46,159 @@ export function RolesManager() {
         { id: "settings", name: "Configuración", description: "Ajustes globales del sistema", permissions: ["view", "edit"], enabled: ["view"] },
     ];
 
-    const users: User[] = [
-        { id: "1", name: "Juan Pérez", email: "juan@mivn.org", roleId: "admin", status: "active" },
-        { id: "2", name: "María Gómez", email: "maria@mivn.org", roleId: "admin", status: "active" },
-        { id: "3", name: "Carlos López", email: "carlos@mivn.org", roleId: "editor", status: "inactive" },
-    ];
+    const [users, setUsers] = useState<any[]>(initialUsers);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [isAssigning, setIsAssigning] = useState(false);
+    const [memberSearchQuery, setMemberSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const supabase = useMemo(() => createClient(), []);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const { data, error: supabaseError } = await supabase
+                    .from("profiles")
+                    .select("*")
+                    .eq("role", activeRole)
+                    .order("full_name", { ascending: true });
+
+                if (supabaseError) {
+                    console.error("Error fetching users:", supabaseError);
+                    setError(supabaseError.message);
+                } else {
+                    setUsers(data || []);
+                }
+            } catch (err: any) {
+                setError(err.message || "Error inesperado");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, [activeRole]);
+
+    const handleSearchMembers = async (query: string) => {
+        setMemberSearchQuery(query);
+        if (query.length < 2) {
+            setSearchResults([]);
+            return;
+        }
+
+        setIsSearching(true);
+        const { data, error: searchError } = await supabase
+            .from("profiles")
+            .select("*")
+            .or(`full_name.ilike.%${query}%,username.ilike.%${query}%`)
+            .limit(5);
+
+        if (!searchError && data) {
+            setSearchResults(data);
+        }
+        setIsSearching(false);
+    };
+
+    const handleAssignRole = async (userId: string) => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const { error: updateError } = await supabase
+                .from("profiles")
+                .update({ role: activeRole })
+                .eq("id", userId);
+
+            if (updateError) {
+                console.error("Update error:", updateError);
+                setError(`No se pudo asignar el rol: ${updateError.message}`);
+                return;
+            }
+
+            // Update local counts
+            setLocalRolesSummary(prev => {
+                const next = { ...prev };
+                // We'd need to know the OLD role to decrement accurately, 
+                // but just incrementing the new one is better than nothing 
+                // or just refresh counts from DB
+                return next;
+            });
+
+            // Refresh summary and users list
+            const [{ data: summaryData }, { data: usersData }] = await Promise.all([
+                supabase.from("profiles").select("role"),
+                supabase.from("profiles").select("*").eq("role", activeRole).order("full_name", { ascending: true })
+            ]);
+
+            if (summaryData) {
+                const newCounts: any = {};
+                summaryData.forEach(p => {
+                    const r = p.role || 'member';
+                    newCounts[r] = (newCounts[r] || 0) + 1;
+                });
+                setLocalRolesSummary(newCounts);
+            }
+
+            if (usersData) setUsers(usersData);
+
+            setSuccessMessage("¡Rol asignado correctamente!");
+            setTimeout(() => setSuccessMessage(null), 3000);
+
+            setIsAssigning(false);
+            setMemberSearchQuery("");
+            setSearchResults([]);
+        } catch (err: any) {
+            setError(err.message || "Error al asignar rol");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleRevokeRole = async (userId: string) => {
+        if (activeRole === "member") return;
+
+        setIsLoading(true);
+        setError(null);
+        try {
+            const { error: updateError } = await supabase
+                .from("profiles")
+                .update({ role: "member" })
+                .eq("id", userId);
+
+            if (updateError) {
+                setError(`No se pudo quitar el rol: ${updateError.message}`);
+                return;
+            }
+
+            setSuccessMessage("Acceso revocado correctamente");
+            setTimeout(() => setSuccessMessage(null), 3000);
+
+            // Refresh summary and users list
+            const [{ data: summaryData }, { data: usersData }] = await Promise.all([
+                supabase.from("profiles").select("role"),
+                supabase.from("profiles").select("*").eq("role", activeRole).order("full_name", { ascending: true })
+            ]);
+
+            if (summaryData) {
+                const newCounts: any = {};
+                summaryData.forEach(p => {
+                    const r = p.role || 'member';
+                    newCounts[r] = (newCounts[r] || 0) + 1;
+                });
+                setLocalRolesSummary(newCounts);
+            }
+
+            if (usersData) setUsers(usersData);
+        } catch (err: any) {
+            setError(err.message || "Error al revocar rol");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="flex h-[calc(100vh-100px)] gap-6 animate-in fade-in zoom-in-95 duration-500">
@@ -82,8 +219,8 @@ export function RolesManager() {
                             key={role.id}
                             onClick={() => setActiveRole(role.id)}
                             className={`w-full text-left p-4 rounded-2xl transition-all group relative border ${activeRole === role.id
-                                    ? "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 shadow-sm"
-                                    : "border-transparent hover:bg-slate-50/50 dark:hover:bg-white/[0.02]"
+                                ? "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 shadow-sm"
+                                : "border-transparent hover:bg-slate-50/50 dark:hover:bg-white/[0.02]"
                                 }`}
                         >
                             <div className="flex justify-between items-start mb-2">
@@ -213,7 +350,12 @@ export function RolesManager() {
                 {/* Users In Role */}
                 <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex-1 flex flex-col">
                     <div className="p-6 border-b border-slate-100 dark:border-slate-800">
-                        <h3 className="font-playfair font-black text-slate-900 dark:text-white">Usuarios Asignados</h3>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-playfair font-black text-slate-900 dark:text-white">Usuarios Asignados</h3>
+                            <span className="text-[9px] font-black bg-slate-100 dark:bg-white/5 px-2 py-1 rounded text-slate-500 uppercase tracking-widest">
+                                {users.length} Encontrados
+                            </span>
+                        </div>
                         <div className="relative mt-4">
                             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
@@ -224,25 +366,123 @@ export function RolesManager() {
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
-                        {users.map(user => (
-                            <div key={user.id} className="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group cursor-pointer border border-transparent hover:border-slate-100 dark:hover:border-white/5">
-                                <div className="size-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-black text-slate-500">
-                                    {user.name.charAt(0)}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.name}</h4>
-                                    <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
-                                </div>
-                                <button className="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all p-1">
-                                    <X className="w-3.5 h-3.5" />
-                                </button>
+                        {isLoading ? (
+                            <div className="flex flex-col items-center justify-center h-32 space-y-2">
+                                <div className="size-6 border-2 border-slate-200 border-t-mivn-blue rounded-full animate-spin"></div>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cargando...</p>
                             </div>
-                        ))}
+                        ) : error ? (
+                            <div className="p-6 text-center space-y-2">
+                                <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
+                                <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest">Error al cargar</p>
+                                <p className="text-[9px] text-slate-400 leading-tight">{error}</p>
+                            </div>
+                        ) : successMessage ? (
+                            <div className="p-6 text-center space-y-2 animate-in fade-in zoom-in duration-300">
+                                <div className="size-12 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <Check className="w-6 h-6 text-emerald-500" />
+                                </div>
+                                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{successMessage}</p>
+                            </div>
+                        ) : users.length > 0 ? (
+                            users.map(user => (
+                                <div key={user.id} className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:border-mivn-blue/50 transition-all group">
+                                    <div className="size-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[11px] font-black text-slate-500 overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                                        {user.avatar_url ? (
+                                            <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                            user.full_name?.charAt(0) || '?'
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-[13px] font-bold text-slate-900 dark:text-white truncate">{user.full_name}</h4>
+                                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user.username || user.email || 'Sin contacto'}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {activeRole !== "member" && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleRevokeRole(user.id);
+                                                }}
+                                                className="px-2 py-1 rounded bg-rose-50 text-rose-500 text-[8px] font-black uppercase tracking-tighter hover:bg-rose-500 hover:text-white transition-all border border-rose-100"
+                                            >
+                                                Quitar
+                                            </button>
+                                        )}
+                                        <div className="text-[8px] font-black text-slate-300 uppercase tracking-widest pl-1">
+                                            Detalles
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-48 text-center p-6 bg-slate-50/50 dark:bg-white/[0.01] rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
+                                <Users className="w-8 h-8 text-slate-200 dark:text-slate-700 mb-3" />
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">
+                                    Sin usuarios <br /> en este rol
+                                </p>
+                            </div>
+                        )}
                     </div>
                     <div className="p-4 bg-slate-50 dark:bg-white/[0.02] border-t border-slate-100 dark:border-slate-800">
-                        <button className="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-400 text-[10px] font-black uppercase tracking-widest hover:border-mivn-blue hover:text-mivn-blue transition-all">
-                            Asignar Usuario
-                        </button>
+                        {isAssigning ? (
+                            <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                <div className="relative">
+                                    <Search className="w-3.5 h-3.5 text-mivn-blue absolute left-3 top-1/2 -translate-y-1/2" />
+                                    <input
+                                        autoFocus
+                                        type="text"
+                                        value={memberSearchQuery}
+                                        onChange={(e) => handleSearchMembers(e.target.value)}
+                                        placeholder="Escribe nombre de miembro..."
+                                        className="w-full bg-white dark:bg-slate-930 border-2 border-mivn-blue/20 rounded-xl py-2.5 pl-9 pr-3 text-xs font-bold outline-none focus:border-mivn-blue transition-all shadow-lg shadow-mivn-blue/5"
+                                    />
+                                    <button
+                                        onClick={() => setIsAssigning(false)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500"
+                                    >
+                                        <X className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+
+                                {isSearching ? (
+                                    <div className="flex items-center justify-center py-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
+                                        <div className="size-4 border-2 border-slate-200 border-t-mivn-blue rounded-full animate-spin"></div>
+                                    </div>
+                                ) : searchResults.length > 0 ? (
+                                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-xl max-h-48 overflow-y-auto">
+                                        {searchResults.map(member => (
+                                            <button
+                                                key={member.id}
+                                                onClick={() => handleAssignRole(member.id)}
+                                                className="w-full flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border-b last:border-0 border-slate-50 dark:border-slate-800 group text-left"
+                                            >
+                                                <div className="size-8 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-black shrink-0">
+                                                    {member.full_name?.charAt(0)}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-[11px] font-bold truncate">{member.full_name}</p>
+                                                    <p className="text-[9px] text-slate-400 uppercase tracking-tighter">Actual: {member.role || 'member'}</p>
+                                                </div>
+                                                <Plus className="w-3.5 h-3.5 text-slate-300 group-hover:text-mivn-blue transition-colors" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : memberSearchQuery.length >= 2 && (
+                                    <div className="p-4 text-center bg-slate-50/50 dark:bg-white/5 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No se hallaron miembros</p>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setIsAssigning(true)}
+                                className="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-400 text-[10px] font-black uppercase tracking-widest hover:border-mivn-blue hover:text-mivn-blue transition-all"
+                            >
+                                Asignar Usuario
+                            </button>
+                        )}
                     </div>
                 </div>
 

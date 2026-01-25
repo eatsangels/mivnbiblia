@@ -5,7 +5,16 @@ import {
     CheckCircle2, AlertCircle, ChevronLeft, ChevronRight, Edit, MessageSquare
 } from "lucide-react";
 
-export function MemberManager() {
+export interface MemberManagerProps {
+    initialMembers: any[];
+    stats: {
+        total: number;
+        leaders: number;
+        newConverted: number;
+    };
+}
+
+export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Page Heading */}
@@ -38,7 +47,7 @@ export function MemberManager() {
                     <div>
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Miembros</p>
                         <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-3xl font-black text-slate-900 dark:text-white">1,240</span>
+                            <span className="text-3xl font-black text-slate-900 dark:text-white">{stats.total.toLocaleString()}</span>
                             <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg">+5.2%</span>
                         </div>
                     </div>
@@ -50,7 +59,7 @@ export function MemberManager() {
                     <div>
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Líderes Activos</p>
                         <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-3xl font-black text-slate-900 dark:text-white">85</span>
+                            <span className="text-3xl font-black text-slate-900 dark:text-white">{stats.leaders.toLocaleString()}</span>
                             <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg">+2.1%</span>
                         </div>
                     </div>
@@ -62,7 +71,7 @@ export function MemberManager() {
                     <div>
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nuevos Convertidos</p>
                         <div className="flex items-baseline gap-2 mt-1">
-                            <span className="text-3xl font-black text-slate-900 dark:text-white">12%</span>
+                            <span className="text-3xl font-black text-slate-900 dark:text-white">{stats.newConverted.toLocaleString()}</span>
                             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Este mes</span>
                         </div>
                     </div>
@@ -95,57 +104,55 @@ export function MemberManager() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                            {[
-                                { name: "Juan Pérez", email: "juan.p@email.com", phone: "+503 2211-0000", ministry: "Ministerio Juvenil", status: "Activo", role: "Miembro", color: "bg-mivn-blue" },
-                                { name: "Maria Garcia", email: "m.garcia@email.com", phone: "+503 2211-0001", ministry: "Alabanza", status: "Líder", role: "Líder", color: "bg-purple-500" },
-                                { name: "Carlos Ruiz", email: "c.ruiz@email.com", phone: "+503 2211-0002", ministry: "Niños", status: "Nuevo", role: "Nuevo", color: "bg-orange-500" },
-                                { name: "Ana Lopez", email: "a.lopez@email.com", phone: "+503 2211-0003", ministry: "Intercesión", status: "Activo", role: "Miembro", color: "bg-emerald-500" },
-                            ].map((member, i) => (
-                                <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
-                                    <td className="px-8 py-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-bold text-slate-500 text-sm">
-                                                {member.name.charAt(0)}
+                            {initialMembers.length > 0 ? (
+                                initialMembers.map((member, i) => (
+                                    <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
+                                        <td className="px-8 py-6">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-bold text-slate-500 text-sm uppercase">
+                                                    {member.full_name?.charAt(0) || '?'}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{member.full_name}</p>
+                                                    <p className="text-xs text-slate-400">{member.role || 'Miembro'}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-slate-900 dark:text-white">{member.name}</p>
-                                                <p className="text-xs text-slate-400">{member.role}</p>
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <div className="space-y-1">
+                                                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+                                                    <Mail className="w-3 h-3" /> {member.email || 'N/A'}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-                                                <Mail className="w-3 h-3" /> {member.email}
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-mivn-blue bg-opacity-10 text-mivn-blue`}>
+                                                {member.ministry || 'General'}
+                                            </span>
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <div className="flex items-center gap-2">
+                                                <div className={`w-2 h-2 rounded-full bg-emerald-500`}></div>
+                                                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Activo</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-                                                <Phone className="w-3 h-3" /> {member.phone}
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <div className="flex justify-end gap-2">
+                                                <button className="p-2 text-slate-400 hover:text-mivn-blue hover:bg-mivn-blue/5 rounded-xl transition-all">
+                                                    <MessageSquare className="w-4 h-4" />
+                                                </button>
+                                                <button className="p-2 text-slate-400 hover:text-mivn-blue hover:bg-mivn-blue/5 rounded-xl transition-all">
+                                                    <Edit className="w-4 h-4" />
+                                                </button>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${member.color} bg-opacity-10 text-${member.color.replace('bg-', '')}`}>
-                                            {member.ministry}
-                                        </span>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <div className="flex items-center gap-2">
-                                            <div className={`w-2 h-2 rounded-full ${member.status === 'Activo' || member.status === 'Líder' ? 'bg-emerald-500' : 'bg-mivn-blue'}`}></div>
-                                            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{member.status}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <div className="flex justify-end gap-2">
-                                            <button className="p-2 text-slate-400 hover:text-mivn-blue hover:bg-mivn-blue/5 rounded-xl transition-all">
-                                                <MessageSquare className="w-4 h-4" />
-                                            </button>
-                                            <button className="p-2 text-slate-400 hover:text-mivn-blue hover:bg-mivn-blue/5 rounded-xl transition-all">
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="px-8 py-12 text-center text-slate-400 italic">No se encontraron miembros</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -153,7 +160,7 @@ export function MemberManager() {
                 {/* Pagination */}
                 <div className="px-8 py-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                        Show <span className="text-slate-900 dark:text-white">1-10</span> of <span className="text-slate-900 dark:text-white">1,240</span>
+                        Mostrando <span className="text-slate-900 dark:text-white">1-{initialMembers.length}</span> de <span className="text-slate-900 dark:text-white">{stats.total}</span>
                     </p>
                     <div className="flex gap-2">
                         <button className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 transition-colors disabled:opacity-50" disabled>

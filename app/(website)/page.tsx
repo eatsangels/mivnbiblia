@@ -3,10 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import { Play, ArrowRight, Calendar, MapPin, Quote } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getPinnedAnnouncements } from "@/lib/queries/announcements";
+import { AnnouncementsFeed } from "@/components/home/AnnouncementsFeed";
 
 export default async function WebsiteHome() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+    const announcements = await getPinnedAnnouncements();
 
     return (
         <>
@@ -57,6 +60,9 @@ export default async function WebsiteHome() {
                         </div>
                     </div>
                 </section>
+
+                {/* Announcements Feed */}
+                <AnnouncementsFeed announcements={announcements} />
 
                 {/* Events Preview - Matched to Exact Visual */}
                 <section className="py-24 px-4 bg-[#FDFDFF] dark:bg-[#0A0F1D]" id="eventos">

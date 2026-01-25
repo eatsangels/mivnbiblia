@@ -6,11 +6,22 @@ import { User as UserIcon, Menu, Moon, Sun, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { User } from "@supabase/supabase-js";
 
-interface GlobalNavClientProps {
-    user: User | null;
+interface NavItem {
+    id: string;
+    label: string;
+    url: string;
+    icon: string | null;
+    order: number;
+    is_external: boolean;
+    children?: NavItem[];
 }
 
-export const GlobalNavClient = ({ user }: GlobalNavClientProps) => {
+interface GlobalNavClientProps {
+    user: User | null;
+    navItems: NavItem[];
+}
+
+export const GlobalNavClient = ({ user, navItems }: GlobalNavClientProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDark, setIsDark] = useState(false);
 
@@ -39,18 +50,6 @@ export const GlobalNavClient = ({ user }: GlobalNavClientProps) => {
         }
     };
 
-    const navLinks = [
-        { name: "Estudio", href: "/read" },
-        { name: "Cultos", href: "/cultos" },
-        { name: "Recursos", href: "/recursos" },
-        { name: "Oración", href: "/oracion" },
-        { name: "Ministerios", href: "/ministerios" },
-        { name: "Eventos", href: "/eventos" },
-        { name: "Boletín", href: "/boletin" },
-        { name: "Devocional", href: "/devocionales" },
-        { name: "Nosotros", href: "/sobre-nosotros" },
-    ];
-
     return (
         <nav className="sticky top-0 z-50 bg-white/90 dark:bg-[#0a0f1d]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
             <div className="max-w-[1400px] mx-auto px-6">
@@ -72,13 +71,15 @@ export const GlobalNavClient = ({ user }: GlobalNavClientProps) => {
 
                     {/* Desktop Navigation */}
                     <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
-                        {navLinks.map((link) => (
+                        {navItems.map((link) => (
                             <Link
-                                key={link.name}
-                                href={link.href}
+                                key={link.id}
+                                href={link.url}
+                                target={link.is_external ? "_blank" : undefined}
+                                rel={link.is_external ? "noopener noreferrer" : undefined}
                                 className="text-slate-700 dark:text-slate-300 hover:text-mivn-blue dark:hover:text-mivn-blue transition-colors font-medium text-[15px]"
                             >
-                                {link.name}
+                                {link.label}
                             </Link>
                         ))}
                     </div>
@@ -147,14 +148,16 @@ export const GlobalNavClient = ({ user }: GlobalNavClientProps) => {
                 {isOpen && (
                     <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 py-4 animate-in slide-in-from-top duration-200">
                         <div className="flex flex-col space-y-3">
-                            {navLinks.map((link) => (
+                            {navItems.map((link) => (
                                 <Link
-                                    key={link.name}
-                                    href={link.href}
+                                    key={link.id}
+                                    href={link.url}
+                                    target={link.is_external ? "_blank" : undefined}
+                                    rel={link.is_external ? "noopener noreferrer" : undefined}
                                     onClick={() => setIsOpen(false)}
                                     className="text-slate-700 dark:text-slate-300 hover:text-mivn-blue font-medium py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                                 >
-                                    {link.name}
+                                    {link.label}
                                 </Link>
                             ))}
 

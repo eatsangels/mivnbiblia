@@ -5,7 +5,13 @@ import {
     Download, TrendingUp, Users, CheckCircle2, AlertCircle, PlusCircle
 } from "lucide-react";
 
-export function EventManager() {
+import Link from "next/link";
+
+export interface EventManagerProps {
+    initialEvents: any[];
+}
+
+export function EventManager({ initialEvents }: EventManagerProps) {
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Page Heading */}
@@ -96,17 +102,14 @@ export function EventManager() {
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-slate-500 font-medium">Total Eventos</span>
-                                <span className="text-slate-900 dark:text-white font-bold text-xl">12</span>
+                                <span className="text-slate-900 dark:text-white font-bold text-xl">{initialEvents.length}</span>
                             </div>
                             <div className="w-full h-px bg-mivn-blue/10" />
                             <div className="flex justify-between items-center text-sm">
-                                <span className="text-slate-500 font-medium">Congresos</span>
-                                <span className="text-mivn-gold font-bold text-xl">2</span>
-                            </div>
-                            <div className="w-full h-px bg-mivn-blue/10" />
-                            <div className="flex justify-between items-center text-sm">
-                                <span className="text-slate-500 font-medium">Total Inscritos</span>
-                                <span className="text-slate-900 dark:text-white font-bold text-xl">458</span>
+                                <span className="text-slate-500 font-medium">Próximos</span>
+                                <span className="text-mivn-gold font-bold text-xl">
+                                    {initialEvents.filter(e => new Date(e.date) >= new Date()).length}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -122,7 +125,9 @@ export function EventManager() {
                                 <button className="w-10 h-10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center transition-colors">
                                     <ChevronLeft className="w-5 h-5 text-slate-600" />
                                 </button>
-                                <h3 className="text-2xl font-playfair font-black text-slate-900 dark:text-white">Octubre 2026</h3>
+                                <h3 className="text-2xl font-playfair font-black text-slate-900 dark:text-white">
+                                    {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                </h3>
                                 <button className="w-10 h-10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center transition-colors">
                                     <ChevronRight className="w-5 h-5 text-slate-600" />
                                 </button>
@@ -137,47 +142,8 @@ export function EventManager() {
                         </div>
 
                         {/* Calendar Grid */}
-                        <div>
-                            <div className="grid grid-cols-7 mb-4">
-                                {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((day) => (
-                                    <div key={day} className="text-center text-[10px] font-black text-slate-400 uppercase tracking-widest py-2">
-                                        {day}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="grid grid-cols-7 gap-3">
-                                {/* Empty Days */}
-                                <div className="aspect-square"></div>
-                                <div className="aspect-square"></div>
-                                {/* Days */}
-                                {[...Array(31)].map((_, i) => {
-                                    const day = i + 1;
-                                    const isToday = day === 5;
-                                    const hasEvent = day === 12 || day === 26;
-                                    return (
-                                        <div key={day} className={`
-                                            aspect-square rounded-2xl p-2 relative transition-all cursor-pointer group
-                                            ${isToday ? 'bg-mivn-blue text-white shadow-xl shadow-mivn-blue/30 scale-110 z-10' : 'bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300'}
-                                        `}>
-                                            <span className={`text-sm font-bold ${isToday ? 'text-white' : ''}`}>{day}</span>
-                                            {isToday && (
-                                                <div className="mt-1">
-                                                    <div className="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1 text-[8px] font-bold leading-tight truncate">
-                                                        Culto Alabanza
-                                                    </div>
-                                                </div>
-                                            )}
-                                            {hasEvent && !isToday && (
-                                                <div className="mt-1">
-                                                    <div className="bg-mivn-gold/10 text-mivn-gold rounded-lg px-2 py-1 text-[8px] font-bold leading-tight truncate">
-                                                        {day === 12 ? 'Congreso' : 'Taller'}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )
-                                })}
-                            </div>
+                        <div className="p-12 text-center text-slate-400 italic">
+                            El calendario interactivo se cargará con los {initialEvents.length} eventos registrados.
                         </div>
                     </div>
 
@@ -185,9 +151,6 @@ export function EventManager() {
                     <div className="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden">
                         <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
                             <h3 className="text-xl font-playfair font-black text-slate-900 dark:text-white">Próximos Eventos</h3>
-                            <button className="text-[10px] font-black text-mivn-blue uppercase tracking-widest hover:underline flex items-center gap-1">
-                                Ver todos <ChevronRight className="w-3 h-3" />
-                            </button>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
@@ -195,49 +158,38 @@ export function EventManager() {
                                     <tr>
                                         <th className="px-8 py-6">Evento</th>
                                         <th className="px-8 py-6">Categoría</th>
-                                        <th className="px-8 py-6">Inscritos</th>
                                         <th className="px-8 py-6 text-right">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                                    {[
-                                        { title: "Congreso Avivamiento 2026", date: "12 Oct - 15 Oct", category: "Congreso", filled: 85, total: 500, color: "text-mivn-gold bg-mivn-gold/10 border-mivn-gold/20" },
-                                        { title: "Culto Adoración Extrema", date: "26 Oct | 19:00 PM", category: "Culto", filled: 40, total: 300, color: "text-mivn-blue bg-mivn-blue/10 border-mivn-blue/20" },
-                                        { title: "Taller: Liderazgo Moderno", date: "30 Oct | 09:00 AM", category: "Taller", filled: 100, total: 100, color: "text-emerald-600 bg-emerald-100 border-emerald-200" },
-                                    ].map((event, i) => (
-                                        <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
-                                            <td className="px-8 py-6">
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight">{event.title}</span>
-                                                    <span className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wide">{event.date}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-8 py-6">
-                                                <span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border ${event.color}`}>
-                                                    {event.category}
-                                                </span>
-                                            </td>
-                                            <td className="px-8 py-6">
-                                                <div className="space-y-2">
-                                                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-500">
-                                                        <span>{event.filled}% Lleno</span>
-                                                        <span>{Math.round(event.total * (event.filled / 100))} / {event.total}</span>
+                                    {initialEvents.length > 0 ? (
+                                        initialEvents.map((event, i) => (
+                                            <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
+                                                <td className="px-8 py-6">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight">{event.title}</span>
+                                                        <span className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wide">
+                                                            {new Date(event.date).toLocaleDateString()} | {event.time}
+                                                        </span>
                                                     </div>
-                                                    <div className="w-24 h-1.5 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
-                                                        <div
-                                                            className={`h-full rounded-full ${event.filled === 100 ? 'bg-emerald-500' : 'bg-mivn-blue'}`}
-                                                            style={{ width: `${event.filled}%` }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-8 py-6 text-right">
-                                                <button className="inline-flex items-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-all">
-                                                    <Download className="w-3 h-3" /> Descargar
-                                                </button>
-                                            </td>
+                                                </td>
+                                                <td className="px-8 py-6">
+                                                    <span className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border text-mivn-blue bg-mivn-blue/10 border-mivn-blue/20`}>
+                                                        {event.category || 'Evento'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-8 py-6 text-right">
+                                                    <button className="inline-flex items-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-all">
+                                                        <Edit3 className="w-3 h-3" /> Editar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={3} className="px-8 py-12 text-center text-slate-400 italic">No hay eventos programados</td>
                                         </tr>
-                                    ))}
+                                    )}
                                 </tbody>
                             </table>
                         </div>

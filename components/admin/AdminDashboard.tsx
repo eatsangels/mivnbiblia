@@ -5,8 +5,24 @@ import {
     Video, Radio, Settings, CheckCircle2, XCircle, Edit, Eye,
     CalendarDays, History, Plus
 } from "lucide-react";
+import Link from "next/link";
 
-export function AdminDashboard() {
+export interface AdminDashboardProps {
+    stats: {
+        membersCount: number;
+        eventsCount: number;
+        pendingTestimonies: number;
+        totalDonations: number;
+    };
+    agenda: any[];
+    pendingTestimonies: any[];
+    activity: {
+        newMembers: any[];
+        newTestimonies: any[];
+    };
+}
+
+export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: AdminDashboardProps) {
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Header */}
@@ -27,10 +43,10 @@ export function AdminDashboard() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { title: "Total Miembros", value: "2,485", change: "+12%", icon: Users, color: "text-mivn-blue", bg: "bg-mivn-blue/10" },
-                    { title: "Nuevos Conversos", value: "42", change: "+5%", icon: Heart, color: "text-purple-600", bg: "bg-purple-500/10" },
-                    { title: "Diezmos (Mes)", value: "$14,250", change: null, icon: DollarSign, color: "text-mivn-gold", bg: "bg-mivn-gold/10" },
-                    { title: "Eventos Próximos", value: "8", change: null, icon: Calendar, color: "text-rose-500", bg: "bg-rose-500/10" },
+                    { title: "Total Miembros", value: stats.membersCount.toLocaleString(), change: "+12%", icon: Users, color: "text-mivn-blue", bg: "bg-mivn-blue/10" },
+                    { title: "Testimonies", value: stats.pendingTestimonies.toString(), change: "Pendientes", icon: Heart, color: "text-purple-600", bg: "bg-purple-500/10" },
+                    { title: "Donaciones (Mes)", value: `$${stats.totalDonations.toLocaleString()}`, change: null, icon: DollarSign, color: "text-mivn-gold", bg: "bg-mivn-gold/10" },
+                    { title: "Eventos Próximos", value: stats.eventsCount.toString(), change: null, icon: Calendar, color: "text-rose-500", bg: "bg-rose-500/10" },
                 ].map((stat, i) => (
                     <div key={i} className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-xl flex flex-col justify-between h-40 group hover:scale-[1.02] transition-transform">
                         <div className="flex justify-between items-start">
@@ -38,8 +54,8 @@ export function AdminDashboard() {
                                 <stat.icon className="w-6 h-6" />
                             </div>
                             {stat.change && (
-                                <span className="flex items-center gap-1 text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-lg">
-                                    <TrendingUp className="w-3 h-3" /> {stat.change}
+                                <span className={`flex items-center gap-1 text-[10px] font-black ${stat.change === 'Pendientes' ? 'text-purple-500 bg-purple-500/10' : 'text-emerald-500 bg-emerald-500/10'} px-2 py-1 rounded-lg`}>
+                                    {stat.change !== 'Pendientes' && <TrendingUp className="w-3 h-3" />} {stat.change}
                                 </span>
                             )}
                         </div>
@@ -103,39 +119,39 @@ export function AdminDashboard() {
                                 </div>
                                 <h2 className="font-playfair font-bold text-lg text-slate-900 dark:text-white">Aprobación de Testimonios</h2>
                             </div>
-                            <button className="text-[10px] font-black uppercase tracking-widest text-mivn-blue hover:underline">Ver todos (12)</button>
+                            <Link href="/admin/gestion-web/testimonios" className="text-[10px] font-black uppercase tracking-widest text-mivn-blue hover:underline">
+                                Ver todos ({stats.pendingTestimonies})
+                            </Link>
                         </div>
                         <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {[
-                                { name: "María González", time: "Hace 2 horas", text: "Quiero agradecer a Dios por sanar a mi hijo de una fiebre persistente..." },
-                                { name: "Ricardo D.", time: "Hace 5 horas", text: "Video Testimonio adjunto para revisión.", isVideo: true }
-                            ].map((item, i) => (
-                                <div key={i} className="p-6 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors flex gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-500 font-bold">
-                                        {item.name.charAt(0)}
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between items-start mb-1">
-                                            <h4 className="font-bold text-slate-900 dark:text-white">{item.name}</h4>
-                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">{item.time}</span>
+                            {pendingTestimonies.length > 0 ? (
+                                pendingTestimonies.map((item, i) => (
+                                    <div key={i} className="p-6 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors flex gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-500 font-bold uppercase">
+                                            {item.author_name.charAt(0)}
                                         </div>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400 italic mb-3 line-clamp-2">"{item.text}"</p>
-                                        <div className="flex gap-4">
-                                            <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-600">
-                                                <CheckCircle2 className="w-3 h-3" /> Aprobar
-                                            </button>
-                                            <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-600">
-                                                <XCircle className="w-3 h-3" /> Rechazar
-                                            </button>
-                                            {item.isVideo && (
-                                                <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-mivn-blue hover:text-blue-600">
-                                                    <Eye className="w-3 h-3" /> Ver Video
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <h4 className="font-bold text-slate-900 dark:text-white">{item.author_name}</h4>
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                                                    {new Date(item.created_at).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400 italic mb-3 line-clamp-2">"{item.content}"</p>
+                                            <div className="flex gap-4">
+                                                <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-600">
+                                                    <CheckCircle2 className="w-3 h-3" /> Aprobar
                                                 </button>
-                                            )}
+                                                <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-600">
+                                                    <XCircle className="w-3 h-3" /> Rechazar
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            ) : (
+                                <div className="p-12 text-center text-slate-400 italic">No hay testimonios pendientes</div>
+                            )}
                         </div>
                     </section>
                 </div>
@@ -154,21 +170,23 @@ export function AdminDashboard() {
                             </button>
                         </div>
                         <div className="space-y-6">
-                            {[
-                                { time: "Hoy - 19:30", title: "Escuela de Líderes", location: "Salón Principal", color: "border-mivn-blue text-mivn-blue" },
-                                { time: "Mañana - 09:00", title: "Ayuno Congregacional", location: "Templo Central", color: "border-mivn-gold text-mivn-gold" },
-                                { time: "Sáb 24 - 15:00", title: "Reunión de Jóvenes", location: "Parque Municipal", color: "border-emerald-500 text-emerald-500" },
-                            ].map((event, i) => (
-                                <div key={i} className={`pl-4 border-l-[3px] ${event.color.split(' ')[0]}`}>
-                                    <p className={`text-[9px] font-black uppercase tracking-widest mb-1 ${event.color.split(' ')[1]}`}>{event.time}</p>
-                                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">{event.title}</h4>
-                                    <p className="text-xs text-slate-500 font-medium">{event.location}</p>
-                                </div>
-                            ))}
+                            {agenda.length > 0 ? (
+                                agenda.map((event, i) => (
+                                    <div key={i} className={`pl-4 border-l-[3px] border-mivn-blue`}>
+                                        <p className={`text-[9px] font-black uppercase tracking-widest mb-1 text-mivn-blue`}>
+                                            {new Date(event.date).toLocaleDateString()} - {event.time}
+                                        </p>
+                                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">{event.title}</h4>
+                                        <p className="text-xs text-slate-500 font-medium">{event.location}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-sm text-slate-400 italic text-center">No hay eventos próximos</p>
+                            )}
                         </div>
-                        <button className="w-full mt-8 py-3 border border-slate-200 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <Link href="/admin/gestion-web/eventos" className="block w-full text-center mt-8 py-3 border border-slate-200 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                             Ver Calendario Completo
-                        </button>
+                        </Link>
                     </section>
 
                     {/* Activity Log */}
@@ -179,18 +197,29 @@ export function AdminDashboard() {
                         </div>
                         <div className="space-y-6 relative">
                             <div className="absolute left-[5px] top-2 bottom-2 w-px bg-slate-100 dark:bg-slate-800"></div>
-                            {[
-                                { user: "Admin", action: "registró 3 nuevos miembros.", time: "Hace 15 min", color: "bg-emerald-500" },
-                                { user: "Sistema", action: "programó recordatorios.", time: "Hace 45 min", color: "bg-mivn-blue" },
-                                { user: "Tesorero", action: "cargó reporte financiero.", time: "Hace 2 horas", color: "bg-mivn-gold" },
-                            ].map((log, i) => (
+                            {activity.newMembers.map((member, i) => (
                                 <div key={i} className="flex gap-4 relative z-10">
-                                    <div className={`w-2.5 h-2.5 rounded-full ${log.color} mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900`}></div>
+                                    <div className={`w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900`}></div>
                                     <div>
                                         <p className="text-xs text-slate-600 dark:text-slate-400">
-                                            <span className="font-bold text-slate-900 dark:text-white">{log.user}</span> {log.action}
+                                            <span className="font-bold text-slate-900 dark:text-white">{member.full_name}</span> se unió al ministerio.
                                         </p>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">{log.time}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                                            {new Date(member.created_at).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                            {activity.newTestimonies.map((testimony, i) => (
+                                <div key={i + "t"} className="flex gap-4 relative z-10">
+                                    <div className={`w-2.5 h-2.5 rounded-full bg-mivn-blue mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900`}></div>
+                                    <div>
+                                        <p className="text-xs text-slate-600 dark:text-slate-400">
+                                            <span className="font-bold text-slate-900 dark:text-white">{testimony.author_name}</span> envió un testimonio.
+                                        </p>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                                            {new Date(testimony.created_at).toLocaleDateString()}
+                                        </span>
                                     </div>
                                 </div>
                             ))}

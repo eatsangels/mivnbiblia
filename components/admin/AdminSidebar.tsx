@@ -26,7 +26,7 @@ const navItems: NavItem[] = [
     { name: "Analíticas", icon: BarChart3, href: "/admin/analytics", description: "Crecimiento Espiritual" },
     { name: "Media", icon: Radio, href: "/admin/media", description: "Transmisiones" },
     { name: "Testimonios", icon: MessageSquareQuote, href: "/admin/testimonials", description: "Moderación" },
-    { name: "Gestión Web", icon: LayoutTemplate, href: "/admin/hero", description: "Portada y Contenido" },
+    { name: "Gestión Web", icon: LayoutTemplate, href: "/admin/gestion-web", description: "Portada y Contenido" },
     { name: "Anuncios", icon: Megaphone, href: "/admin/announcements", description: "Gestión de noticias" },
     { name: "Configuración", icon: Settings, href: "/admin/settings", description: "Ajustes del sistema" },
 ];
