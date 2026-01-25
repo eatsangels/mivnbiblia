@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Heart, HandHeart, Send } from 'lucide-react';
-import { createPrayerRequest } from '@/app/(website)/oracion/actions';
+import { createPrayerRequest, joinPrayerRequest } from '@/app/(website)/oracion/actions';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Swal from 'sweetalert2';
@@ -14,6 +14,7 @@ interface PrayerRequest {
     created_at: string;
     is_anonymous: boolean;
     is_answered: boolean;
+    intersession_count?: number;
 }
 
 interface DashboardPrayerSectionProps {
@@ -24,6 +25,33 @@ interface DashboardPrayerSectionProps {
 export function DashboardPrayerSection({ initialRequests, userName }: DashboardPrayerSectionProps) {
     const [requests, setRequests] = useState(initialRequests);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleJoinPrayer = async (requestId: string) => {
+        const result = await joinPrayerRequest(requestId);
+        if (result.success) {
+            // Optimistic update or just rely on revalidatePath
+            // For immediate feedback in this simple component:
+            setRequests(prev => prev.map(r =>
+                r.id === requestId
+                    ? { ...r, intersession_count: (r.intersession_count || 0) + 1 }
+                    : r
+            ));
+
+            Swal.fire({
+                title: '¡Amén!',
+                text: 'Te has unido en oración por esta petición.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else {
+            Swal.fire({
+                title: 'Atención',
+                text: result.message,
+                icon: 'info',
+            });
+        }
+    };
 
     const handleSubmit = async (formData: FormData) => {
         setIsSubmitting(true);
@@ -117,8 +145,11 @@ export function DashboardPrayerSection({ initialRequests, userName }: DashboardP
                                             </span>
                                         </div>
                                         <p className="text-slate-600 dark:text-slate-400 font-light italic leading-relaxed">"{p.request}"</p>
-                                        <button className="flex items-center gap-3 text-mivn-blue text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all bg-mivn-blue/5 px-6 py-2.5 rounded-full border border-mivn-blue/10">
-                                            <HandHeart className="w-4 h-4" /> Estoy Orando (0)
+                                        <button
+                                            onClick={() => handleJoinPrayer(p.id)}
+                                            className="flex items-center gap-3 text-mivn-blue text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all bg-mivn-blue/5 px-6 py-2.5 rounded-full border border-mivn-blue/10"
+                                        >
+                                            <HandHeart className="w-4 h-4" /> Estoy Orando ({p.intersession_count || 0})
                                         </button>
                                     </div>
                                 </div>

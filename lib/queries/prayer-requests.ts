@@ -13,6 +13,7 @@ export type PrayerRequest = {
     is_private: boolean;
     created_at: string;
     updated_at: string;
+    intersession_count?: number;
 };
 
 /**
@@ -37,7 +38,7 @@ export const getPrayerRequests = cache(async (page: number = 1, limit: number = 
 
     let query = supabase
         .from("prayer_requests")
-        .select("*", { count: "exact" })
+        .select("*, intersession_count:prayer_intersessions(count)", { count: "exact" })
         .eq("is_approved", true)
         .eq("is_private", false) // Only show public requests
         .order("created_at", { ascending: false })
@@ -47,8 +48,13 @@ export const getPrayerRequests = cache(async (page: number = 1, limit: number = 
 
     if (error) throw error;
 
+    const formattedData = (data as any[]).map(item => ({
+        ...item,
+        intersession_count: item.intersession_count?.[0]?.count || 0
+    }));
+
     return {
-        data: data as PrayerRequest[],
+        data: formattedData as PrayerRequest[],
         meta: {
             total: count || 0,
             page,
