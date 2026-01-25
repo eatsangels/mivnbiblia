@@ -25,7 +25,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
     const [history, setHistory] = useState<string | null>(null);
     const [traditions, setTraditions] = useState<string | null>(null);
     const [sermonsList, setSermonsList] = useState<any[]>([]);
-    const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+    const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
     const [editingNoteContent, setEditingNoteContent] = useState('');
     const [currentSermonId, setCurrentSermonId] = useState<string | null>(null);
     const [loadingRefs, setLoadingRefs] = useState(false);
@@ -200,7 +200,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
         }
     };
 
-    const handleDeleteNote = async (id: string) => {
+    const handleDeleteNote = async (id: number) => {
         if (!confirm('¿Estás seguro de que quieres eliminar esta nota?')) return;
 
         const { error } = await supabase.from('user_notes').delete().eq('id', id);
@@ -209,7 +209,7 @@ export function SermonWorkshop({ isOpen, onClose, bookName, chapter }: SermonWor
         }
     };
 
-    const handleSaveNoteEdit = async (id: string) => {
+    const handleSaveNoteEdit = async (id: number) => {
         const { error } = await (supabase.from('user_notes') as any)
             .update({ content: editingNoteContent })
             .eq('id', id);

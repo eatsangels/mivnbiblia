@@ -30,7 +30,7 @@ export async function createPrayerRequest(prevState: any, formData: FormData) {
             user_id: user?.id || null,
             requester_name: name,
             email: user?.email || null,
-            content: request,
+            request: request,
             is_anonymous: isAnonymous,
             is_private: isPrivate,
             is_approved: false, // Always requires approval

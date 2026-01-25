@@ -55,7 +55,7 @@ const BIBLE_GROUPS = [
 interface BookData {
     name: string;
     chapters: number;
-    testament: string;
+    testament: string | null;
 }
 
 interface BibleSelectorProps {

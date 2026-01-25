@@ -24,16 +24,23 @@ export async function createEvent(formData: FormData) {
         ? new Date(new Date(dateStr).getTime() + 2 * 60 * 60 * 1000).toISOString()
         : new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString();
 
+    const slug = title.toLowerCase().trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
     const { error } = await supabase
         .from("events")
         .insert({
             title,
+            slug,
             category,
             capacity,
             speaker,
             location,
             start_time,
             end_time,
+            event_date: start_time,
             description: formData.get("description") as string || ""
         });
 

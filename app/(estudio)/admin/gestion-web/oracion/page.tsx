@@ -122,7 +122,7 @@ export default async function OracionAdminPage() {
                                             )}
                                         </div>
                                         <p className="text-slate-700 dark:text-slate-300">
-                                            {prayer.content}
+                                            {prayer.request}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -156,7 +156,7 @@ export default async function OracionAdminPage() {
                                                 </span>
                                             </div>
                                             <p className="text-slate-700 dark:text-slate-300">
-                                                {prayer.content}
+                                                {prayer.request}
                                             </p>
                                         </div>
                                         <button className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors">

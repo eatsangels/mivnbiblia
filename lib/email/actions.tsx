@@ -16,7 +16,7 @@ export async function sendWelcomeEmail(email: string, firstName: string) {
             from: FROM_EMAIL,
             to: email,
             subject: '¡Bienvenido a la familia MIVN!',
-            react: WelcomeTemplate({ firstName }),
+            react: <WelcomeTemplate firstName={firstName} />,
         });
         return { success: true, data };
     } catch (error) {
@@ -44,13 +44,15 @@ export async function sendEventEmail(
             from: FROM_EMAIL,
             to: recipients, // Resend handles multiple recipients
             subject: `Evento: ${eventDetails.name}`,
-            react: EventTemplate({
-                eventName: eventDetails.name,
-                eventDate: eventDetails.date,
-                eventDescription: eventDetails.description,
-                imageUrl: eventDetails.imageUrl,
-                eventLink: eventDetails.link
-            }),
+            react: (
+                <EventTemplate
+                    eventName={eventDetails.name}
+                    eventDate={eventDetails.date}
+                    eventDescription={eventDetails.description}
+                    imageUrl={eventDetails.imageUrl}
+                    eventLink={eventDetails.link}
+                />
+            ),
         });
         return { success: true, data };
     } catch (error) {
@@ -70,7 +72,7 @@ export async function sendNewsletter(recipients: string[], title: string, conten
             from: FROM_EMAIL,
             to: recipients,
             subject: title,
-            react: NewsletterTemplate({ title, content }),
+            react: <NewsletterTemplate title={title} content={content} />,
         });
         return { success: true, data };
     } catch (error) {

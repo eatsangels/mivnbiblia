@@ -6,12 +6,13 @@ export type PrayerRequest = {
     user_id: string | null;
     requester_name: string;
     email: string | null;
-    content: string;
+    request: string;
     is_anonymous: boolean;
     is_approved: boolean;
     is_answered: boolean;
+    is_private: boolean;
     created_at: string;
-
+    updated_at: string;
 };
 
 /**
@@ -98,7 +99,7 @@ export async function submitPrayerRequest(data: {
             user_id: user?.id || null,
             requester_name: data.requester_name,
             email: data.email || null,
-            content: data.content,
+            request: data.content,
             is_anonymous: data.is_anonymous || false,
             is_approved: false, // Requires admin approval
         });

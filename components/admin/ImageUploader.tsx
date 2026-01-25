@@ -84,29 +84,29 @@ export function ImageUploader({
                     <img
                         src={preview}
                         alt="Preview"
-                        className="w-full h-48 object-cover rounded-xl border border-slate-200 dark:border-slate-700"
+                        className="w-full h-32 object-cover rounded-xl border border-slate-200 dark:border-slate-700"
                     />
                     <button
                         type="button"
                         onClick={removeImage}
-                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                        <X className="w-4 h-4" />
+                        <X className="w-3.5 h-3.5" />
                     </button>
                 </div>
             ) : (
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl cursor-pointer hover:border-mivn-blue transition-colors bg-slate-50 dark:bg-slate-900/50">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl cursor-pointer hover:border-mivn-blue transition-colors bg-slate-50 dark:bg-slate-900/50">
+                    <div className="flex flex-col items-center justify-center pt-4 pb-4 px-4 text-center">
                         {uploading ? (
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mivn-blue"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mivn-blue"></div>
                         ) : (
                             <>
-                                <Upload className="w-12 h-12 text-slate-400 mb-3" />
-                                <p className="mb-2 text-sm text-slate-600 dark:text-slate-400">
-                                    <span className="font-semibold">Click para subir</span> o arrastra y suelta
+                                <Upload className="w-8 h-8 text-slate-400 mb-2" />
+                                <p className="mb-1 text-xs text-slate-600 dark:text-slate-400">
+                                    <span className="font-semibold text-mivn-blue">Subir imagen</span>
                                 </p>
-                                <p className="text-xs text-slate-500 dark:text-slate-500">
-                                    PNG, JPG, GIF hasta 5MB
+                                <p className="text-[10px] text-slate-500 dark:text-slate-500">
+                                    PNG, JPG hasta 5MB
                                 </p>
                             </>
                         )}

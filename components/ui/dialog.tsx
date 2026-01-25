@@ -4,6 +4,8 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+const DialogContext = React.createContext<{ onOpenChange?: (open: boolean) => void }>({});
+
 const Dialog = ({
     children,
     open,
@@ -16,17 +18,19 @@ const Dialog = ({
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* Backdrop */}
-            <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
-                onClick={() => onOpenChange?.(false)}
-            />
-            {/* Dialog Container */}
-            <div className="relative z-50 w-full">
-                {children}
+        <DialogContext.Provider value={{ onOpenChange }}>
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                {/* Backdrop */}
+                <div
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+                    onClick={() => onOpenChange?.(false)}
+                />
+                {/* Dialog Container */}
+                <div className="relative z-50 w-full flex items-center justify-center p-4">
+                    {children}
+                </div>
             </div>
-        </div>
+        </DialogContext.Provider>
     );
 }
 
@@ -43,7 +47,7 @@ const DialogContent = React.forwardRef<
         {...props}
     >
         {children}
-        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
         </DialogClose>
@@ -112,13 +116,17 @@ const DialogClose = React.forwardRef<
     HTMLButtonElement,
     React.ButtonHTMLAttributes<HTMLButtonElement>
 >(({ className, ...props }, ref) => {
-    // In a real implementation we'd use context to close. 
-    // For now, this is just visual unless wired up.
-    // However, the backdrop click handles the main closing.
+    const { onOpenChange } = React.useContext(DialogContext);
+
     return (
         <button
             ref={ref}
+            type="button"
             className={cn("", className)}
+            onClick={(e) => {
+                onOpenChange?.(false);
+                props.onClick?.(e);
+            }}
             {...props}
         />
     )
