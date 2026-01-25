@@ -7,17 +7,29 @@ export async function Footer() {
     const settings = await getSiteSettings();
     const currentYear = new Date().getFullYear();
 
+    // Get colors from settings or use defaults
+    const footerBgColor = settings.footer_bg_color || '#4AA3DF';
+    const footerTextColor = settings.footer_text_color || '#FFFFFF';
+    const footerBottomBg = settings.footer_bottom_bg || '#0f172a';
+    const logoUrl = settings.logo_footer_url || settings.logo_url || '/logo_mivn.png';
+
     return (
         <footer className="w-full font-lexend">
-            {/* Top Section: Multi-column layout on Celeste Blue background */}
-            <div className="bg-mivn-blue dark:bg-mivn-blue/90 text-white px-6 md:px-20 lg:px-40 py-20">
+            {/* Top Section: Multi-column layout with dynamic background */}
+            <div
+                className="px-6 md:px-20 lg:px-40 py-20"
+                style={{
+                    backgroundColor: footerBgColor,
+                    color: footerTextColor
+                }}
+            >
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
 
                     {/* Column 1: Brand Identity & Mission */}
                     <div className="flex flex-col gap-8">
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-2xl overflow-hidden p-1">
-                                <Image src="/logo_mivn.png" alt="MIVN" width={48} height={48} className="object-contain" />
+                                <Image src={logoUrl} alt="MIVN" width={48} height={48} className="object-contain" />
                             </div>
                             <h2 className="text-3xl font-black leading-none tracking-tighter italic">
                                 {settings.site_name || 'MIVN'}
@@ -132,8 +144,14 @@ export async function Footer() {
                 </div>
             </div>
 
-            {/* Bottom Section: Copyright on Dark Background */}
-            <div className="bg-slate-900 dark:bg-slate-950 text-white/60 px-6 md:px-20 lg:px-40 py-8">
+            {/* Bottom Section: Copyright with dynamic background */}
+            <div
+                className="px-6 md:px-20 lg:px-40 py-8"
+                style={{
+                    backgroundColor: footerBottomBg,
+                    color: 'rgba(255, 255, 255, 0.6)'
+                }}
+            >
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
                     <div className="flex items-center gap-3">
                         <Church className="w-5 h-5 text-mivn-gold" />
