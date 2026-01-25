@@ -6,9 +6,10 @@ export const dynamic = 'force-dynamic';
 export default async function Page({
     searchParams,
 }: {
-    searchParams: { page?: string };
+    searchParams: Promise<{ page?: string }>;
 }) {
-    const page = Number(searchParams?.page) || 1;
+    const { page: pageStr } = await searchParams;
+    const page = Number(pageStr) || 1;
     const { data: requests, meta } = await getPrayerRequests(page);
 
     return (

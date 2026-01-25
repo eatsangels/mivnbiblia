@@ -53,6 +53,7 @@ export async function Footer() {
                             {[
                                 { name: "Inicio", href: "/" },
                                 { name: "Devocionales", href: "/devocionales" },
+                                { name: "Comunidad", href: "/grupos" },
                                 { name: "Ministerios", href: "/ministerios" },
                                 { name: "Eventos", href: "/eventos" },
                                 { name: "Recursos", href: "/recursos" },

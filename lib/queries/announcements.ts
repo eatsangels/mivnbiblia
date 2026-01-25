@@ -26,7 +26,6 @@ export const getPinnedAnnouncements = cache(async (limit = 3) => {
     const { data, error } = await supabase
         .from("announcements")
         .select("*")
-        .eq("is_active", true)
         .eq("is_pinned", true)
         .order("created_at", { ascending: false })
         .limit(limit);
@@ -47,7 +46,6 @@ export const getActiveAnnouncements = cache(async () => {
     const { data, error } = await supabase
         .from("announcements")
         .select("*")
-        .eq("is_active", true)
         .order("created_at", { ascending: false });
 
     if (error) throw error;

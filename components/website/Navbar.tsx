@@ -19,6 +19,7 @@ export const Navbar = ({ user }: NavbarProps) => {
         { name: "Recursos", href: "/recursos" },
         { name: "Oración", href: "/oracion" },
         { name: "Ministerios", href: "/ministerios" },
+        { name: "Comunidad", href: "/grupos" },
         { name: "Eventos", href: "/eventos" },
         { name: "Boletín", href: "/boletin" },
         { name: "Devocional", href: "/devocionales" },

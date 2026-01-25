@@ -98,8 +98,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
             .update({
                 full_name: formData.full_name,
                 username: formData.username,
-                // These might need migration if they don't exist yet
-                // phone: formData.phone,
+                phone: formData.phone,
                 // birth_date: formData.birth_date,
                 // address: formData.address
             })
@@ -321,6 +320,82 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                     </div>
                                 ))}
                             </div>
+
+
+                            {/* Password Change Section */}
+                            <div className="px-10 py-8 bg-slate-50 dark:bg-white/5 border-y border-slate-100 dark:border-white/5 flex items-center gap-4 mt-8">
+                                <div className="w-10 h-10 bg-mivn-gold/10 rounded-xl flex items-center justify-center text-mivn-gold">
+                                    <Shield className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Contraseña</h3>
+                            </div>
+                            <div className="p-10 md:p-12 space-y-6">
+
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nueva Contraseña</label>
+                                    <input
+                                        type="password"
+                                        name="newPassword"
+                                        placeholder="••••••••"
+                                        autoComplete="new-password"
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none"
+                                    />
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Confirmar Contraseña</label>
+                                    <input
+                                        type="password"
+                                        name="confirmPassword"
+                                        placeholder="••••••••"
+                                        autoComplete="new-password"
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={async (e) => {
+                                        const btn = e.currentTarget;
+                                        const form = btn.closest('div.p-10.md\\:p-12.space-y-6') as HTMLDivElement;
+                                        const newPassInput = form.querySelector('input[name="newPassword"]') as HTMLInputElement;
+                                        const confirmPassInput = form.querySelector('input[name="confirmPassword"]') as HTMLInputElement;
+                                        const newPass = newPassInput?.value;
+                                        const confirmPass = confirmPassInput?.value;
+
+                                        const messageContainer = document.getElementById('pass-message');
+
+                                        if (!newPass) return;
+                                        if (newPass !== confirmPass) {
+                                            if (messageContainer) {
+                                                messageContainer.textContent = "Las contraseñas no coinciden";
+                                                messageContainer.className = "text-rose-500 text-xs font-bold uppercase tracking-widest mt-2";
+                                            }
+                                            return;
+                                        }
+
+                                        setIsLoading(true);
+                                        const { error } = await supabase.auth.updateUser({ password: newPass });
+
+                                        if (messageContainer) {
+                                            if (error) {
+                                                messageContainer.textContent = "Error: " + error.message;
+                                                messageContainer.className = "text-rose-500 text-xs font-bold uppercase tracking-widest mt-2";
+                                            } else {
+                                                messageContainer.textContent = "Contraseña actualizada correctamente";
+                                                messageContainer.className = "text-emerald-500 text-xs font-bold uppercase tracking-widest mt-2";
+                                                newPassInput.value = "";
+                                                confirmPassInput.value = "";
+                                            }
+                                        }
+                                        setIsLoading(false);
+                                    }}
+                                    disabled={isLoading}
+                                    className="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-all w-full md:w-auto mt-4"
+                                >
+                                    {isLoading ? 'Actualizando...' : 'Cambiar Contraseña'}
+                                </button>
+                                <div id="pass-message"></div>
+
+                            </div>
                         </div>
                     )}
 
@@ -345,7 +420,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                     </div>
 
                 </form>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
