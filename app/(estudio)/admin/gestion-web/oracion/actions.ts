@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 export async function approvePrayerRequest(id: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("prayer_requests")
         .update({ is_approved: true })
         .eq("id", id);
@@ -24,7 +24,7 @@ export async function approvePrayerRequest(id: string) {
 export async function rejectPrayerRequest(id: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("prayer_requests")
         .delete()
         .eq("id", id);
@@ -41,7 +41,7 @@ export async function rejectPrayerRequest(id: string) {
 export async function toggleAnswered(id: string, currentState: boolean) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("prayer_requests")
         .update({ is_answered: !currentState })
         .eq("id", id);

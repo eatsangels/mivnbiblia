@@ -18,6 +18,9 @@ export type Page = {
 /**
  * Get all published pages
  */
+/**
+ * Get all published pages
+ */
 export const getPages = cache(async () => {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -27,7 +30,7 @@ export const getPages = cache(async () => {
         .order("order", { ascending: true, nullsFirst: false });
 
     if (error) throw error;
-    return data as Page[];
+    return (data || []) as unknown as Page[];
 });
 
 /**
@@ -41,7 +44,7 @@ export const getAdminPages = cache(async () => {
         .order("order", { ascending: true, nullsFirst: false });
 
     if (error) throw error;
-    return data as Page[];
+    return (data || []) as unknown as Page[];
 });
 
 /**
@@ -57,7 +60,7 @@ export const getPageBySlug = cache(async (slug: string) => {
         .single();
 
     if (error) throw error;
-    return data as Page;
+    return data as unknown as Page;
 });
 
 /**
@@ -72,5 +75,5 @@ export const getPageById = cache(async (id: string) => {
         .single();
 
     if (error) throw error;
-    return data as Page;
+    return data as unknown as Page;
 });

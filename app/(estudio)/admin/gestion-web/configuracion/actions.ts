@@ -26,7 +26,7 @@ export async function updateSiteSettings(formData: FormData) {
     // Update each setting
     for (const [key, value] of Object.entries(settings)) {
         if (value) {
-            await supabase
+            await (supabase as any)
                 .from("site_settings")
                 .upsert({
                     key,

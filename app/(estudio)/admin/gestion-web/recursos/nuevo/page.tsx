@@ -4,6 +4,7 @@ import { getResourceCategories } from "@/lib/queries/resources";
 import { createResource } from "../actions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { FormCloudinaryUpload } from "@/components/ui/FormCloudinaryUpload";
 
 export default async function NewResourcePage() {
     const supabase = await createClient();
@@ -91,15 +92,13 @@ export default async function NewResourcePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* File URL */}
                         <div>
-                            <label htmlFor="file_url" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                                URL del Archivo (Descarga)
+                            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                                Archivo (Descarga)
                             </label>
-                            <input
-                                type="url"
-                                id="file_url"
+                            <FormCloudinaryUpload
                                 name="file_url"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
-                                placeholder="https://..."
+                                label="Subir Archivo de Recurso"
+                                resourceType="auto"
                             />
                         </div>
 
@@ -121,15 +120,13 @@ export default async function NewResourcePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Thumbnail */}
                         <div>
-                            <label htmlFor="thumbnail" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                                URL de Miniatura (Imagen)
+                            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                                Miniatura (Imagen)
                             </label>
-                            <input
-                                type="url"
-                                id="thumbnail"
+                            <FormCloudinaryUpload
                                 name="thumbnail"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
-                                placeholder="https://..."
+                                label="Subir Miniatura"
+                                resourceType="image"
                             />
                         </div>
 

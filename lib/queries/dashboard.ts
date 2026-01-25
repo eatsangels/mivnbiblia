@@ -33,7 +33,7 @@ export async function getDashboardStats() {
         .select("amount")
         .gte("created_at", firstDayOfMonth.toISOString());
 
-    const totalDonations = donations?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
+    const totalDonations = (donations as any[])?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
 
     return {
         membersCount: membersCount || 0,

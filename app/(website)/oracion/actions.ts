@@ -24,13 +24,13 @@ export async function createPrayerRequest(prevState: any, formData: FormData) {
         return { message: "Por favor completa los campos requeridos.", success: false };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("prayer_requests")
         .insert({
             user_id: user?.id || null,
             requester_name: name,
             email: user?.email || null,
-            request: request,
+            content: request,
             is_anonymous: isAnonymous,
             is_private: isPrivate,
             is_approved: false, // Always requires approval

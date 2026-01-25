@@ -242,7 +242,7 @@ export const PrayerWall = ({ initialRequests = [], pagination }: PrayerWallProps
                                             Petición de {r.is_anonymous ? "Un Hermano" : r.requester_name.split(" ")[0]}
                                         </h5>
                                         <p className="text-slate-500 dark:text-slate-400 font-light italic leading-relaxed text-base">
-                                            "{r.request}"
+                                            "{r.content}"
                                         </p>
                                     </div>
 

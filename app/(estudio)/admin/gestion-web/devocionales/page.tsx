@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, Pencil, Trash2, BookOpen, Calendar } from "lucide-react";
 
+import { Database } from "@/lib/database.types";
+
 export default async function DevotionalsAdminPage() {
+    type DevotionalRow = Database['public']['Tables']['devotionals']['Row'];
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -11,10 +14,12 @@ export default async function DevotionalsAdminPage() {
         redirect('/login');
     }
 
-    const { data: devotionals } = await supabase
+    const { data: devotionalsRaw } = await supabase
         .from("devotionals")
         .select("*")
-        .order("publish_date", { ascending: false });
+        .order("date", { ascending: false });
+
+    const devotionals = (devotionalsRaw || []) as DevotionalRow[];
 
     return (
         <div className="space-y-8">
@@ -61,7 +66,7 @@ export default async function DevotionalsAdminPage() {
                         <div>
                             <p className="text-sm text-slate-600 dark:text-slate-400">Publicados</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                                {devotionals?.filter(d => d.is_published).length || 0}
+                                {devotionals?.length || 0}
                             </p>
                         </div>
                     </div>
@@ -75,7 +80,7 @@ export default async function DevotionalsAdminPage() {
                         <div>
                             <p className="text-sm text-slate-600 dark:text-slate-400">Borradores</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                                {devotionals?.filter(d => !d.is_published).length || 0}
+                                0
                             </p>
                         </div>
                     </div>
@@ -90,7 +95,7 @@ export default async function DevotionalsAdminPage() {
                             <p className="text-sm text-slate-600 dark:text-slate-400">Este Mes</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {devotionals?.filter(d => {
-                                    const date = new Date(d.publish_date);
+                                    const date = new Date(d.date);
                                     const now = new Date();
                                     return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
                                 }).length || 0}
@@ -110,7 +115,7 @@ export default async function DevotionalsAdminPage() {
                                     Devocional
                                 </th>
                                 <th className="text-left px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
-                                    Referencia
+                                    Autor
                                 </th>
                                 <th className="text-left px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                                     Fecha
@@ -138,12 +143,12 @@ export default async function DevotionalsAdminPage() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <p className="text-slate-900 dark:text-white">
-                                            {devotional.scripture_reference}
+                                            {devotional.author}
                                         </p>
                                     </td>
                                     <td className="px-6 py-4">
                                         <p className="text-slate-900 dark:text-white">
-                                            {new Date(devotional.publish_date).toLocaleDateString('es-ES', {
+                                            {new Date(devotional.date).toLocaleDateString('es-ES', {
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric'
@@ -151,13 +156,9 @@ export default async function DevotionalsAdminPage() {
                                         </p>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${devotional.is_published
-                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                                : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
-                                            }`}>
-                                            <span className={`w-1.5 h-1.5 rounded-full ${devotional.is_published ? 'bg-green-500' : 'bg-yellow-500'
-                                                }`} />
-                                            {devotional.is_published ? 'Publicado' : 'Borrador'}
+                                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                                            Publicado
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">

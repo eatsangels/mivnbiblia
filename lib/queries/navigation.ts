@@ -26,11 +26,13 @@ export const getNavigationMenu = cache(async (menuName: string) => {
     const supabase = await createClient();
 
     // Get menu
-    const { data: menu, error: menuError } = await supabase
+    const { data: menuRaw, error: menuError } = await supabase
         .from("navigation_menus")
         .select("*")
         .eq("name", menuName)
         .maybeSingle();
+
+    const menu = menuRaw as unknown as NavigationMenu | null;
 
     if (menuError) {
         throw menuError;
@@ -59,7 +61,7 @@ export const getNavigationMenu = cache(async (menuName: string) => {
 
     return {
         menu: menu as NavigationMenu,
-        items: items as NavigationItem[],
+        items: (items || []) as unknown as NavigationItem[],
     };
 });
 

@@ -3,9 +3,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Database } from "@/lib/database.types";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function createDevotional(formData: FormData) {
-    const supabase = await createClient();
+    const supabase = (await createClient()) as SupabaseClient<Database, "public">;
 
     const title = formData.get("title") as string;
     const scripture_reference = formData.get("scripture_reference") as string;
@@ -23,16 +25,16 @@ export async function createDevotional(formData: FormData) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-    const { error } = await supabase.from("devotionals").insert({
+    const devotionalData = {
         title,
         slug,
-        scripture_reference,
         content,
-        author_name,
-        publish_date,
-        image,
-        is_published,
-    });
+        author: author_name,
+        date: publish_date,
+        image_url: image || null,
+    };
+
+    const { error } = await (supabase as any).from("devotionals").insert(devotionalData);
 
     if (error) {
         throw new Error(error.message);
@@ -44,7 +46,7 @@ export async function createDevotional(formData: FormData) {
 }
 
 export async function updateDevotional(id: string, formData: FormData) {
-    const supabase = await createClient();
+    const supabase = (await createClient()) as SupabaseClient<Database, "public">;
 
     const title = formData.get("title") as string;
     const scripture_reference = formData.get("scripture_reference") as string;
@@ -62,18 +64,18 @@ export async function updateDevotional(id: string, formData: FormData) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-    const { error } = await supabase
+    const devotionalData = {
+        title,
+        slug,
+        content,
+        author: author_name,
+        date: publish_date,
+        image_url: image || null,
+    };
+
+    const { error } = await (supabase as any)
         .from("devotionals")
-        .update({
-            title,
-            slug,
-            scripture_reference,
-            content,
-            author_name,
-            publish_date,
-            image,
-            is_published,
-        })
+        .update(devotionalData)
         .eq("id", id);
 
     if (error) {
@@ -86,9 +88,9 @@ export async function updateDevotional(id: string, formData: FormData) {
 }
 
 export async function deleteDevotional(id: string) {
-    const supabase = await createClient();
+    const supabase = (await createClient()) as SupabaseClient<Database, "public">;
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("devotionals")
         .delete()
         .eq("id", id);

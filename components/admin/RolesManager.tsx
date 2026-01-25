@@ -108,7 +108,7 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
         setError(null);
 
         try {
-            const { error: updateError } = await supabase
+            const { error: updateError } = await (supabase as any)
                 .from("profiles")
                 .update({ role: activeRole })
                 .eq("id", userId);
@@ -136,7 +136,7 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
 
             if (summaryData) {
                 const newCounts: any = {};
-                summaryData.forEach(p => {
+                (summaryData as any[]).forEach(p => {
                     const r = p.role || 'member';
                     newCounts[r] = (newCounts[r] || 0) + 1;
                 });
@@ -164,7 +164,7 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
         setIsLoading(true);
         setError(null);
         try {
-            const { error: updateError } = await supabase
+            const { error: updateError } = await (supabase as any)
                 .from("profiles")
                 .update({ role: "member" })
                 .eq("id", userId);
@@ -185,7 +185,7 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
 
             if (summaryData) {
                 const newCounts: any = {};
-                summaryData.forEach(p => {
+                (summaryData as any[]).forEach(p => {
                     const r = p.role || 'member';
                     newCounts[r] = (newCounts[r] || 0) + 1;
                 });

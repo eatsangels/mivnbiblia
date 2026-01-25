@@ -14,6 +14,8 @@ export type Comment = {
     updated_at: string;
 };
 
+// ... imports ...
+
 /**
  * Get comments for a specific content item
  */
@@ -29,7 +31,7 @@ export const getComments = cache(async (contentType: string, contentId: string) 
         .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data as Comment[];
+    return (data || []) as unknown as Comment[];
 });
 
 /**
@@ -45,7 +47,7 @@ export const getCommentReplies = cache(async (parentId: string) => {
         .order("created_at", { ascending: true });
 
     if (error) throw error;
-    return data as Comment[];
+    return (data || []) as unknown as Comment[];
 });
 
 /**
@@ -62,7 +64,7 @@ export async function submitComment(data: {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("comments")
         .insert({
             content_type: data.content_type,
@@ -83,7 +85,7 @@ export async function submitComment(data: {
 export async function approveComment(commentId: string) {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from("comments")
         .update({ is_approved: true })
         .eq("id", commentId)
@@ -101,7 +103,7 @@ export async function approveComment(commentId: string) {
  */
 export async function deleteComment(commentId: string) {
     const supabase = await createClient();
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("comments")
         .delete()
         .eq("id", commentId);

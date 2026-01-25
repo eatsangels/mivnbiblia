@@ -31,6 +31,9 @@ export type Resource = {
 /**
  * Get all resource categories
  */
+/**
+ * Get all resource categories
+ */
 export const getResourceCategories = cache(async () => {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -39,7 +42,7 @@ export const getResourceCategories = cache(async () => {
         .order("order", { ascending: true, nullsFirst: false });
 
     if (error) throw error;
-    return data as ResourceCategory[];
+    return (data || []) as unknown as ResourceCategory[];
 });
 
 /**
@@ -54,7 +57,7 @@ export const getResources = cache(async () => {
         .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data;
+    return (data || []) as unknown as Resource[];
 });
 
 /**
@@ -71,17 +74,18 @@ export const getResourcesByCategory = cache(async (categorySlug: string) => {
         .single();
 
     if (catError) throw catError;
+    const categoryTyped = category as unknown as ResourceCategory;
 
     // Then get resources
     const { data, error } = await supabase
         .from("resources")
         .select("*")
-        .eq("category_id", category.id)
+        .eq("category_id", categoryTyped.id)
         .eq("is_published", true)
         .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data as Resource[];
+    return (data || []) as unknown as Resource[];
 });
 
 /**
@@ -98,7 +102,7 @@ export const getFeaturedResources = cache(async (limit: number = 6) => {
         .limit(limit);
 
     if (error) throw error;
-    return data;
+    return (data || []) as unknown as Resource[];
 });
 
 /**
@@ -114,7 +118,7 @@ export const getResourceBySlug = cache(async (slug: string) => {
         .single();
 
     if (error) throw error;
-    return data;
+    return data as unknown as Resource;
 });
 
 /**
@@ -122,7 +126,7 @@ export const getResourceBySlug = cache(async (slug: string) => {
  */
 export async function incrementDownloadCount(resourceId: string) {
     const supabase = await createClient();
-    const { error } = await supabase.rpc("increment_download_count", {
+    const { error } = await (supabase as any).rpc("increment_download_count", {
         resource_id: resourceId,
     });
 
@@ -141,5 +145,5 @@ export const getResourceById = cache(async (id: string) => {
         .single();
 
     if (error) throw error;
-    return data;
+    return data as unknown as Resource;
 });

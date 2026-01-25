@@ -2,12 +2,21 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Download, FileText, Star, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { Database } from "@/lib/database.types";
 
 export default async function RecursosPage() {
+    type ResourceWithCategory = Database['public']['Tables']['resources']['Row'] & {
+        resource_categories: {
+            id: string;
+            name: string;
+            slug: string;
+        } | null;
+    };
+
     const supabase = await createClient();
 
     // Fetch resources from database
-    const { data: resources } = await supabase
+    const { data: resourcesRaw } = await supabase
         .from("resources")
         .select(`
             *,
@@ -19,6 +28,8 @@ export default async function RecursosPage() {
         `)
         .eq("is_published", true)
         .order("created_at", { ascending: false });
+
+    const resources = (resourcesRaw || []) as unknown as ResourceWithCategory[];
 
     const featuredResource = resources?.find(r => r.is_featured);
     const otherResources = resources?.filter(r => !r.is_featured) || [];

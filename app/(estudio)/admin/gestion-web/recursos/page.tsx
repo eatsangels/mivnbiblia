@@ -3,7 +3,17 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, Pencil, Trash2, FileText, Folder } from "lucide-react";
 
+import { Database } from "@/lib/database.types";
+
 export default async function RecursosAdminPage() {
+    type ResourceWithCategory = Database['public']['Tables']['resources']['Row'] & {
+        resource_categories: {
+            id: string;
+            name: string;
+        } | null;
+    };
+    type CategoryRow = Database['public']['Tables']['resource_categories']['Row'];
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -11,7 +21,7 @@ export default async function RecursosAdminPage() {
         redirect('/login');
     }
 
-    const { data: resources } = await supabase
+    const { data: resourcesRaw } = await supabase
         .from("resources")
         .select(`
             *,
@@ -22,10 +32,14 @@ export default async function RecursosAdminPage() {
         `)
         .order("created_at", { ascending: false });
 
-    const { data: categories } = await supabase
+    const resources = (resourcesRaw || []) as unknown as ResourceWithCategory[];
+
+    const { data: categoriesRaw } = await supabase
         .from("resource_categories")
         .select("*")
         .order("name");
+
+    const categories = (categoriesRaw || []) as CategoryRow[];
 
     return (
         <div className="space-y-8">

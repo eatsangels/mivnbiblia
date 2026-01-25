@@ -31,7 +31,7 @@ export const getBulletins = cache(async (limit?: number) => {
     const { data, error } = await query;
 
     if (error) throw error;
-    return data as Bulletin[];
+    return (data || []) as unknown as Bulletin[];
 });
 
 /**
@@ -48,7 +48,7 @@ export const getLatestBulletin = cache(async () => {
         .single();
 
     if (error && error.code !== 'PGRST116') throw error;
-    return data as Bulletin | null;
+    return data as unknown as Bulletin | null;
 });
 
 /**
@@ -64,7 +64,7 @@ export const getBulletinBySlug = cache(async (slug: string) => {
         .single();
 
     if (error) throw error;
-    return data as Bulletin;
+    return data as unknown as Bulletin;
 });
 
 /**
@@ -79,5 +79,5 @@ export const getBulletinById = cache(async (id: string) => {
         .single();
 
     if (error) throw error;
-    return data as Bulletin;
+    return data as unknown as Bulletin;
 });

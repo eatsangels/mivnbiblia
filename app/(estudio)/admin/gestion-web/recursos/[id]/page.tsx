@@ -4,6 +4,7 @@ import { getResourceCategories, getResourceById } from "@/lib/queries/resources"
 import { updateResource } from "../actions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { FormCloudinaryUpload } from "@/components/ui/FormCloudinaryUpload";
 
 interface EditResourcePageProps {
     params: {
@@ -106,7 +107,7 @@ export default async function EditResourcePage({ params }: EditResourcePageProps
                             name="description"
                             required
                             rows={4}
-                            defaultValue={resource.description}
+                            defaultValue={resource.description || ''}
                             className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
                             placeholder="Describe qué contiene este recurso..."
                         />
@@ -115,16 +116,14 @@ export default async function EditResourcePage({ params }: EditResourcePageProps
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* File URL */}
                         <div>
-                            <label htmlFor="file_url" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                                URL del Archivo (Descarga)
+                            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                                Archivo (Descarga)
                             </label>
-                            <input
-                                type="url"
-                                id="file_url"
+                            <FormCloudinaryUpload
                                 name="file_url"
                                 defaultValue={resource.file_url || ''}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
-                                placeholder="https://..."
+                                label="Subir Archivo de Recurso"
+                                resourceType="auto"
                             />
                         </div>
 
@@ -147,16 +146,14 @@ export default async function EditResourcePage({ params }: EditResourcePageProps
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Thumbnail */}
                         <div>
-                            <label htmlFor="thumbnail" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                                URL de Miniatura (Imagen)
+                            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                                Miniatura (Imagen)
                             </label>
-                            <input
-                                type="url"
-                                id="thumbnail"
+                            <FormCloudinaryUpload
                                 name="thumbnail"
                                 defaultValue={resource.thumbnail || ''}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
-                                placeholder="https://..."
+                                label="Subir Miniatura"
+                                resourceType="image"
                             />
                         </div>
 
@@ -183,7 +180,7 @@ export default async function EditResourcePage({ params }: EditResourcePageProps
                                 type="checkbox"
                                 id="is_featured"
                                 name="is_featured"
-                                defaultChecked={resource.is_featured}
+                                defaultChecked={resource.is_featured || false}
                                 className="w-5 h-5 rounded border-slate-300 text-mivn-blue focus:ring-mivn-blue"
                             />
                             <label htmlFor="is_featured" className="text-sm font-semibold text-slate-900 dark:text-white">
@@ -197,7 +194,7 @@ export default async function EditResourcePage({ params }: EditResourcePageProps
                                 type="checkbox"
                                 id="is_published"
                                 name="is_published"
-                                defaultChecked={resource.is_published}
+                                defaultChecked={resource.is_published || false}
                                 className="w-5 h-5 rounded border-slate-300 text-mivn-blue focus:ring-mivn-blue"
                             />
                             <label htmlFor="is_published" className="text-sm font-semibold text-slate-900 dark:text-white">

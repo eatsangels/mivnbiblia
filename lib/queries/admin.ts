@@ -70,7 +70,7 @@ export async function getFinanceStats() {
         .from("donations")
         .select("amount");
 
-    const total = donations?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
+    const total = (donations as any[])?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
 
     return {
         total,
@@ -121,7 +121,7 @@ export async function getRolesSummary() {
     if (error) throw error;
 
     const counts: Record<string, number> = {};
-    data?.forEach(p => {
+    (data as any[])?.forEach(p => {
         const r = p.role || 'member';
         counts[r] = (counts[r] || 0) + 1;
     });
@@ -134,7 +134,7 @@ export async function getRolesSummary() {
  */
 export async function updateMemberRole(userId: string, role: string) {
     const supabase = await createClient();
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("profiles")
         .update({ role, updated_at: new Date().toISOString() })
         .eq("id", userId);

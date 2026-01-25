@@ -3,6 +3,14 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Download, ArrowLeft, FileText, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
+import { Database } from "@/lib/database.types";
+
+type ResourceWithCategory = Database['public']['Tables']['resources']['Row'] & {
+    resource_categories: {
+        id: string;
+        name: string;
+    } | null;
+};
 
 interface ResourcePageProps {
     params: {
@@ -13,32 +21,37 @@ interface ResourcePageProps {
 export default async function ResourceDetailPage({ params }: ResourcePageProps) {
     const supabase = await createClient();
 
-    const { data: resource } = await supabase
+    const { data: rawResource } = await supabase
         .from("resources")
         .select(`
             *,
             resource_categories (
                 id,
-                name,
-                slug
+                name
             )
         `)
         .eq("slug", params.slug)
         .eq("is_published", true)
         .single();
 
+    const resource = rawResource as unknown as ResourceWithCategory;
+
     if (!resource) {
         notFound();
     }
 
+    type ResourceRow = Database['public']['Tables']['resources']['Row'];
+
     // Fetch related resources from the same category
-    const { data: relatedResources } = await supabase
+    const { data: relatedResourcesRaw } = resource.category_id ? await supabase
         .from("resources")
         .select("*")
         .eq("category_id", resource.category_id)
         .neq("id", resource.id)
         .eq("is_published", true)
-        .limit(3);
+        .limit(3) : { data: [] };
+
+    const relatedResources = (relatedResourcesRaw || []) as ResourceRow[];
 
     return (
         <main className="min-h-screen bg-white dark:bg-[#0A0F1D]">
@@ -98,11 +111,7 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
                             )}
 
                             {/* Content */}
-                            {resource.content && (
-                                <div className="prose prose-lg dark:prose-invert max-w-none">
-                                    <div dangerouslySetInnerHTML={{ __html: resource.content }} />
-                                </div>
-                            )}
+
                         </div>
 
                         {/* Sidebar */}
@@ -136,16 +145,18 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
                                     Información
                                 </h3>
                                 <div className="space-y-3 text-sm">
-                                    <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-                                        <Calendar className="w-4 h-4" />
-                                        <span>
-                                            Publicado: {new Date(resource.created_at).toLocaleDateString('es-ES', {
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric'
-                                            })}
-                                        </span>
-                                    </div>
+                                    {resource.created_at && (
+                                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                                            <Calendar className="w-4 h-4" />
+                                            <span>
+                                                Publicado: {new Date(resource.created_at).toLocaleDateString('es-ES', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric'
+                                                })}
+                                            </span>
+                                        </div>
+                                    )}
                                     {resource.resource_categories && (
                                         <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                                             <Tag className="w-4 h-4" />

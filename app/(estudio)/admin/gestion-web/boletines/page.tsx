@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, Pencil, Trash2, FileText, Calendar } from "lucide-react";
 
+import { Database } from "@/lib/database.types";
+
 export default async function BoletinesAdminPage() {
+    type BulletinRow = Database['public']['Tables']['bulletins']['Row'];
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -11,10 +14,12 @@ export default async function BoletinesAdminPage() {
         redirect('/login');
     }
 
-    const { data: bulletins } = await supabase
+    const { data: bulletinsRaw } = await supabase
         .from("bulletins")
         .select("*")
         .order("publish_date", { ascending: false });
+
+    const bulletins = (bulletinsRaw || []) as BulletinRow[];
 
     return (
         <div className="space-y-8">
@@ -76,6 +81,7 @@ export default async function BoletinesAdminPage() {
                             <p className="text-sm text-slate-600 dark:text-slate-400">Este Mes</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {bulletins?.filter(b => {
+                                    if (!b.publish_date) return false;
                                     const date = new Date(b.publish_date);
                                     const now = new Date();
                                     return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
@@ -115,23 +121,23 @@ export default async function BoletinesAdminPage() {
                                                 {bulletin.title}
                                             </p>
                                             <p className="text-sm text-slate-500 dark:text-slate-400">
-                                                {bulletin.slug}
+                                                {bulletin.id}
                                             </p>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <p className="text-slate-900 dark:text-white">
-                                            {new Date(bulletin.publish_date).toLocaleDateString('es-ES', {
+                                            {bulletin.publish_date ? new Date(bulletin.publish_date).toLocaleDateString('es-ES', {
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric'
-                                            })}
+                                            }) : 'No publicado'}
                                         </p>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${bulletin.is_published
-                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                                : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                                            : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
                                             }`}>
                                             <span className={`w-1.5 h-1.5 rounded-full ${bulletin.is_published ? 'bg-green-500' : 'bg-yellow-500'
                                                 }`} />

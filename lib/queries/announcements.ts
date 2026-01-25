@@ -19,27 +19,15 @@ export type Announcement = {
 };
 
 /**
- * Get pinned announcements for the home page
+ * Get all pinned announcements (active)
  */
 export const getPinnedAnnouncements = cache(async (limit = 3) => {
     const supabase = await createClient();
-
-    // We want announcements that are pinned, and either scheduled for now/past or null (immediate)
-    const now = new Date().toISOString();
-
     const { data, error } = await supabase
         .from("announcements")
-        .select(`
-            *,
-            profiles:created_by (
-                full_name,
-                avatar_url,
-                role
-            )
-        `)
+        .select("*")
+        .eq("is_active", true)
         .eq("is_pinned", true)
-        // logic for scheduling could be complex, for now let's just get pinned ones
-        // In a real scenario we might filter by scheduled_for <= now OR scheduled_for is null
         .order("created_at", { ascending: false })
         .limit(limit);
 
@@ -48,5 +36,20 @@ export const getPinnedAnnouncements = cache(async (limit = 3) => {
         return [];
     }
 
-    return data as Announcement[];
+    return (data || []) as unknown as Announcement[];
+});
+
+/**
+ * Get all active announcements
+ */
+export const getActiveAnnouncements = cache(async () => {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("announcements")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return (data || []) as unknown as Announcement[];
 });

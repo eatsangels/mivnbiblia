@@ -6,12 +6,12 @@ export type PrayerRequest = {
     user_id: string | null;
     requester_name: string;
     email: string | null;
-    request: string;
+    content: string;
     is_anonymous: boolean;
     is_approved: boolean;
     is_answered: boolean;
     created_at: string;
-    updated_at: string;
+
 };
 
 /**
@@ -85,20 +85,20 @@ export const getUnansweredPrayerRequests = cache(async (limit?: number) => {
 export async function submitPrayerRequest(data: {
     requester_name: string;
     email?: string;
-    request: string;
+    content: string;
     is_anonymous?: boolean;
 }) {
     const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("prayer_requests")
         .insert({
             user_id: user?.id || null,
             requester_name: data.requester_name,
             email: data.email || null,
-            request: data.request,
+            content: data.content,
             is_anonymous: data.is_anonymous || false,
             is_approved: false, // Requires admin approval
         });

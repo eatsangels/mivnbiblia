@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createBulletin } from "../actions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { FormCloudinaryUpload } from "@/components/ui/FormCloudinaryUpload";
 
 export default async function NewBulletinPage() {
     const supabase = await createClient();
@@ -85,12 +86,10 @@ export default async function NewBulletinPage() {
                         <label htmlFor="pdf_url" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                             Link al PDF (Opcional)
                         </label>
-                        <input
-                            type="url"
-                            id="pdf_url"
+                        <FormCloudinaryUpload
                             name="pdf_url"
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
-                            placeholder="https://ejemplo.com/boletin.pdf"
+                            label="Subir PDF del Boletín"
+                            resourceType="auto"
                         />
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                             Link directo al archivo PDF hospedado en Supabase Storage

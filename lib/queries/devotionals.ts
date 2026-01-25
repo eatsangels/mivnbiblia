@@ -33,7 +33,7 @@ export const getDevotionals = cache(async (limit?: number) => {
     const { data, error } = await query;
 
     if (error) throw error;
-    return data as Devotional[];
+    return (data || []) as unknown as Devotional[];
 });
 
 /**
@@ -51,7 +51,7 @@ export const getTodayDevotional = cache(async () => {
         .single();
 
     if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
-    return data as Devotional | null;
+    return data as unknown as Devotional | null;
 });
 
 /**
@@ -67,7 +67,7 @@ export const getDevotionalBySlug = cache(async (slug: string) => {
         .single();
 
     if (error) throw error;
-    return data as Devotional;
+    return data as unknown as Devotional;
 });
 
 /**
@@ -84,7 +84,7 @@ export const getDevotionalsByDateRange = cache(async (startDate: string, endDate
         .order("publish_date", { ascending: false });
 
     if (error) throw error;
-    return data as Devotional[];
+    return (data || []) as unknown as Devotional[];
 });
 
 /**
@@ -99,5 +99,5 @@ export const getDevotionalById = cache(async (id: string) => {
         .single();
 
     if (error) throw error;
-    return data as Devotional;
+    return data as unknown as Devotional;
 });

@@ -25,7 +25,7 @@ export async function createResource(formData: FormData) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-    const { error } = await supabase.from("resources").insert({
+    const { error } = await (supabase as any).from("resources").insert({
         title,
         slug,
         description,
@@ -34,6 +34,7 @@ export async function createResource(formData: FormData) {
         external_url,
         thumbnail,
         file_type,
+
         is_featured,
         is_published,
     });
@@ -68,7 +69,7 @@ export async function updateResource(id: string, formData: FormData) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("resources")
         .update({
             title,
@@ -79,6 +80,7 @@ export async function updateResource(id: string, formData: FormData) {
             external_url,
             thumbnail,
             file_type,
+
             is_featured,
             is_published,
         })
@@ -96,7 +98,7 @@ export async function updateResource(id: string, formData: FormData) {
 export async function deleteResource(id: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("resources")
         .delete()
         .eq("id", id);

@@ -25,7 +25,7 @@ export async function createMinistry(formData: FormData) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-    const { error } = await supabase.from("ministries").insert({
+    const { error } = await (supabase as any).from("ministries").insert({
         name,
         slug,
         description,
@@ -67,7 +67,7 @@ export async function updateMinistry(id: string, formData: FormData) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("ministries")
         .update({
             name,
@@ -94,7 +94,7 @@ export async function updateMinistry(id: string, formData: FormData) {
 export async function deleteMinistry(id: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("ministries")
         .delete()
         .eq("id", id);

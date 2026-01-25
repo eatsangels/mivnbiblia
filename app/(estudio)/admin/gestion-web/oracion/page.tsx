@@ -4,7 +4,10 @@ import Link from "next/link";
 import { Plus, Check, X, Heart } from "lucide-react";
 import { PrayerActions } from "./_components/PrayerActions";
 
+import { Database } from "@/lib/database.types";
+
 export default async function OracionAdminPage() {
+    type PrayerRequestRow = Database['public']['Tables']['prayer_requests']['Row'];
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -12,10 +15,12 @@ export default async function OracionAdminPage() {
         redirect('/login');
     }
 
-    const { data: prayers } = await supabase
+    const { data: prayersRaw } = await supabase
         .from("prayer_requests")
         .select("*")
         .order("created_at", { ascending: false });
+
+    const prayers = (prayersRaw || []) as PrayerRequestRow[];
 
     const pending = prayers?.filter(p => !p.is_approved) || [];
     const approved = prayers?.filter(p => p.is_approved && !p.is_answered) || [];
@@ -117,7 +122,7 @@ export default async function OracionAdminPage() {
                                             )}
                                         </div>
                                         <p className="text-slate-700 dark:text-slate-300">
-                                            {prayer.request}
+                                            {prayer.content}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -151,7 +156,7 @@ export default async function OracionAdminPage() {
                                                 </span>
                                             </div>
                                             <p className="text-slate-700 dark:text-slate-300">
-                                                {prayer.request}
+                                                {prayer.content}
                                             </p>
                                         </div>
                                         <button className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors">

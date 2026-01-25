@@ -23,7 +23,8 @@ export const getSiteSettings = cache(async () => {
 
     // Convert array to key-value object
     const settings: Record<string, string> = {};
-    data?.forEach((setting: SiteSetting) => {
+    const settingsRaw = (data || []) as unknown as SiteSetting[];
+    settingsRaw.forEach((setting) => {
         settings[setting.key] = setting.value;
     });
 
@@ -42,5 +43,5 @@ export const getSiteSetting = cache(async (key: string) => {
         .single();
 
     if (error) throw error;
-    return data as SiteSetting;
+    return data as unknown as SiteSetting;
 });

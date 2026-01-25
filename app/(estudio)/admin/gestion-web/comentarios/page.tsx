@@ -3,7 +3,15 @@ import { redirect } from "next/navigation";
 import { Check, X, MessageCircle } from "lucide-react";
 import { handleApproveComment, handleDeleteComment } from "./actions";
 
+import { Database } from "@/lib/database.types";
+
 export default async function ComentariosAdminPage() {
+    type CommentWithProfile = Database['public']['Tables']['comments']['Row'] & {
+        profiles: {
+            full_name: string | null;
+        } | null;
+    };
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -11,10 +19,12 @@ export default async function ComentariosAdminPage() {
         redirect('/login');
     }
 
-    const { data: comments } = await supabase
+    const { data: commentsRaw } = await supabase
         .from("comments")
-        .select("*")
+        .select("*, profiles(full_name)")
         .order("created_at", { ascending: false });
+
+    const comments = (commentsRaw || []) as unknown as CommentWithProfile[];
 
     const pending = comments?.filter(c => !c.is_approved) || [];
     const approved = comments?.filter(c => c.is_approved) || [];
@@ -90,18 +100,16 @@ export default async function ComentariosAdminPage() {
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <p className="font-bold text-slate-900 dark:text-white">
-                                                {comment.author_name}
-                                            </p>
+                                            {comment.profiles?.full_name || 'Usuario Anónimo'}
                                             <span className="text-sm text-slate-500 dark:text-slate-400">
                                                 {new Date(comment.created_at).toLocaleDateString('es-ES')}
                                             </span>
                                             <span className="px-2 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                                                {comment.content_type}
+                                                {comment.devotional_id ? 'Devocional' : 'Sermón'}
                                             </span>
                                         </div>
                                         <p className="text-slate-700 dark:text-slate-300">
-                                            {comment.comment}
+                                            {comment.content}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -137,17 +145,17 @@ export default async function ComentariosAdminPage() {
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-2">
                                                 <p className="font-bold text-slate-900 dark:text-white">
-                                                    {comment.author_name}
+                                                    {comment.profiles?.full_name || 'Usuario Anónimo'}
                                                 </p>
                                                 <span className="text-sm text-slate-500 dark:text-slate-400">
                                                     {new Date(comment.created_at).toLocaleDateString('es-ES')}
                                                 </span>
                                                 <span className="px-2 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                                                    {comment.content_type}
+                                                    {comment.devotional_id ? 'Devocional' : 'Sermón'}
                                                 </span>
                                             </div>
                                             <p className="text-slate-700 dark:text-slate-300">
-                                                {comment.comment}
+                                                {comment.content}
                                             </p>
                                         </div>
                                         <div>

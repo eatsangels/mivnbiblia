@@ -21,6 +21,9 @@ export type Ministry = {
 /**
  * Get all active ministries
  */
+/**
+ * Get all active ministries
+ */
 export const getMinistries = cache(async () => {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -30,7 +33,7 @@ export const getMinistries = cache(async () => {
         .order("order", { ascending: true, nullsFirst: false });
 
     if (error) throw error;
-    return data as Ministry[];
+    return (data || []) as unknown as Ministry[];
 });
 
 /**
@@ -44,7 +47,7 @@ export const getAdminMinistries = cache(async () => {
         .order("order", { ascending: true, nullsFirst: false });
 
     if (error) throw error;
-    return data as Ministry[];
+    return (data || []) as unknown as Ministry[];
 });
 
 /**
@@ -60,7 +63,7 @@ export const getMinistryBySlug = cache(async (slug: string) => {
         .single();
 
     if (error) throw error;
-    return data as Ministry;
+    return data as unknown as Ministry;
 });
 
 /**
@@ -75,5 +78,5 @@ export const getMinistryById = cache(async (id: string) => {
         .single();
 
     if (error) throw error;
-    return data as Ministry;
+    return data as unknown as Ministry;
 });

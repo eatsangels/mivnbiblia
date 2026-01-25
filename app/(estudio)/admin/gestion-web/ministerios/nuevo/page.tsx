@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createMinistry } from "../actions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { FormCloudinaryUpload } from "@/components/ui/FormCloudinaryUpload";
 
 export default async function NewMinistryPage() {
     const supabase = await createClient();
@@ -140,15 +141,13 @@ export default async function NewMinistryPage() {
 
                     {/* Image URL */}
                     <div>
-                        <label htmlFor="image" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                            URL de Imagen
+                        <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            Imagen
                         </label>
-                        <input
-                            type="url"
-                            id="image"
+                        <FormCloudinaryUpload
                             name="image"
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-2 focus:ring-mivn-blue/20 outline-none transition-all"
-                            placeholder="https://ejemplo.com/imagen.jpg"
+                            label="Subir Imagen del Ministerio"
+                            resourceType="image"
                         />
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                             Puedes usar una URL de Unsplash o subir a Supabase Storage
