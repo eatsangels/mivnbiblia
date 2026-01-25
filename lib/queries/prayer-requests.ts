@@ -23,7 +23,6 @@ export const getPrayerRequests = cache(async (limit?: number) => {
         .from("prayer_requests")
         .select("*")
         .eq("is_approved", true)
-        .eq("is_anonymous", false)
         .order("created_at", { ascending: false });
 
     if (limit) {

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, Check, X, Heart } from "lucide-react";
+import { PrayerActions } from "./_components/PrayerActions";
 
 export default async function OracionAdminPage() {
     const supabase = await createClient();
@@ -120,12 +121,7 @@ export default async function OracionAdminPage() {
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <button className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors">
-                                            <Check className="w-5 h-5" />
-                                        </button>
-                                        <button className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
-                                            <X className="w-5 h-5" />
-                                        </button>
+                                        <PrayerActions id={prayer.id} />
                                     </div>
                                 </div>
                             </div>

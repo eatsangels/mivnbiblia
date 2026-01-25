@@ -2,48 +2,78 @@
 
 import { Send, Lock, Globe, Star, Heart, MessageCircle, User, Edit3, ShieldCheck, CheckCircle2, ChevronDown, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
+import { createPrayerRequest } from "@/app/(website)/oracion/actions";
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
+import type { PrayerRequest } from "@/lib/queries/prayer-requests";
+import Swal from 'sweetalert2';
 
-export const PrayerWall = () => {
+interface PrayerWallProps {
+    initialRequests: PrayerRequest[];
+}
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+
+    return (
+        <button
+            type="submit"
+            disabled={pending}
+            className="w-full bg-mivn-blue text-white py-6 rounded-3xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            {pending ? "Enviando..." : "Enviar Petición"} <Send className="w-4 h-4" />
+        </button>
+    );
+}
+
+export const PrayerWall = ({ initialRequests = [] }: PrayerWallProps) => {
     const [activeTab, setActiveTab] = useState("Recientes");
 
-    const requests = [
-        {
-            name: "María López",
-            time: "Hace 2 horas",
-            title: "Sanidad por cirugía",
-            text: "Doy gracias a Dios porque la operación de mi hijo fue un éxito. Los médicos están asombrados por su recuperación. ¡La oración tiene poder!",
-            praying: 124,
-            responded: true,
-            initials: "ML"
-        },
-        {
-            name: "Anónimo",
-            time: "Hace 5 horas",
-            title: "Fortaleza en el desempleo",
-            text: "Pido oración por mi situación laboral. Llevo 3 meses buscando y el desánimo quiere entrar. Pido que Dios abra una puerta conforme a Su voluntad.",
-            praying: 42,
-            responded: false,
-            initials: "?"
-        },
-        {
-            name: "Juan Sánchez",
-            time: "Ayer",
-            title: "Restauración Familiar",
-            text: "Pido oración por la relación con mis hijos. Que el Espíritu Santo traiga perdón y reconciliación a nuestro hogar.",
-            praying: 18,
-            responded: false,
-            initials: "JS"
-        },
-        {
-            name: "Elena Peña",
-            time: "Ayer",
-            title: "Paz en la Tormenta",
-            text: "Gracias a todos los que oraron por mi ansiedad. He sentido una paz que sobrepasa todo entendimiento esta semana. ¡Dios es fiel!",
-            praying: 67,
-            responded: true,
-            initials: "EP"
+    // Server Action Handler
+    async function handleSubmit(formData: FormData) {
+        const result = await createPrayerRequest(null, formData);
+        if (result.success) {
+            Swal.fire({
+                title: '¡Petición Enviada!',
+                text: 'Tu petición ha sido enviada y será revisada por nuestro equipo de oración.',
+                icon: 'success',
+                confirmButtonText: 'Amén',
+                confirmButtonColor: '#4AA3DF', // mivn-blue
+                background: '#fff',
+                color: '#1e293b', // slate-800
+                iconColor: '#4AA3DF',
+                customClass: {
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3'
+                }
+            });
+            // Optionally reset form here
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: result.message,
+                icon: 'error',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#ef4444',
+                background: '#fff',
+                color: '#1e293b',
+                customClass: {
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl font-bold uppercase tracking-widest px-8 py-3'
+                }
+            });
         }
-    ];
+    }
+
+    const getInitials = (name: string) => {
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
+    };
 
     return (
         <div className="bg-background-light dark:bg-background-dark min-h-screen font-lexend">
@@ -90,31 +120,31 @@ export const PrayerWall = () => {
                             <h2 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white">Enviar Petición</h2>
                         </div>
 
-                        <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+                        <form className="space-y-8" action={handleSubmit}>
                             <div className="space-y-3">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nombre Completo</label>
-                                <input type="text" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none italic" placeholder="Escribe tu nombre..." />
+                                <input name="name" type="text" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none italic" placeholder="Escribe tu nombre..." required />
                                 <div className="flex items-center gap-3 px-4 pt-2">
-                                    <input type="checkbox" id="anon" className="rounded border-slate-300 dark:border-white/10 text-mivn-blue focus:ring-mivn-blue" />
+                                    <input type="checkbox" name="isAnonymous" id="anon" className="rounded border-slate-300 dark:border-white/10 text-mivn-blue focus:ring-mivn-blue" />
                                     <label htmlFor="anon" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest cursor-pointer">Publicar de forma anónima</label>
                                 </div>
                             </div>
 
                             <div className="space-y-3">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Tu Mensaje</label>
-                                <textarea rows={5} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[2.5rem] py-6 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none resize-none italic" placeholder="Comparte tu necesidad con nosotros..." />
+                                <textarea name="request" rows={5} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[2.5rem] py-6 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none resize-none italic" placeholder="Comparte tu necesidad con nosotros..." required />
                             </div>
 
                             <div className="space-y-4">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Visibilidad</p>
                                 <div className="grid grid-cols-2 gap-4">
                                     <label className="relative flex flex-col items-center justify-center gap-3 p-6 border-2 border-mivn-blue/20 bg-mivn-blue/5 rounded-3xl cursor-pointer hover:bg-mivn-blue/10 transition-colors">
-                                        <input type="radio" name="visibility" className="hidden" defaultChecked />
+                                        <input type="radio" name="visibility" value="public" className="hidden" defaultChecked />
                                         <Globe className="w-5 h-5 text-mivn-blue" />
                                         <span className="text-[9px] font-black uppercase tracking-widest text-mivn-blue">Pública</span>
                                     </label>
                                     <label className="relative flex flex-col items-center justify-center gap-3 p-6 border-2 border-slate-100 dark:border-white/5 rounded-3xl cursor-pointer hover:bg-slate-50 dark:hover:bg-white/10 transition-colors">
-                                        <input type="radio" name="visibility" className="hidden" />
+                                        <input type="radio" name="visibility" value="private" className="hidden" />
                                         <Lock className="w-5 h-5 text-slate-400" />
                                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Privada</span>
                                     </label>
@@ -124,9 +154,7 @@ export const PrayerWall = () => {
                                 </p>
                             </div>
 
-                            <button className="w-full bg-mivn-blue text-white py-6 rounded-3xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4">
-                                Enviar Petición <Send className="w-4 h-4" />
-                            </button>
+                            <SubmitButton />
                         </form>
                     </div>
 
@@ -164,46 +192,59 @@ export const PrayerWall = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {requests.map((r, i) => (
-                            <div key={i} className={`group bg-white dark:bg-slate-900 border ${r.responded ? "border-mivn-gold/30 shadow-mivn-gold/5" : "border-slate-100 dark:border-slate-800"} rounded-[3.5rem] p-10 space-y-8 hover:shadow-2xl transition-all duration-500 relative overflow-hidden`}>
-
-                                {r.responded && (
-                                    <div className="absolute top-8 right-8 bg-mivn-gold/10 text-mivn-gold px-4 py-1.5 rounded-full border border-mivn-gold/20 flex items-center gap-2 text-[8px] font-black tracking-widest uppercase shadow-lg">
-                                        <Star className="w-3 h-3 fill-current" /> Respondida
-                                    </div>
-                                )}
-
-                                <div className="flex items-center gap-6">
-                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl transition-all group-hover:scale-110 shadow-xl ${r.responded ? "bg-mivn-gold text-white" : "bg-slate-100 dark:bg-white/5 text-slate-400 border border-slate-100 dark:border-white/5"}`}>
-                                        {r.initials}
-                                    </div>
-                                    <div>
-                                        <h4 className="text-lg font-playfair font-bold text-slate-800 dark:text-white uppercase tracking-tight">{r.name}</h4>
-                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{r.time}</p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-3">
-                                    <h5 className="text-xl font-bold text-slate-800 dark:text-white leading-tight underline decoration-mivn-blue/30 decoration-2 underline-offset-4">{r.title}</h5>
-                                    <p className="text-slate-500 dark:text-slate-400 font-light italic leading-relaxed text-base">
-                                        "{r.text}"
-                                    </p>
-                                </div>
-
-                                <div className="flex items-center justify-between pt-8 border-t border-slate-50 dark:border-white/5">
-                                    <div className="flex items-center gap-3 text-mivn-blue">
-                                        <div className="relative flex h-3 w-3">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mivn-blue opacity-75" />
-                                            <Heart className="relative inline-flex h-3 w-3 fill-current" />
-                                        </div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest">{r.praying} Orando</span>
-                                    </div>
-                                    <button className={`px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${r.responded ? "bg-slate-100 dark:bg-white/5 text-slate-400" : "bg-mivn-blue text-white shadow-xl shadow-mivn-blue/20 hover:scale-105"}`}>
-                                        {r.responded ? "Amén" : "Me uno en oración"}
-                                    </button>
-                                </div>
+                        {initialRequests.length === 0 ? (
+                            <div className="col-span-full py-12 text-center text-slate-400">
+                                <p>No hay peticiones públicas recientes. Sé el primero en compartir tu necesidad.</p>
                             </div>
-                        ))}
+                        ) : (
+                            initialRequests.map((r) => (
+                                <div key={r.id} className={`group bg-white dark:bg-slate-900 border ${r.is_answered ? "border-mivn-gold/30 shadow-mivn-gold/5" : "border-slate-100 dark:border-slate-800"} rounded-[3.5rem] p-10 space-y-8 hover:shadow-2xl transition-all duration-500 relative overflow-hidden`}>
+
+                                    {r.is_answered && (
+                                        <div className="absolute top-8 right-8 bg-mivn-gold/10 text-mivn-gold px-4 py-1.5 rounded-full border border-mivn-gold/20 flex items-center gap-2 text-[8px] font-black tracking-widest uppercase shadow-lg">
+                                            <Star className="w-3 h-3 fill-current" /> Respondida
+                                        </div>
+                                    )}
+
+                                    <div className="flex items-center gap-6">
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl transition-all group-hover:scale-110 shadow-xl ${r.is_answered ? "bg-mivn-gold text-white" : "bg-slate-100 dark:bg-white/5 text-slate-400 border border-slate-100 dark:border-white/5"}`}>
+                                            {r.is_anonymous ? "?" : getInitials(r.requester_name)}
+                                        </div>
+                                        <div>
+                                            <h4 className="text-lg font-playfair font-bold text-slate-800 dark:text-white uppercase tracking-tight">
+                                                {r.is_anonymous ? "Anónimo" : r.requester_name}
+                                            </h4>
+                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                                                {formatDistanceToNow(new Date(r.created_at), { addSuffix: true, locale: es })}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {/* Since we don't have a title column yet, we might use truncated request or generic title */}
+                                        <h5 className="text-xl font-bold text-slate-800 dark:text-white leading-tight underline decoration-mivn-blue/30 decoration-2 underline-offset-4">
+                                            Petición de {r.is_anonymous ? "Un Hermano" : r.requester_name.split(" ")[0]}
+                                        </h5>
+                                        <p className="text-slate-500 dark:text-slate-400 font-light italic leading-relaxed text-base">
+                                            "{r.request}"
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pt-8 border-t border-slate-50 dark:border-white/5">
+                                        <div className="flex items-center gap-3 text-mivn-blue">
+                                            <div className="relative flex h-3 w-3">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mivn-blue opacity-75" />
+                                                <Heart className="relative inline-flex h-3 w-3 fill-current" />
+                                            </div>
+                                            <span className="text-[10px] font-black uppercase tracking-widest">0 Orando</span>
+                                        </div>
+                                        <button className={`px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${r.is_answered ? "bg-slate-100 dark:bg-white/5 text-slate-400" : "bg-mivn-blue text-white shadow-xl shadow-mivn-blue/20 hover:scale-105"}`}>
+                                            {r.is_answered ? "Amén" : "Me uno en oración"}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
 
                     <div className="flex justify-center pt-8">
