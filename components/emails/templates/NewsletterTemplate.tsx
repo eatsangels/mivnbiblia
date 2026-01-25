@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EmailLayout } from '../EmailLayout';
+import { EmailLayout } from '@/components/emails/EmailLayout';
 
 interface NewsletterTemplateProps {
     title: string;

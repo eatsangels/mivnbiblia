@@ -39,19 +39,40 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                             <Edit3 className="w-5 h-5 text-mivn-blue" /> Crear Nuevo Evento
                         </h2>
 
-                        <form className="space-y-6">
+                        <form action={async (formData) => {
+                            const { createEvent } = await import("@/app/(estudio)/admin/events/actions");
+                            const result = await createEvent(formData);
+                            if (result.success) {
+                                // Simple way to reset form or show success
+                                alert("Evento creado exitosamente");
+                            } else {
+                                alert("Error: " + result.error);
+                            }
+                        }} className="space-y-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Título del Evento</label>
                                 <input
+                                    name="title"
+                                    required
                                     className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold placeholder:text-slate-400 placeholder:font-normal"
                                     placeholder="Ej: Gran Congreso de Alabanza"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Fecha</label>
+                                <input
+                                    type="datetime-local"
+                                    name="date"
+                                    required
+                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Categoría</label>
-                                    <select className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold text-sm appearance-none cursor-pointer">
+                                    <select name="category" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold text-sm appearance-none cursor-pointer">
                                         <option>Culto</option>
                                         <option>Taller</option>
                                         <option>Congreso</option>
@@ -62,6 +83,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Capacidad</label>
                                     <input
                                         type="number"
+                                        name="capacity"
                                         className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                         placeholder="0"
                                     />
@@ -73,6 +95,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                 <div className="relative">
                                     <MapPin className="absolute left-5 top-4 w-5 h-5 text-slate-400" />
                                     <input
+                                        name="location"
                                         className="w-full pl-14 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pr-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                         placeholder="Templo Principal"
                                     />
@@ -84,13 +107,14 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                 <div className="relative">
                                     <User className="absolute left-5 top-4 w-5 h-5 text-slate-400" />
                                     <input
+                                        name="speaker"
                                         className="w-full pl-14 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pr-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                         placeholder="Nombre del Invitado"
                                     />
                                 </div>
                             </div>
 
-                            <button className="w-full bg-mivn-blue text-white font-black uppercase tracking-[0.2em] text-xs py-5 rounded-[1.5rem] shadow-xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all mt-4">
+                            <button type="submit" className="w-full bg-mivn-blue text-white font-black uppercase tracking-[0.2em] text-xs py-5 rounded-[1.5rem] shadow-xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all mt-4">
                                 Programar Evento
                             </button>
                         </form>

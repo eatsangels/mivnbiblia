@@ -28,6 +28,7 @@ export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
     return (
         <>
             <MemberEditDialog
+                key={selectedMember?.id || 'new'}
                 member={selectedMember}
                 isOpen={isEditOpen}
                 onClose={() => setIsEditOpen(false)}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 // Custom dialog component
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { updateMember } from "@/app/(estudio)/admin/members/actions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";

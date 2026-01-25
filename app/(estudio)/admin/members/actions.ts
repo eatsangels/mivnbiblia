@@ -31,7 +31,7 @@ export async function updateMember(userId: string, data: any) {
 
     if (error) {
         console.error("Error updating member:", error);
-        throw new Error("Error al actualizar miembro");
+        return { success: false, error: error.message };
     }
 
     revalidatePath("/admin/members");
