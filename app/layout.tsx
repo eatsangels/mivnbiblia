@@ -36,6 +36,8 @@ export const metadata: Metadata = {
 };
 
 import { TopBanner } from "@/components/institute/TopBanner";
+import { CookieProvider } from "@/contexts/CookieContext";
+import { CookieBanner } from "@/components/cookies/CookieBanner";
 
 export default function RootLayout({
   children,
@@ -47,9 +49,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${libreBaskerville.variable} ${playfair.variable} ${lexend.variable} antialiased`}
       >
-        <TopBanner />
-        {children}
-        <Toaster richColors position="top-right" />
+        <CookieProvider>
+          <TopBanner />
+          {children}
+          <CookieBanner />
+          <Toaster richColors position="top-right" />
+        </CookieProvider>
       </body>
     </html>
   );

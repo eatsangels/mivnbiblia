@@ -53,6 +53,7 @@ export const Footer = () => {
                                 { name: "Ministerios", href: "/ministerios" },
                                 { name: "Donaciones", href: "/donaciones" },
                                 { name: "Sobre Nosotros", href: "/sobre-nosotros" },
+                                { name: "Política de Cookies", href: "/politica-de-cookies" },
                             ].map((link) => (
                                 <li key={link.name}>
                                     <Link href={link.href} className="hover:text-mivn-gold transition-colors flex items-center gap-2 group">
