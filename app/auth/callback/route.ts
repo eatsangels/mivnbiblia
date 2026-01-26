@@ -7,6 +7,12 @@ export async function GET(request: Request) {
     // if "next" is in param, use it as the redirect URL
     const next = searchParams.get('next') ?? '/dashboard'
 
+    // Check for errors returned by Supabase
+    const errorDescription = searchParams.get('error_description')
+    if (errorDescription) {
+        return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errorDescription)}`)
+    }
+
     if (code) {
         const supabase = await createClient()
         const { error } = await supabase.auth.exchangeCodeForSession(code)
@@ -21,6 +27,10 @@ export async function GET(request: Request) {
             } else {
                 return NextResponse.redirect(`${origin}${next}`)
             }
+        } else {
+            // Log the actual error from exchangeCodeForSession
+            console.error('Auth code exchange error:', error)
+            return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`)
         }
     }
 

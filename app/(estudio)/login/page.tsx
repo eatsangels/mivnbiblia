@@ -7,10 +7,11 @@ import { Loader2, Eye, EyeOff, Heart, Cross } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { AuthLayout, Testimonial } from '@/components/ui/auth-layout'
+import { getEmailByUsername } from './actions'
 
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('')
+    const [identifier, setIdentifier] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -20,7 +21,7 @@ export default function LoginPage() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        if (!email.trim() || !password.trim()) {
+        if (!identifier.trim() || !password.trim()) {
             const msg = "Por favor completa todos los campos.";
             setError(msg)
             toast.warning("Campos vacíos", { description: msg })
@@ -35,16 +36,74 @@ export default function LoginPage() {
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         )
 
+        let loginEmail = identifier.trim()
+
+        // Check if input is a username (no @ symbol)
+        if (!loginEmail.includes('@')) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('id') // We just need to check if user exists, but we can't get email from profiles usually. 
+            // Wait, profiles usually doesn't store email. 
+            // Actually, I can't query auth.users from client code.
+            // Assuming profiles table has 'username' which connects to auth.users.
+            // BUT, to satisfy "login with username", I need the email to pass to signInWithPassword.
+            // If I can't get the email from the username via public query, I can't implement this strictly client-side 
+            // UNLESS the profiles table explicitly stores the email (which is common in some setups but possibly redundant/insecure).
+            // Let me check if 'profiles' has email. 
+            // Checking previous context... `20260124_create_cms_tables.sql` references profiles(id).
+            // Let's assume for a moment that I need to find the email.
+            // If profiles relies on `auth.users`, the email is in `auth.users`.
+            // A common pattern is to store email in profiles for easy access, OR use an edge function / server action to resolve it.
+            // Since I am in "client" component, I should probably check if `profiles` has `username` and `email` or if I need a server action.
+            // Re-reading `register/page.tsx`... formData has `email` and `username`.
+            // The trigger I just wrote:
+            // INSERT INTO public.profiles (id, full_name, username, avatar_url, role) ...
+            // It does NOT insert email into profiles. 
+            // So I cannot find the email by querying 'profiles' with 'username'.
+
+            // Correction: I need to perform this check on the server side? 
+            // Or I can update the trigger to also store email in profiles? 
+            // Or I can use a server action that has admin rights to lookup email by username.
+
+            // Let's verify if `profiles` table has email column. 
+            // I'll take a quick look at `database.types.ts` or recent migrations if possible. 
+            // The user just sent me `20260124_create_cms_tables.sql` which references `profiles`.
+            // But the `profiles` table definition itself isn't in that file (it's referenced).
+            // I'll assume it DOESN'T have it based on my `handle_new_user` trigger code which didn't include it.
+
+            // Use a Server Action?
+            // `app/(estudio)/login/page.tsx` is "use client".
+            // I can create a server action in a new file `app/(estudio)/login/actions.ts` that takes a username and returns an email.
+            // Yes, that seems safest and most correct.
+
+            const resolvedEmail = await getEmailByUsername(loginEmail)
+            if (!resolvedEmail) {
+                // Determine if we want to reveal that user doesn't exist
+                // For security, generic message is better, but for UX on 'username' specific,
+                // it might be helpful to say "Username not found" or just fail generically.
+                // We'll let it proceed to signIn with the username as email, which will fail elegantly below,
+                // OR we can short-circuit here.
+                // If we short circuit, we save a Supabase call.
+                // Let's short circuit with generic error to mimic Supabase behavior?
+                // Actually, if we pass a username to signInWithPassword (email field), it returns "Invalid login credentials" usually.
+                // So let's fall through, but loginEmail is still username, so it will fail.
+                // OR better, we explicitly handle "User found?"
+                // Let's rely on standard error handling below.
+            } else {
+                loginEmail = resolvedEmail
+            }
+        }
+
         const { error } = await supabase.auth.signInWithPassword({
-            email,
+            email: loginEmail,
             password,
         })
 
         if (error) {
             if (error.message.includes("Invalid login credentials")) {
-                setError("Correo o contraseña incorrectos.")
+                setError("Usuario/Correo o contraseña incorrectos.")
                 toast.error("Error de acceso", {
-                    description: "El correo o la contraseña no coinciden con nuestros registros. Por favor verifica tus credenciales."
+                    description: "Las credenciales no coinciden con nuestros registros."
                 })
             } else {
                 setError(error.message)
@@ -99,14 +158,14 @@ export default function LoginPage() {
         >
             <form onSubmit={handleLogin} className="space-y-5">
                 <div className="animate-element animate-delay-300">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block">Correo Electrónico</label>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block">Correo Electrónico o Usuario</label>
                     <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all focus-within:border-gold-500/50 focus-within:bg-gold-500/5 group">
                         <input
-                            name="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="tu@ejemplo.com"
+                            name="identifier"
+                            type="text"
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
+                            placeholder="Usuario o tu@email.com"
                             className="w-full bg-transparent text-sm p-3.5 rounded-xl focus:outline-none text-white placeholder-gray-600"
                             required
                         />
