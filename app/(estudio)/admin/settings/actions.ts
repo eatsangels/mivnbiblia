@@ -231,3 +231,41 @@ export async function reorderWeeklyActivities(activities: { id: string; display_
 
     return { success: true };
 }
+
+// Get roles summary
+export async function getRolesSummary() {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('role');
+
+    if (error) {
+        console.error('Error fetching roles summary:', error);
+        return {};
+    }
+
+    const summary: Record<string, number> = {};
+    data.forEach((profile) => {
+        const role = profile.role || 'member';
+        summary[role] = (summary[role] || 0) + 1;
+    });
+
+    return summary;
+}
+
+// Get users by role
+export async function getUsersByRole(role: string = 'admin') {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('role', role)
+        .order('full_name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching users by role:', error);
+        return [];
+    }
+
+    return data || [];
+}

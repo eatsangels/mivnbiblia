@@ -1,12 +1,15 @@
 import { ServiceSettingsForm } from "@/components/admin/ServiceSettingsForm";
 import { WeeklyActivitiesManager } from "@/components/admin/WeeklyActivitiesManager";
-import { getServiceSettings, getWeeklyActivities } from "./actions";
+import { RolesManager } from "@/components/admin/RolesManager";
+import { getServiceSettings, getWeeklyActivities, getRolesSummary, getUsersByRole } from "./actions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
 
 export default async function SettingsPage() {
-    const [settings, activities] = await Promise.all([
+    const [settings, activities, rolesSummary, initialUsers] = await Promise.all([
         getServiceSettings(),
-        getWeeklyActivities()
+        getWeeklyActivities(),
+        getRolesSummary(),
+        getUsersByRole('admin')
     ]);
 
     return (
@@ -21,11 +24,16 @@ export default async function SettingsPage() {
                 </p>
             </div>
 
-            <Tabs defaultValue="service" className="w-full">
-                <TabsList className="grid w-full max-w-md grid-cols-2">
+            <Tabs defaultValue="roles" className="w-full">
+                <TabsList className="grid w-full max-w-xl grid-cols-3">
+                    <TabsTrigger value="roles">Roles y Permisos</TabsTrigger>
                     <TabsTrigger value="service">Próximo Servicio</TabsTrigger>
                     <TabsTrigger value="activities">Actividades Semanales</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="roles" className="mt-8">
+                    <RolesManager rolesSummary={rolesSummary} initialUsers={initialUsers} />
+                </TabsContent>
 
                 <TabsContent value="service" className="mt-8">
                     <ServiceSettingsForm settings={settings} />
