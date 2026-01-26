@@ -69,7 +69,7 @@ export default async function DashboardPage() {
 
     // Fetch dynamic pastor messages
     const { data: messages } = await supabase
-        .from('pastor_messages' as any)
+        .from('pastor_messages')
         .select('*')
         .eq('is_active', true)
         .order('date', { ascending: false })
@@ -143,7 +143,16 @@ export default async function DashboardPage() {
                                 <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">
                                     {profile?.full_name?.split(' ')[0] || 'Ricardo'}
                                 </p>
-                                <p className="text-[10px] text-mivn-gold mt-1 uppercase font-black tracking-widest">Miembro Activo</p>
+                                <p className="text-[10px] text-mivn-gold mt-1 uppercase font-black tracking-widest">
+                                    {(profile?.role === 'admin' && 'Administrador') ||
+                                        (profile?.role === 'super_admin' && 'Súper Admin') ||
+                                        (profile?.role === 'member' && 'Miembro') ||
+                                        (profile?.role === 'pastor' && 'Pastor') ||
+                                        (profile?.role === 'leader' && 'Líder') ||
+                                        (profile?.role === 'treasurer' && 'Tesorero') ||
+                                        (profile?.role === 'content_editor' && 'Editor') ||
+                                        profile?.role || "Miembro"}
+                                </p>
                             </div>
                             <Link href="/dashboard/profile" className="w-11 h-11 rounded-2xl bg-mivn-blue/20 border-2 border-mivn-blue/20 p-0.5 group overflow-hidden shadow-lg transition-all hover:scale-105">
                                 <div className="w-full h-full rounded-xl bg-mivn-blue flex items-center justify-center text-white font-bold text-lg overflow-hidden relative">

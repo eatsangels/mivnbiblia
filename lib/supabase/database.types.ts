@@ -736,6 +736,45 @@ export type Database = {
                     },
                 ]
             }
+            pastor_messages: {
+                Row: {
+                    created_at: string | null
+                    date: string
+                    duration: string | null
+                    id: string
+                    image_url: string | null
+                    is_active: boolean | null
+                    pastor_name: string
+                    title: string
+                    updated_at: string | null
+                    video_url: string | null
+                }
+                Insert: {
+                    created_at?: string | null
+                    date?: string
+                    duration?: string | null
+                    id?: string
+                    image_url?: string | null
+                    is_active?: boolean | null
+                    pastor_name: string
+                    title: string
+                    updated_at?: string | null
+                    video_url?: string | null
+                }
+                Update: {
+                    created_at?: string | null
+                    date?: string
+                    duration?: string | null
+                    id?: string
+                    image_url?: string | null
+                    is_active?: boolean | null
+                    pastor_name?: string
+                    title?: string
+                    updated_at?: string | null
+                    video_url?: string | null
+                }
+                Relationships: []
+            }
             profiles: {
                 Row: {
                     avatar_url: string | null
