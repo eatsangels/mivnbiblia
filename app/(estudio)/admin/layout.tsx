@@ -47,10 +47,10 @@ export default async function AdminLayout({
                             </div>
                         </Link>
 
-                        <div className="hidden md:flex items-center bg-slate-100 dark:bg-white/5 rounded-2xl px-4 py-2 border border-transparent focus-within:border-mivn-blue/30 transition-all">
+                        <div className="hidden md:flex items-center bg-slate-100 dark:bg-white/5 rounded-2xl px-4 py-2 border border-transparent focus-within:border-mivn-blue/30 transition-all shadow-sm">
                             <Search className="w-4 h-4 text-slate-400" />
                             <input
-                                className="bg-transparent border-none focus:ring-0 text-sm w-64 placeholder:text-slate-400 text-slate-800 dark:text-white ml-2"
+                                className="bg-transparent !border-none !outline-none !shadow-none !ring-0 text-sm w-64 placeholder:text-slate-400 text-slate-800 dark:text-white ml-2 appearance-none"
                                 placeholder="Buscar configuración..."
                                 type="text"
                             />

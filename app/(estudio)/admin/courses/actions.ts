@@ -3,33 +3,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export type Course = {
-    id: string;
-    title: string;
-    description: string | null;
-    level: 'Básico' | 'Intermedio' | 'Avanzado';
-    thumbnail_url: string | null;
-    total_lessons: number;
-    is_active: boolean;
-    created_at: string;
-    updated_at: string;
-};
+import { Database } from "@/lib/database.types";
+
+export type Course = Database['public']['Tables']['courses']['Row'];
+export type CourseLesson = Database['public']['Tables']['course_lessons']['Row'];
+export type CourseEnrollment = Database['public']['Tables']['course_enrollments']['Row'];
 
 export type CourseWithStats = Course & {
     enrolled_count: number;
     avg_progress: number;
-};
-
-export type CourseLesson = {
-    id: string;
-    course_id: string;
-    title: string;
-    description: string | null;
-    video_url: string | null;
-    duration_minutes: number;
-    order_index: number;
-    content: string | null;
-    created_at: string;
 };
 
 /**

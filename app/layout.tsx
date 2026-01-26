@@ -33,12 +33,13 @@ const lexend = Lexend({
 export const metadata: Metadata = {
   title: "Ministerio Internacional Vida Nueva | Santuario Digital",
   description: "Plataforma de estudio bíblico profundo y crecimiento espiritual del Ministerio Internacional Vida Nueva (MIVN).",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 import { TopBanner } from "@/components/institute/TopBanner";

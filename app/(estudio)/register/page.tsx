@@ -478,6 +478,11 @@ export default function RegisterPage() {
                                 ))}
                             </div>
                         </div>
+                        {error && (
+                            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm font-medium animate-in fade-in slide-in-from-bottom-2">
+                                {error}
+                            </div>
+                        )}
                     </div>
 
                     {/* Navigation */}
@@ -498,11 +503,11 @@ export default function RegisterPage() {
                         </button>
                     </div>
                 </form>
-            </div>
+            </div >
             <footer className="mt-12 text-[10px] font-black text-slate-400 uppercase tracking-widest italic animate-fade-in">
                 © 2026 Ministerio Internacional Vida Nueva. Todos los derechos reservados.
             </footer>
-        </div>
+        </div >
     );
 
     const handleStep2Submit = async (e: React.FormEvent) => {

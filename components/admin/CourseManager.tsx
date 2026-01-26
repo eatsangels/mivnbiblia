@@ -98,8 +98,8 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
                             <div key={course.id} className="bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-xl hover:shadow-2xl transition-all group hover:-translate-y-1">
                                 <div className="h-48 relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10 flex items-end p-6">
-                                        <span className={`${getLevelColor(course.level)} text-white px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-lg`}>
-                                            {course.level}
+                                        <span className={`${getLevelColor(course.level || '')} text-white px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-lg`}>
+                                            {course.level || 'S/N'}
                                         </span>
                                     </div>
                                     <img src={course.thumbnail_url || 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&q=80&w=1000'} alt={course.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -122,7 +122,7 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
                                             <span className="text-mivn-blue">{course.avg_progress}%</span>
                                         </div>
                                         <div className="w-full bg-slate-100 dark:bg-white/5 h-2 rounded-full overflow-hidden">
-                                            <div className={`h-full rounded-full ${getLevelColor(course.level)}`} style={{ width: `${course.avg_progress}%` }}></div>
+                                            <div className={`h-full rounded-full ${getLevelColor(course.level || '')}`} style={{ width: `${course.avg_progress}%` }}></div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 pt-2">
