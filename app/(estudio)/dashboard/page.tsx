@@ -27,7 +27,8 @@ import {
     TrendingUp,
     Shield,
     Home,
-    School
+    School,
+    Settings
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
@@ -65,6 +66,14 @@ export default async function DashboardPage() {
 
     // Fetch prayer requests
     const { data: prayerRequests } = await getPrayerRequests(1, 10);
+
+    // Fetch dynamic pastor messages
+    const { data: messages } = await supabase
+        .from('pastor_messages')
+        .select('*')
+        .eq('is_active', true)
+        .order('date', { ascending: false })
+        .limit(2);
 
     const sidebarLinks: any[] = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", active: true },
@@ -118,10 +127,14 @@ export default async function DashboardPage() {
                     </nav>
 
                     <div className="flex items-center gap-6">
-                        <button className="relative p-2 text-slate-400 hover:text-mivn-blue transition-colors">
+                        <Link href="/dashboard/profile" className="p-2 text-slate-400 hover:text-mivn-blue transition-colors group relative">
+                            <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform duration-700" />
+                        </Link>
+
+                        <Link href="/dashboard/profile" className="relative p-2 text-slate-400 hover:text-mivn-blue transition-colors">
                             <Bell className="w-5 h-5" />
                             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900" />
-                        </button>
+                        </Link>
 
                         <div className="h-8 w-[1px] bg-slate-200 dark:bg-white/10 hidden sm:block" />
 
@@ -190,11 +203,14 @@ export default async function DashboardPage() {
                                     <div className="space-y-6">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Lectura este mes</p>
                                         <div className="flex items-end gap-3">
-                                            <span className="text-5xl font-bold font-playfair text-slate-900 dark:text-white">{progress?.total_chapters_read || 24}</span>
-                                            <span className="text-slate-400 font-medium mb-1.5 uppercase tracking-widest text-[10px]">/ 31 días</span>
+                                            <span className="text-5xl font-bold font-playfair text-slate-900 dark:text-white">{progress?.total_chapters_read || 0}</span>
+                                            <span className="text-slate-400 font-medium mb-1.5 uppercase tracking-widest text-[10px]">/ 1189 caps</span>
                                         </div>
                                         <div className="w-full bg-slate-50 dark:bg-white/5 h-3 rounded-full overflow-hidden border border-slate-100 dark:border-white/5">
-                                            <div className="bg-mivn-blue h-full rounded-full shadow-[0_0_15px_rgba(74,163,223,0.3)] transition-all duration-1000" style={{ width: '77%' }} />
+                                            <div
+                                                className="bg-mivn-blue h-full rounded-full shadow-[0_0_15px_rgba(74,163,223,0.3)] transition-all duration-1000"
+                                                style={{ width: `${Math.min(((progress?.total_chapters_read || 0) / 1189) * 100, 100)}%` }}
+                                            />
                                         </div>
                                     </div>
 
@@ -204,7 +220,7 @@ export default async function DashboardPage() {
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Racha Actual</p>
-                                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{progress?.current_streak || 12} Días</p>
+                                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{progress?.current_streak || 0} Días</p>
                                         </div>
                                     </div>
 
@@ -274,34 +290,49 @@ export default async function DashboardPage() {
                     {/* Right Side: Sidebar Widgets */}
                     <aside className="lg:col-span-4 space-y-12">
 
-                        {/* A. Messages from Pastor */}
+                        {/* A. Messages from Pastor (Dynamic) */}
                         <section className="space-y-8">
                             <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white flex items-center gap-4">
                                 <Megaphone className="w-6 h-6 text-mivn-gold" /> Mensajes del Pastor
                             </h3>
                             <div className="space-y-6">
-                                {[
-                                    { title: "Caminando en Fe en Tiempos de Incertidumbre", meta: "Pastor David • Hace 2 días", img: "https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&q=80&w=600", time: "4:12" },
-                                    { title: "Reflexión: El poder de la reconciliación", meta: "Pastor Samuel • Hace 5 días", img: "https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&q=80&w=600", time: "3:45" }
-                                ].map((msg, i) => (
-                                    <div key={i} className="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden cursor-pointer">
-                                        <div className="aspect-video relative overflow-hidden">
-                                            <img src={msg.img} alt="Thumbnail" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-[2px]">
-                                                <PlayCircle className="w-16 h-16 text-white" />
+                                {messages && messages.length > 0 ? (
+                                    messages.map((msg: any) => (
+                                        <div key={msg.id} className="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden cursor-pointer">
+                                            <div className="aspect-video relative overflow-hidden">
+                                                <img
+                                                    src={msg.image_url || "https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&q=80&w=600"}
+                                                    alt="Thumbnail"
+                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-[2px]">
+                                                    <PlayCircle className="w-16 h-16 text-white" />
+                                                </div>
+                                                {msg.duration && (
+                                                    <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/60 shadow-xl text-white text-[10px] font-bold rounded-lg backdrop-blur-md">
+                                                        {msg.duration}
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/60 shadow-xl text-white text-[10px] font-bold rounded-lg backdrop-blur-md">{msg.time}</div>
+                                            <div className="p-8 space-y-3">
+                                                <h4 className="font-bold text-slate-800 dark:text-white uppercase tracking-tight leading-tight group-hover:text-mivn-blue transition-colors line-clamp-2">
+                                                    {msg.title}
+                                                </h4>
+                                                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">
+                                                    {msg.pastor_name} • {new Date(msg.date).toLocaleDateString()}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="p-8 space-y-3">
-                                            <h4 className="font-bold text-slate-800 dark:text-white uppercase tracking-tight leading-tight group-hover:text-mivn-blue transition-colors">{msg.title}</h4>
-                                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">{msg.meta}</p>
-                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="p-8 text-center text-slate-400 bg-slate-50 dark:bg-white/5 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
+                                        <p>No hay mensajes nuevos por ahora.</p>
                                     </div>
-                                ))}
+                                )}
                             </div>
-                            <button className="w-full py-6 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.3em] text-mivn-blue hover:bg-mivn-blue hover:text-white transition-all">
+                            <Link href="/cultos" className="block w-full text-center py-6 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.3em] text-mivn-blue hover:bg-mivn-blue hover:text-white transition-all">
                                 Ver todos los mensajes
-                            </button>
+                            </Link>
                         </section>
 
                         {/* B. Upcoming Events */}
