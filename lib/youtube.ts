@@ -14,6 +14,7 @@ export interface YouTubeVideo {
     duration: string;
     isLive: boolean;
     viewCount: number;
+    scheduledStartTime?: string;
 }
 
 export interface YouTubeLiveStream {
@@ -24,6 +25,7 @@ export interface YouTubeLiveStream {
     scheduledStartTime?: string;
     actualStartTime?: string;
     concurrentViewers?: number;
+    publishedAt?: string;
 }
 
 /**

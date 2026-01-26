@@ -1325,6 +1325,287 @@ export type Database = {
                     },
                 ]
             }
+            service_settings: {
+                Row: {
+                    created_at: string | null
+                    google_maps_url: string | null
+                    id: string
+                    is_live: boolean | null
+                    live_video_url: string | null
+                    next_service_date: string | null
+                    next_service_description: string | null
+                    next_service_image: string | null
+                    next_service_location: string | null
+                    next_service_preacher: string | null
+                    next_service_series: string | null
+                    next_service_time: string | null
+                    next_service_title: string | null
+                    offline_message: string | null
+                    offline_subtitle: string | null
+                    service_time_sunday: string | null
+                    service_time_wednesday: string | null
+                    updated_at: string | null
+                    youtube_channel_id: string | null
+                    youtube_video_id: string | null
+                }
+                Insert: {
+                    created_at?: string | null
+                    google_maps_url?: string | null
+                    id?: string
+                    is_live?: boolean | null
+                    live_video_url?: string | null
+                    next_service_date?: string | null
+                    next_service_description?: string | null
+                    next_service_image?: string | null
+                    next_service_location?: string | null
+                    next_service_preacher?: string | null
+                    next_service_series?: string | null
+                    next_service_time?: string | null
+                    next_service_title?: string | null
+                    offline_message?: string | null
+                    offline_subtitle?: string | null
+                    service_time_sunday?: string | null
+                    service_time_wednesday?: string | null
+                    updated_at?: string | null
+                    youtube_channel_id?: string | null
+                    youtube_video_id?: string | null
+                }
+                Update: {
+                    created_at?: string | null
+                    google_maps_url?: string | null
+                    id?: string
+                    is_live?: boolean | null
+                    live_video_url?: string | null
+                    next_service_date?: string | null
+                    next_service_description?: string | null
+                    next_service_image?: string | null
+                    next_service_location?: string | null
+                    next_service_preacher?: string | null
+                    next_service_series?: string | null
+                    next_service_time?: string | null
+                    next_service_title?: string | null
+                    offline_message?: string | null
+                    offline_subtitle?: string | null
+                    service_time_sunday?: string | null
+                    service_time_wednesday?: string | null
+                    updated_at?: string | null
+                    youtube_channel_id?: string | null
+                    youtube_video_id?: string | null
+                }
+                Relationships: []
+            }
+            weekly_activities: {
+                Row: {
+                    category: string | null
+                    color: string | null
+                    created_at: string | null
+                    day_of_week: string
+                    description: string | null
+                    display_order: number | null
+                    icon_name: string | null
+                    id: string
+                    is_active: boolean | null
+                    time: string
+                    title: string
+                }
+                Insert: {
+                    category?: string | null
+                    color?: string | null
+                    created_at?: string | null
+                    day_of_week: string
+                    description?: string | null
+                    display_order?: number | null
+                    icon_name?: string | null
+                    id?: string
+                    is_active?: boolean | null
+                    time: string
+                    title: string
+                }
+                Update: {
+                    category?: string | null
+                    color?: string | null
+                    created_at?: string | null
+                    day_of_week?: string
+                    description?: string | null
+                    display_order?: number | null
+                    icon_name?: string | null
+                    id?: string
+                    is_active?: boolean | null
+                    time?: string
+                    title?: string
+                }
+                Relationships: []
+            }
+            small_groups: {
+                Row: {
+                    id: string
+                    name: string
+                    category: string
+                    leader: string
+                    description: string | null
+                    members_count: number
+                    image_url: string | null
+                    leader_image_url: string | null
+                    schedule: string | null
+                    location: string | null
+                    is_active: boolean
+                    created_at: string
+                    updated_at: string
+                }
+                Insert: {
+                    id?: string
+                    name: string
+                    category: string
+                    leader: string
+                    description?: string | null
+                    members_count?: number
+                    image_url?: string | null
+                    leader_image_url?: string | null
+                    schedule?: string | null
+                    location?: string | null
+                    is_active?: boolean
+                    created_at?: string
+                    updated_at?: string
+                }
+                Update: {
+                    id?: string
+                    name?: string
+                    category?: string
+                    leader?: string
+                    description?: string | null
+                    members_count?: number
+                    image_url?: string | null
+                    leader_image_url?: string | null
+                    schedule?: string | null
+                    location?: string | null
+                    is_active?: boolean
+                    created_at?: string
+                    updated_at?: string
+                }
+                Relationships: []
+            }
+            courses: {
+                Row: {
+                    created_at: string
+                    description: string | null
+                    id: string
+                    is_active: boolean
+                    level: "Básico" | "Intermedio" | "Avanzado" | null
+                    thumbnail_url: string | null
+                    title: string
+                    total_lessons: number
+                    updated_at: string
+                }
+                Insert: {
+                    created_at?: string
+                    description?: string | null
+                    id?: string
+                    is_active?: boolean
+                    level?: "Básico" | "Intermedio" | "Avanzado" | null
+                    thumbnail_url?: string | null
+                    title: string
+                    total_lessons?: number
+                    updated_at?: string
+                }
+                Update: {
+                    created_at?: string
+                    description?: string | null
+                    id?: string
+                    is_active?: boolean
+                    level?: "Básico" | "Intermedio" | "Avanzado" | null
+                    thumbnail_url?: string | null
+                    title?: string
+                    total_lessons?: number
+                    updated_at?: string
+                }
+                Relationships: []
+            }
+            course_lessons: {
+                Row: {
+                    content: string | null
+                    course_id: string
+                    created_at: string
+                    description: string | null
+                    duration_minutes: number
+                    id: string
+                    order_index: number
+                    title: string
+                    video_url: string | null
+                }
+                Insert: {
+                    content?: string | null
+                    course_id: string
+                    created_at?: string
+                    description?: string | null
+                    duration_minutes?: number
+                    id?: string
+                    order_index?: number
+                    title: string
+                    video_url?: string | null
+                }
+                Update: {
+                    content?: string | null
+                    course_id?: string
+                    created_at?: string
+                    description?: string | null
+                    duration_minutes?: number
+                    id?: string
+                    order_index?: number
+                    title?: string
+                    video_url?: string | null
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "course_lessons_course_id_fkey"
+                        columns: ["course_id"]
+                        isOneToOne: false
+                        referencedRelation: "courses"
+                        referencedColumns: ["id"]
+                    }
+                ]
+            }
+            course_enrollments: {
+                Row: {
+                    completed_at: string | null
+                    course_id: string
+                    enrolled_at: string
+                    id: string
+                    progress_percentage: number
+                    user_id: string
+                }
+                Insert: {
+                    completed_at?: string | null
+                    course_id: string
+                    enrolled_at?: string
+                    id?: string
+                    progress_percentage?: number
+                    user_id: string
+                }
+                Update: {
+                    completed_at?: string | null
+                    course_id?: string
+                    enrolled_at?: string
+                    id?: string
+                    progress_percentage?: number
+                    user_id?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "course_enrollments_course_id_fkey"
+                        columns: ["course_id"]
+                        isOneToOne: false
+                        referencedRelation: "courses"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "course_enrollments_user_id_fkey"
+                        columns: ["user_id"]
+                        isOneToOne: false
+                        referencedRelation: "profiles"
+                        referencedColumns: ["id"]
+                    }
+                ]
+            }
         }
         Views: {
             [_ in never]: never

@@ -1,57 +1,31 @@
-import { MapPin, Plus, Minus, Crosshair, Users, ChevronDown, Map, ChevronRight, Calendar, User, Search, Clock, Music } from "lucide-react";
+import { MapPin, Plus, Minus, Crosshair, Users, ChevronDown, Map, ChevronRight, Calendar, User, Search, Clock, Music, Heart, BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
+import { getSmallGroups } from "@/app/(estudio)/admin/groups/actions";
 
 export const metadata: Metadata = {
     title: "Mapa de Grupos Pequeños | Ministerio Internacional Vida Nueva",
     description: "Encuentra un grupo de crecimiento cerca de ti y conéctate con la comunidad.",
 };
 
-const groups = [
-    {
-        id: 1,
-        name: "G.P. Amistad y Vida",
-        leader: "Samuel & Elena",
-        time: "Jueves, 7:30 PM",
-        type: "Matrimonios",
-        image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=200",
-        dayIcon: Clock,
-        typeIcon: Users
-    },
-    {
-        id: 2,
-        name: "Juventud Renovada",
-        leader: "Marcos Torres",
-        time: "Viernes, 6:00 PM",
-        type: "Jóvenes",
-        image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200",
-        dayIcon: Clock,
-        typeIcon: User
-    },
-    {
-        id: 3,
-        name: "Pilar de Oración",
-        leader: "Martha Quiroz",
-        time: "Lunes, 7:00 PM",
-        type: "Adultos",
-        image: "https://images.unsplash.com/photo-1554151228-14d9def656ec?auto=format&fit=crop&q=80&w=200",
-        dayIcon: Clock,
-        typeIcon: Users
-    },
-    {
-        id: 4,
-        name: "Alabanza en Casa",
-        leader: "Gabriel Soto",
-        time: "Sábado, 5:00 PM",
-        type: "Ministerio",
-        image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200",
-        dayIcon: Clock,
-        typeIcon: Music
+// Helper function to get icon based on category
+const getCategoryIcon = (category: string) => {
+    switch (category.toLowerCase()) {
+        case 'jóvenes': return User;
+        case 'parejas': return Users;
+        case 'alabanza': return Music;
+        case 'oración': return Heart;
+        case 'estudio': return BookOpen;
+        case 'niños': return User; // Or a Kid icon if available
+        default: return Users;
     }
-];
+};
 
-export default function GruposPage() {
+export default async function GruposPage() {
+    // Fetch groups from database
+    const groups = await getSmallGroups();
+
     return (
         <div className="flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
             {/* Left Pane: Interactive Map */}
@@ -147,48 +121,66 @@ export default function GruposPage() {
                         {groups.length} Grupos encontrados
                     </p>
 
-                    {groups.map((group) => (
-                        <div key={group.id} className="bg-white dark:bg-white/5 p-5 rounded-3xl border border-slate-100 dark:border-white/5 hover:border-mivn-blue/50 dark:hover:border-mivn-blue/50 transition-all cursor-pointer group hover:shadow-lg hover:shadow-mivn-blue/5">
-                            <div className="flex gap-5">
-                                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 border-white dark:border-slate-800 shadow-md">
-                                    <Image
-                                        src={group.image}
-                                        alt={group.leader}
-                                        width={64}
-                                        height={64}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="font-bold text-slate-900 dark:text-white truncate text-lg group-hover:text-mivn-blue transition-colors">
-                                        {group.name}
-                                    </h3>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                                        Líder: {group.leader}
-                                    </p>
-                                    <div className="flex items-center gap-4 mt-4">
-                                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-lg">
-                                            <group.dayIcon className="w-3 h-3 text-mivn-blue" />
-                                            {group.time}
+                    {groups.length === 0 ? (
+                        <div className="text-center py-10 text-slate-400">
+                            <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                            <p>No hay grupos disponibles por el momento.</p>
+                        </div>
+                    ) : (
+                        groups.map((group) => {
+                            const CategoryIcon = getCategoryIcon(group.category);
+
+                            return (
+                                <div key={group.id} className="bg-white dark:bg-white/5 p-5 rounded-3xl border border-slate-100 dark:border-white/5 hover:border-mivn-blue/50 dark:hover:border-mivn-blue/50 transition-all cursor-pointer group hover:shadow-lg hover:shadow-mivn-blue/5">
+                                    <div className="flex gap-5">
+                                        <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 border-white dark:border-slate-800 shadow-md relative">
+                                            {group.image_url ? (
+                                                <Image
+                                                    src={group.image_url}
+                                                    alt={group.name}
+                                                    fill
+                                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                                                    <Users className="w-6 h-6 text-slate-400" />
+                                                </div>
+                                            )}
                                         </div>
-                                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-lg">
-                                            <group.typeIcon className="w-3 h-3 text-mivn-gold" />
-                                            {group.type}
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-bold text-slate-900 dark:text-white truncate text-lg group-hover:text-mivn-blue transition-colors">
+                                                {group.name}
+                                            </h3>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                                                Líder: {group.leader}
+                                            </p>
+                                            <div className="flex items-center gap-4 mt-4">
+                                                {group.schedule && (
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-lg">
+                                                        <Clock className="w-3 h-3 text-mivn-blue" />
+                                                        {group.schedule}
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wide bg-slate-100 dark:bg-white/5 px-3 py-1.5 rounded-lg">
+                                                    <CategoryIcon className="w-3 h-3 text-mivn-gold" />
+                                                    {group.category}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-5 pt-4 border-t border-slate-50 dark:border-white/5 flex items-center justify-between">
+                                        <button className="text-mivn-blue text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:underline decoration-2 underline-offset-4">
+                                            <Map className="w-4 h-4" />
+                                            {group.location || 'Ver ubicación'}
+                                        </button>
+                                        <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-mivn-blue group-hover:text-white transition-all duration-300">
+                                            <ChevronRight className="w-4 h-4" />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="mt-5 pt-4 border-t border-slate-50 dark:border-white/5 flex items-center justify-between">
-                                <button className="text-mivn-blue text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:underline decoration-2 underline-offset-4">
-                                    <Map className="w-4 h-4" />
-                                    Cómo llegar
-                                </button>
-                                <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-mivn-blue group-hover:text-white transition-all duration-300">
-                                    <ChevronRight className="w-4 h-4" />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                            );
+                        })
+                    )}
 
                     {/* Padding for bottom scroll */}
                     <div className="h-4" />
