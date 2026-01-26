@@ -24,6 +24,7 @@ export interface ProfileData {
     small_group?: string | null;
     ministry?: string | null;
     baptism_date?: string | null;
+    role?: string | null;
 }
 
 export default function ProfileSettings({ profile }: { profile: ProfileData }) {
@@ -155,7 +156,16 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                         <div>
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white">{formData.full_name || "Usuario MIVN"}</h3>
                             <div className="flex items-center justify-center gap-2 mt-2">
-                                <span className="bg-mivn-blue/10 text-mivn-blue px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-mivn-blue/20">Miembro Activo</span>
+                                <span className="bg-mivn-blue/10 text-mivn-blue px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-mivn-blue/20">
+                                    {(profile.role === 'admin' && 'Administrador') ||
+                                        (profile.role === 'super_admin' && 'Súper Admin') ||
+                                        (profile.role === 'member' && 'Miembro') ||
+                                        (profile.role === 'pastor' && 'Pastor') ||
+                                        (profile.role === 'leader' && 'Líder') ||
+                                        (profile.role === 'treasurer' && 'Tesorero') ||
+                                        (profile.role === 'content_editor' && 'Editor de Contenido') ||
+                                        profile.role || "Miembro"}
+                                </span>
                             </div>
                         </div>
                     </div>
