@@ -54,8 +54,8 @@ export async function getRecentActivity() {
 
     const { data: newMembers } = await supabase
         .from("profiles")
-        .select("full_name, updated_at")
-        .order("updated_at", { ascending: false })
+        .select("full_name, created_at")
+        .order("created_at", { ascending: false })
         .limit(3);
 
     const { data: newTestimonies } = await supabase

@@ -886,33 +886,48 @@ export type Database = {
             profiles: {
                 Row: {
                     avatar_url: string | null
-                    created_at: string
+                    baptism_date: string | null
+                    bio: string | null
+                    created_at: string | null
                     email: string | null
                     full_name: string | null
                     id: string
+                    ministry: string | null
                     phone: string | null
                     role: string | null
+                    small_group: string | null
                     updated_at: string | null
+                    username: string | null
                 }
                 Insert: {
                     avatar_url?: string | null
-                    created_at?: string
+                    baptism_date?: string | null
+                    bio?: string | null
+                    created_at?: string | null
                     email?: string | null
                     full_name?: string | null
                     id: string
+                    ministry?: string | null
                     phone?: string | null
                     role?: string | null
+                    small_group?: string | null
                     updated_at?: string | null
+                    username?: string | null
                 }
                 Update: {
                     avatar_url?: string | null
-                    created_at?: string
+                    baptism_date?: string | null
+                    bio?: string | null
+                    created_at?: string | null
                     email?: string | null
                     full_name?: string | null
                     id?: string
+                    ministry?: string | null
                     phone?: string | null
                     role?: string | null
+                    small_group?: string | null
                     updated_at?: string | null
+                    username?: string | null
                 }
                 Relationships: [
                     {
