@@ -69,7 +69,7 @@ export default async function DashboardPage() {
 
     // Fetch dynamic pastor messages
     const { data: messages } = await supabase
-        .from('pastor_messages')
+        .from('pastor_messages' as any)
         .select('*')
         .eq('is_active', true)
         .order('date', { ascending: false })
