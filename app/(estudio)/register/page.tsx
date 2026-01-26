@@ -556,30 +556,24 @@ export default function RegisterPage() {
                         </div>
 
                         <div className="space-y-6 pt-10">
+
+                            {/* NEW: Email Verification Alert */}
+                            <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-900/50 p-6 rounded-2xl max-w-2xl mx-auto space-y-2">
+                                <h3 className="text-yellow-700 dark:text-yellow-500 font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+                                    <Mail className="w-4 h-4" /> Verifica tu Correo
+                                </h3>
+                                <p className="text-sm text-yellow-800 dark:text-yellow-200/80">
+                                    Hemos enviado un enlace de confirmación a <strong>{formData.email}</strong>.
+                                    <br />
+                                    Por favor, revisa tu bandeja de entrada (y Spam) para activar tu cuenta.
+                                </p>
+                            </div>
+
                             <h3 className="text-mivn-blue text-xs font-black uppercase tracking-[0.4em]">Un mensaje para ti</h3>
                             <p className="text-xl md:text-2xl text-slate-800 dark:text-gray-200 font-light italic leading-relaxed max-w-3xl mx-auto">
                                 "Nos alegra inmensamente que hayas dado este paso de fe. MIVN no es solo una iglesia, es tu casa y tu familia. ¡Estamos emocionados de verte crecer y servir juntos!"
                             </p>
                             <p className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">— Pastores Juan & Elena</p>
-                        </div>
-
-                        {/* Next Steps Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10">
-                            {[
-                                { title: "Personaliza", desc: "Añade tu foto y completa tu información.", icon: UserRoundPen },
-                                { title: "Busca un Grupo", desc: "Encuentra comunidad cerca de ti.", icon: Users },
-                                { title: "Próximo Culto", desc: "Acompáñanos este Domingo 10 AM.", icon: Calendar }
-                            ].map((step, i) => (
-                                <div key={i} className="space-y-4 group/step p-6 rounded-3xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-                                    <div className="w-14 h-14 bg-mivn-blue/10 rounded-2xl flex items-center justify-center text-mivn-blue mx-auto group-hover/step:scale-110 group-hover/step:bg-mivn-blue group-hover/step:text-white transition-all">
-                                        <step.icon className="w-6 h-6" />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight">{step.title}</h4>
-                                        <p className="text-[10px] text-slate-400 font-medium italic">{step.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 </div>
@@ -587,12 +581,14 @@ export default function RegisterPage() {
                 {/* Final CTA */}
                 <div className="flex flex-col items-center gap-6">
                     <button
-                        onClick={() => router.push('/dashboard')}
+                        onClick={() => router.push('/login')}
                         className="w-full max-w-md bg-mivn-blue text-white py-6 rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 group"
                     >
-                        Ir a mi Dashboard <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        Ir a Iniciar Sesión <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
-                    <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-mivn-blue transition-colors">Omitir por ahora</button>
+                    <p className="text-[10px] text-slate-400 max-w-md text-center">
+                        Una vez verifiques tu correo, podrás iniciar sesión y acceder a todos los recursos.
+                    </p>
                 </div>
 
                 <footer className="text-center py-10 space-y-6">

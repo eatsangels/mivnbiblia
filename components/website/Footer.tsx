@@ -41,9 +41,9 @@ export async function Footer() {
                         {/* Social Media Icons in Gold */}
                         <div className="flex gap-4 pt-4">
                             {[
-                                { icon: Facebook, href: settings.facebook_url || "#" },
-                                { icon: Instagram, href: settings.instagram_url || "#" },
-                                { icon: Youtube, href: settings.youtube_url || "#" },
+                                { icon: Facebook, href: settings.facebook_url || "https://www.facebook.com/profile.php?id=61586324631409" },
+                                { icon: Instagram, href: settings.instagram_url || "https://www.instagram.com/mivn2604" },
+                                { icon: Youtube, href: settings.youtube_url || "https://www.youtube.com/@mivn2604" },
                             ].map((social, i) => (
                                 <a
                                     key={i}
@@ -86,36 +86,37 @@ export async function Footer() {
                     <div className="flex flex-col gap-8">
                         <h3 className="text-mivn-gold text-[10px] font-black tracking-[0.3em] uppercase">Contacto</h3>
                         <div className="flex flex-col gap-6 text-sm">
-                            {settings.address && (
-                                <div className="flex gap-4 items-start group">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5">
-                                        <MapPin className="text-mivn-gold w-5 h-5" />
-                                    </div>
-                                    <p className="hover:text-mivn-gold transition-colors leading-relaxed">
-                                        {settings.address}
-                                    </p>
+                            <div className="flex gap-4 items-start group">
+                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5">
+                                    <MapPin className="text-mivn-gold w-5 h-5" />
                                 </div>
-                            )}
-                            {settings.contact_phone && (
-                                <div className="flex gap-4 items-center group">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5">
-                                        <Phone className="text-mivn-gold w-5 h-5" />
-                                    </div>
-                                    <a className="hover:text-mivn-gold transition-colors font-bold" href={`tel:${settings.contact_phone}`}>
-                                        {settings.contact_phone}
-                                    </a>
+                                <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address || "100 Hurricane Shoals Rd NW, Suite F, Lawrenceville, GA 30043")}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:text-mivn-gold transition-colors leading-relaxed cursor-pointer"
+                                >
+                                    {settings.address || "100 Hurricane Shoals Rd NW, Suite F, Lawrenceville, GA 30043"}
+                                </a>
+                            </div>
+
+                            <div className="flex gap-4 items-center group">
+                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5">
+                                    <Phone className="text-mivn-gold w-5 h-5" />
                                 </div>
-                            )}
-                            {settings.contact_email && (
-                                <div className="flex gap-4 items-center group">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5">
-                                        <Mail className="text-mivn-gold w-5 h-5" />
-                                    </div>
-                                    <a className="hover:text-mivn-gold transition-colors font-bold" href={`mailto:${settings.contact_email}`}>
-                                        {settings.contact_email}
-                                    </a>
+                                <a className="hover:text-mivn-gold transition-colors font-bold" href={`tel:${settings.contact_phone || '+17705248414'}`}>
+                                    {settings.contact_phone || "+1 (770) 524-8414"}
+                                </a>
+                            </div>
+
+                            <div className="flex gap-4 items-center group">
+                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/5">
+                                    <Mail className="text-mivn-gold w-5 h-5" />
                                 </div>
-                            )}
+                                <a className="hover:text-mivn-gold transition-colors font-bold" href={`mailto:${settings.contact_email || 'eatsangelsgaming@gmail.com'}`}>
+                                    {settings.contact_email || "eatsangelsgaming@gmail.com"}
+                                </a>
+                            </div>
                         </div>
                     </div>
 

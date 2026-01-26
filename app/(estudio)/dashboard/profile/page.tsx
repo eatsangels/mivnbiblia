@@ -14,14 +14,50 @@ export default async function ProfilePage() {
         redirect('/login');
     }
 
-    const { data: profile } = await supabase
+    let { data: profile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single() as any;
 
+    // SELF-HEALING: If profile is missing (e.g. trigger failed), create it now.
     if (!profile) {
-        return <div className="min-h-screen bg-[#05070a] flex items-center justify-center text-white">Error loading profile.</div>;
+        console.log("⚠️ Profile missing for user, attempting lazy creation...", user.id);
+
+        const { error: insertError } = await supabase
+            .from('profiles')
+            .insert({
+                id: user.id,
+                email: user.email,
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario Nuevo',
+                username: user.user_metadata?.username || user.email?.split('@')[0] || `user_${user.id.substring(0, 8)}`,
+                avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture, // Fix: Google uses 'picture'
+                role: 'member'
+            });
+
+        if (insertError) {
+            console.error("❌ Failed to lazy create profile:", insertError);
+            return (
+                <div className="min-h-screen bg-[#05070a] flex flex-col items-center justify-center text-white space-y-4">
+                    <p className="text-xl font-bold">Error cargando perfil</p>
+                    <p className="text-slate-500 text-sm">No pudimos crear tu perfil automáticamente.</p>
+                    <pre className="text-xs bg-slate-900 p-4 rounded text-rose-400">{JSON.stringify(insertError, null, 2)}</pre>
+                </div>
+            );
+        }
+
+        // Refetch after creation
+        const { data: newProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single() as any;
+
+        profile = newProfile;
+    }
+
+    if (!profile) {
+        return <div className="min-h-screen bg-[#05070a] flex items-center justify-center text-white">Error loading profile (Retry).</div>;
     }
 
     return (

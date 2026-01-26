@@ -132,7 +132,12 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                         <div className="relative group">
                             <div className="w-28 h-28 rounded-[2.5rem] overflow-hidden border-4 border-slate-50 dark:border-slate-800 shadow-xl bg-slate-100 dark:bg-slate-800 transition-transform duration-500 group-hover:scale-105">
                                 {avatarUrl ? (
-                                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                    <img
+                                        src={avatarUrl}
+                                        alt="Avatar"
+                                        className="w-full h-full object-cover"
+                                        onError={() => setAvatarUrl(null)} // Fallback on error
+                                    />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-slate-400">
                                         <User className="w-12 h-12" />
