@@ -1,41 +1,132 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <style>
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f6f9fc; margin: 0; padding: 0; }
-    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 40px; margin-bottom: 40px; }
-    .header { background-color: #05070a; padding: 40px 20px; text-align: center; }
-    .logo { color: #ffffff; font-size: 24px; font-weight: bold; text-decoration: none; letter-spacing: 2px; }
-    .logo span { color: #D4AF37; } /* MIVN Gold */
-    .content { padding: 40px; text-align: center; color: #333333; }
-    .welcome-text { font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #1a1a1a; }
-    .body-text { color: #666666; line-height: 1.6; font-size: 16px; margin-bottom: 30px; }
-    .verse-box { background-color: #f8f9fa; border-left: 4px solid #D4AF37; padding: 20px; margin: 30px 0; text-align: left; font-style: italic; color: #555; }
-    .verse-ref { display: block; margin-top: 10px; font-weight: bold; font-style: normal; font-size: 12px; text-transform: uppercase; color: #D4AF37; }
-    .button { display: inline-block; background-color: #0f172a; /* MIVN Blue/Dark */ color: #ffffff; padding: 16px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: background-color 0.3s; }
-    .footer { background-color: #f8f9fa; padding: 30px; text-align: center; font-size: 12px; color: #999999; }
-    .social-links { margin-bottom: 20px; }
-    .footer a { color: #999999; text-decoration: none; margin: 0 10px; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #f6f9fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .header {
+      background-color: #05070a;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .logo-img {
+      width: 96px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .content {
+      padding: 40px;
+      text-align: center;
+      color: #333333;
+    }
+
+    .welcome-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+
+    .body-text {
+      color: #666666;
+      line-height: 1.6;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .verse-box {
+      background-color: #f8f9fa;
+      border-left: 4px solid #D4AF37;
+      padding: 20px;
+      margin: 30px 0;
+      text-align: left;
+      font-style: italic;
+      color: #555;
+    }
+
+    .verse-ref {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      font-style: normal;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #D4AF37;
+    }
+
+    .button {
+      display: inline-block;
+      background-color: #0f172a;
+      /* MIVN Blue/Dark */
+      color: #ffffff;
+      padding: 16px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1px;
+      transition: background-color 0.3s;
+    }
+
+    .footer {
+      background-color: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #999999;
+    }
+
+    .social-links {
+      margin-bottom: 20px;
+    }
+
+    .footer a {
+      color: #999999;
+      text-decoration: none;
+      margin: 0 10px;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
-      <!-- Reemplaza este texto con tu Logo URL si tienes uno hosteado -->
-      <div class="logo">MIVN <span>ONLINE</span></div>
+      <img src="https://mivn.online/_next/image?url=%2Flogo_mivn.png&w=96&q=75" alt="MIVN Logo" class="logo-img" />
     </div>
-    
+
     <div class="content">
       <h1 class="welcome-text">¡Bienvenido a la Familia!</h1>
       <p class="body-text">
-        Estamos muy felices de que hayas decidido unirte a nuestra comunidad digital. 
+        Estamos muy felices de que hayas decidido unirte a nuestra comunidad digital.
         Para comenzar tu viaje y acceder a todos los recursos, por favor confirma tu correo electrónico.
       </p>
 
       <a href="{{ .ConfirmationURL }}" class="button">Confirmar mi Cuenta</a>
 
       <div class="verse-box">
-        "Estando persuadido de esto, que el que comenzó en vosotros la buena obra, la perfeccionará hasta el día de Jesucristo."
+        "Estando persuadido de esto, que el que comenzó en vosotros la buena obra, la perfeccionará hasta el día de
+        Jesucristo."
         <span class="verse-ref">Filipenses 1:6</span>
       </div>
 
@@ -49,11 +140,12 @@
       <p>100 Hurricane shoals Rd NW Suite F, Lawrenceville, GA 30043</p>
       <p>+1 (770) 524-8414</p>
       <p>
-        <a href="https://www.facebook.com/profile.php?id=61586324631409">Facebook</a> • 
-        <a href="https://www.instagram.com/mivn2604">Instagram</a> • 
+        <a href="https://www.facebook.com/profile.php?id=61586324631409">Facebook</a> •
+        <a href="https://www.instagram.com/mivn2604">Instagram</a> •
         <a href="https://www.youtube.com/@mivn2604">YouTube</a>
       </p>
     </div>
   </div>
 </body>
+
 </html>

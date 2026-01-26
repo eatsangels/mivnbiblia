@@ -53,11 +53,33 @@ export default async function ProfilePage() {
             .eq('id', user.id)
             .single() as any;
 
-        profile = newProfile;
+        if (newProfile) {
+            profile = newProfile;
+            console.log("✅ Lazy creation successful, profile loaded:", profile.id);
+        } else {
+            // FALLBACK: If fetch fails immediately after insert (rare), construct a temporary profile object
+            // so the UI can render without error.
+            console.warn("⚠️ Fetch failed after insert, using optimistic profile.");
+            profile = {
+                id: user.id,
+                email: user.email,
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario Nuevo',
+                username: user.user_metadata?.username || user.email?.split('@')[0] || `user_${user.id.substring(0, 8)}`,
+                avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture,
+                role: 'member'
+            };
+        }
     }
 
+    // Final safety check: If we still don't have a profile object, show a cleaner error (not black screen)
     if (!profile) {
-        return <div className="min-h-screen bg-[#05070a] flex items-center justify-center text-white">Error loading profile (Retry).</div>;
+        return (
+            <div className="min-h-screen bg-[#F8FAFB] dark:bg-[#05070a] flex flex-col items-center justify-center space-y-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mivn-blue"></div>
+                <p className="text-slate-500">Configurando tu perfil...</p>
+                <meta httpEquiv="refresh" content="2" /> {/* Auto-refresh page */}
+            </div>
+        );
     }
 
     return (
