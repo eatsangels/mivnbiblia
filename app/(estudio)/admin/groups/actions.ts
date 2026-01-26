@@ -39,7 +39,7 @@ export async function createSmallGroup(group: Omit<SmallGroup, 'id' | 'created_a
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') return { error: 'No autorizado' };
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') return { error: 'No autorizado' };
 
     const { data, error } = await supabase
         .from('small_groups')
@@ -70,7 +70,7 @@ export async function updateSmallGroup(id: string, group: Partial<SmallGroup>) {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') return { error: 'No autorizado' };
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') return { error: 'No autorizado' };
 
     const { error } = await supabase
         .from('small_groups')
@@ -100,7 +100,7 @@ export async function deleteSmallGroup(id: string) {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') return { error: 'No autorizado' };
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') return { error: 'No autorizado' };
 
     const { error } = await supabase
         .from('small_groups')

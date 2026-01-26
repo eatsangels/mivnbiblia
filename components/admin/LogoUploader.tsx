@@ -16,12 +16,10 @@ interface LogoUploaderProps {
 export function LogoUploader({ label, currentUrl, type, onUploadComplete }: LogoUploaderProps) {
     const [uploading, setUploading] = useState(false);
     const [previewUrl, setPreviewUrl] = useState(currentUrl);
+    const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
+    const processFile = async (file: File) => {
         // Validate file type
         if (!file.type.startsWith('image/')) {
             toast.error('Por favor selecciona una imagen válida');
@@ -60,7 +58,30 @@ export function LogoUploader({ label, currentUrl, type, onUploadComplete }: Logo
             setPreviewUrl(currentUrl); // Revert preview
         } finally {
             setUploading(false);
+            setIsDragging(false);
         }
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) await processFile(file);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = async (e: React.DragEvent) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files?.[0];
+        if (file) await processFile(file);
+        else setIsDragging(false);
     };
 
     return (
@@ -69,42 +90,49 @@ export function LogoUploader({ label, currentUrl, type, onUploadComplete }: Logo
                 {label}
             </label>
 
-            {/* Preview */}
-            <div className="relative w-full aspect-video bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden border-2 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center group">
+            {/* Preview & Drop Area */}
+            <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`relative w-full aspect-video bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden border-2 border-dashed transition-all duration-300 flex items-center justify-center group ${isDragging
+                    ? 'border-mivn-blue bg-mivn-blue/5 scale-[0.99]'
+                    : 'border-slate-300 dark:border-slate-600'
+                    }`}
+            >
                 {previewUrl ? (
                     <div className="relative w-full h-full p-8">
                         <Image
                             src={previewUrl}
                             alt="Logo preview"
                             fill
-                            className="object-contain"
+                            className="object-contain transition-transform duration-500 group-hover:scale-105"
                         />
                     </div>
                 ) : (
                     <div className="text-center text-slate-400">
-                        <ImageIcon className="w-16 h-16 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">No hay logo configurado</p>
+                        {uploading ? (
+                            <Loader2 className="w-16 h-16 mx-auto mb-2 animate-spin text-mivn-blue" />
+                        ) : (
+                            <ImageIcon className={`w-16 h-16 mx-auto mb-2 transition-all ${isDragging ? 'text-mivn-blue scale-110' : 'opacity-50'}`} />
+                        )}
+                        <p className="text-sm font-bold">{isDragging ? '¡Suéltalo aquí!' : 'No hay logo configurado'}</p>
                     </div>
                 )}
 
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                     <button
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
-                        className="px-6 py-3 bg-white text-slate-900 rounded-xl font-bold text-sm hover:bg-slate-100 transition-all flex items-center gap-2 disabled:opacity-50"
+                        className="px-6 py-3 bg-white text-slate-900 rounded-xl font-bold text-sm hover:scale-105 transition-all flex items-center gap-2 disabled:opacity-50 shadow-xl"
                     >
                         {uploading ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                Subiendo...
-                            </>
+                            <Loader2 className="w-4 h-4 animate-spin text-mivn-blue" />
                         ) : (
-                            <>
-                                <Upload className="w-4 h-4" />
-                                Cambiar Logo
-                            </>
+                            <Upload className="w-4 h-4" />
                         )}
+                        {previewUrl ? 'Cambiar Logo' : 'Subir Logo'}
                     </button>
                 </div>
             </div>
@@ -118,29 +146,8 @@ export function LogoUploader({ label, currentUrl, type, onUploadComplete }: Logo
                 className="hidden"
             />
 
-            {/* Upload button (visible when no preview) */}
-            {!previewUrl && (
-                <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
-                    className="w-full px-6 py-4 bg-mivn-blue text-white rounded-xl font-bold hover:bg-sky-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                    {uploading ? (
-                        <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Subiendo...
-                        </>
-                    ) : (
-                        <>
-                            <Upload className="w-5 h-5" />
-                            Subir Logo
-                        </>
-                    )}
-                </button>
-            )}
-
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-                Formatos: PNG, JPG, SVG. Tamaño máximo: 2MB. Recomendado: fondo transparente.
+            <p className="text-xs text-slate-500 dark:text-slate-400 text-center italic">
+                {isDragging ? '¡Listo para subir!' : 'Arrastra y suelta o usa el botón. PNG, JPG, SVG hasta 2MB.'}
             </p>
         </div>
     );

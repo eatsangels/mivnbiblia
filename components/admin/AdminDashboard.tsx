@@ -174,7 +174,7 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: 
                                 agenda.map((event, i) => (
                                     <div key={i} className={`pl-4 border-l-[3px] border-mivn-blue`}>
                                         <p className={`text-[9px] font-black uppercase tracking-widest mb-1 text-mivn-blue`}>
-                                            {new Date(event.date).toLocaleDateString()} - {event.time}
+                                            {new Date(event.event_date).toLocaleDateString()} - {event.start_time?.slice(0, 5)}
                                         </p>
                                         <h4 className="text-sm font-bold text-slate-900 dark:text-white">{event.title}</h4>
                                         <p className="text-xs text-slate-500 font-medium">{event.location}</p>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from 'next/navigation';
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { AdminHeaderActions } from "@/components/admin/AdminHeaderActions";
 import { Bell, Settings, Search, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -58,15 +59,7 @@ export default async function AdminLayout({
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-3">
-                            <button className="flex size-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-mivn-blue transition-colors outline-none">
-                                <Settings className="w-5 h-5" />
-                            </button>
-                            <button className="flex size-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-mivn-blue transition-colors outline-none relative">
-                                <Bell className="w-5 h-5" />
-                                <span className="absolute top-2.5 right-2.5 size-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-                            </button>
-                        </div>
+                        <AdminHeaderActions />
 
                         <div className="h-8 w-[1px] bg-slate-200 dark:bg-white/10 hidden sm:block" />
 

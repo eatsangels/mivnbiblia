@@ -41,7 +41,7 @@ export async function updateServiceSettings(settings: Partial<ServiceSettings>) 
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') {
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
@@ -67,6 +67,7 @@ export async function updateServiceSettings(settings: Partial<ServiceSettings>) 
 
     revalidatePath('/cultos');
     revalidatePath('/en-vivo');
+    revalidatePath('/admin/settings');
 
     return { success: true };
 }
@@ -105,7 +106,7 @@ export async function createWeeklyActivity(activity: Omit<WeeklyActivity, 'id' |
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') {
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
@@ -142,7 +143,7 @@ export async function updateWeeklyActivity(id: string, activity: Partial<WeeklyA
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') {
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
@@ -178,7 +179,7 @@ export async function deleteWeeklyActivity(id: string) {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') {
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
@@ -214,7 +215,7 @@ export async function reorderWeeklyActivities(activities: { id: string; display_
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin') {
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
@@ -266,6 +267,95 @@ export async function getUsersByRole(role: string = 'admin') {
         console.error('Error fetching users by role:', error);
         return [];
     }
+
+    return data || [];
+}
+// Update role permissions
+export async function updateRolePermissions(roleId: string, permissions: any[]) {
+    const supabase = await createClient();
+
+    // Check if user is admin or super_admin
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: 'No autenticado' };
+
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+        return { error: 'No autorizado' };
+    }
+
+    // We need to find the UUID for the role using the slug
+    const { data: roleData } = await supabase
+        .from('app_roles')
+        .select('id')
+        .eq('slug', roleId)
+        .single();
+
+    if (!roleData) {
+        // Try creating the role if it doesn't exist (optional, but good for simple roles like 'member' if they are missing in app_roles table but exist in logic)
+        // For now, let's just error if not found to be safe
+        return { error: 'Rol no encontrado en la base de datos' };
+    }
+
+    for (const perm of permissions) {
+        // Check if a permission record already exists for this role and module
+        const { data: existingPerm } = await supabase
+            .from('role_permissions')
+            .select('id')
+            .eq('role_id', roleData.id)
+            .eq('module', perm.id)
+            .single();
+
+        const payload = {
+            role_id: roleData.id,
+            module: perm.id,
+            can_view: perm.enabled.includes('view'),
+            can_create: perm.enabled.includes('create'),
+            can_edit: perm.enabled.includes('edit'),
+            can_delete: perm.enabled.includes('delete'),
+            can_export: perm.enabled.includes('export'),
+            updated_at: new Date().toISOString()
+        };
+
+        if (existingPerm) {
+            const { error: updateErr } = await supabase
+                .from('role_permissions')
+                .update(payload)
+                .eq('id', existingPerm.id);
+            if (updateErr) return { error: `Error actualizando: ${updateErr.message}` };
+        } else {
+            const { error: insertErr } = await supabase
+                .from('role_permissions')
+                .insert(payload);
+            if (insertErr) return { error: `Error insertando: ${insertErr.message}` };
+        }
+    }
+
+    revalidatePath('/admin/settings');
+    return { success: true };
+}
+
+// Fetch role permissions
+export async function getRolePermissions(roleSlug: string) {
+    const supabase = await createClient();
+
+    // Get role ID
+    const { data: roleData } = await supabase
+        .from('app_roles')
+        .select('id')
+        .eq('slug', roleSlug)
+        .single();
+
+    if (!roleData) return [];
+
+    const { data } = await supabase
+        .from('role_permissions')
+        .select('*')
+        .eq('role_id', roleData.id);
 
     return data || [];
 }

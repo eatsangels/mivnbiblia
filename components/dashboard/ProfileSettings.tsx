@@ -100,8 +100,8 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                 full_name: formData.full_name,
                 username: formData.username,
                 phone: formData.phone,
-                // birth_date: formData.birth_date,
-                // address: formData.address
+                birth_date: formData.birth_date || null,
+                address: formData.address || null
             })
             .eq('id', profile.id);
 

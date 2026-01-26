@@ -75,6 +75,7 @@ export default async function GestionWebPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                     { title: 'Personalización', href: '/admin/gestion-web/personalizacion', icon: '🎨', description: 'Logo, colores y footer del sitio' },
+                    { title: 'Mensajes del Pastor', href: '/admin/gestion-web/mensajes-pastor', icon: '📢', description: 'Publicar sermones y mensajes' },
                     { title: 'Ministerios', href: '/admin/gestion-web/ministerios', icon: '⛪', description: 'Gestionar ministerios de la iglesia' },
                     { title: 'Devocionales', href: '/admin/gestion-web/devocionales', icon: '📖', description: 'Crear y editar devocionales diarios' },
                     { title: 'Recursos', href: '/admin/gestion-web/recursos', icon: '📚', description: 'Gestionar recursos descargables' },

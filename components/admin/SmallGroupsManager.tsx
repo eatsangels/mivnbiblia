@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Plus, Edit, Trash2, Save, X, Users, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { ImageUploader } from "./ImageUploader";
 
 interface SmallGroupsManagerProps {
     groups: SmallGroup[];
@@ -206,37 +207,21 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
                         </div>
 
                         <div className="space-y-2">
-                            <Label>URL Imagen del Grupo</Label>
-                            <div className="flex gap-2">
-                                <Input
-                                    value={formData.image_url}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                                    placeholder="https://..."
-                                    className="rounded-2xl"
-                                />
-                                {formData.image_url && (
-                                    <div className="w-10 h-10 rounded-lg overflow-hidden relative shrink-0 border border-slate-200">
-                                        <Image src={formData.image_url} alt="Preview" fill className="object-cover" />
-                                    </div>
-                                )}
-                            </div>
+                            <Label>Imagen del Grupo</Label>
+                            <ImageUploader
+                                currentImage={formData.image_url || undefined}
+                                onUploadComplete={(url: string) => setFormData(prev => ({ ...prev, image_url: url }))}
+                                folder="groups"
+                            />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>URL Foto del Líder</Label>
-                            <div className="flex gap-2">
-                                <Input
-                                    value={formData.leader_image_url}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, leader_image_url: e.target.value }))}
-                                    placeholder="https://..."
-                                    className="rounded-2xl"
-                                />
-                                {formData.leader_image_url && (
-                                    <div className="w-10 h-10 rounded-full overflow-hidden relative shrink-0 border border-slate-200">
-                                        <Image src={formData.leader_image_url} alt="Preview" fill className="object-cover" />
-                                    </div>
-                                )}
-                            </div>
+                            <Label>Foto del Líder</Label>
+                            <ImageUploader
+                                currentImage={formData.leader_image_url || undefined}
+                                onUploadComplete={(url: string) => setFormData(prev => ({ ...prev, leader_image_url: url }))}
+                                folder="leaders"
+                            />
                         </div>
                     </div>
 

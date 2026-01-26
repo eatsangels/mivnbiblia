@@ -35,6 +35,9 @@ import Image from "next/image";
 import { ResetProgressButton } from '@/components/dashboard/ResetProgressButton';
 import { getPrayerRequests } from '@/lib/queries/prayer-requests';
 import { DashboardPrayerSection } from '@/components/dashboard/DashboardPrayerSection';
+import { WelcomeCard } from '@/components/dashboard/WelcomeCard';
+
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
     const supabase = await createClient();
@@ -57,11 +60,10 @@ export default async function DashboardPage() {
         .eq('user_id', user.id)
         .single() as any;
 
-    // Deterministic Verse of the Day logic
-    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+    // RANDOM Verse logic
     const { count } = await supabase.from('scriptures').select('*', { count: 'exact', head: true });
-    const verseOffset = count ? (dayOfYear * 12345) % count : 0;
-    const { data: verses } = await supabase.from('scriptures').select('*').range(verseOffset, verseOffset) as any;
+    const randomOffset = count ? Math.floor(Math.random() * count) : 0;
+    const { data: verses } = await supabase.from('scriptures').select('*').range(randomOffset, randomOffset) as any;
     const verseOfTheDay = verses?.[0];
 
     // Fetch prayer requests
@@ -175,27 +177,10 @@ export default async function DashboardPage() {
                     <div className="lg:col-span-8 space-y-12">
 
                         {/* 1. Welcome Hero Section */}
-                        <section className="relative overflow-hidden rounded-[3.5rem] bg-mivn-blue p-10 md:p-16 text-white shadow-2xl shadow-mivn-blue/20 group">
-                            <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:rotate-12 transition-transform duration-1000">
-                                <BookOpen className="w-64 h-64 text-white" />
-                            </div>
-                            <div className="relative z-10 max-w-2xl space-y-8">
-                                <div className="space-y-4">
-                                    <h2 className="text-4xl md:text-6xl font-playfair font-bold tracking-tight">¡Hola, {profile?.full_name?.split(' ')[0] || 'Hermano'}!</h2>
-                                    <p className="text-xl md:text-2xl text-white/80 font-light italic leading-relaxed">
-                                        "{verseOfTheDay?.text || 'Lámpara es a mis pies tu palabra, y lumbrera a mi camino.'}"
-                                    </p>
-                                    <p className="text-[10px] uppercase font-black tracking-widest text-white/60">
-                                        — {verseOfTheDay ? `${verseOfTheDay.book} ${verseOfTheDay.chapter}:${verseOfTheDay.verse}` : 'Salmos 119:105'}
-                                    </p>
-                                </div>
-                                <div className="flex flex-wrap gap-4 pt-4">
-                                    <Link href="/read" className="bg-white text-mivn-blue px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
-                                        Continuar Lectura <ChevronRight className="w-4 h-4" />
-                                    </Link>
-                                </div>
-                            </div>
-                        </section>
+                        <WelcomeCard
+                            profileName={profile?.full_name?.split(' ')[0] || 'Hermano'}
+                            initialVerse={verseOfTheDay}
+                        />
 
                         {/* 2. Spiritual Progress Section */}
                         <section className="space-y-8">
@@ -253,7 +238,7 @@ export default async function DashboardPage() {
                                 <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white flex items-center gap-4">
                                     <Users className="w-6 h-6 text-mivn-blue" /> Mis Grupos de Vida
                                 </h3>
-                                <button className="text-[10px] font-black text-mivn-blue hover:underline uppercase tracking-widest">+ Unirse a otro</button>
+                                <Link href="/grupos" className="text-[10px] font-black text-mivn-blue hover:underline uppercase tracking-widest">+ Unirse a otro</Link>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -281,7 +266,7 @@ export default async function DashboardPage() {
                                                 ))}
                                                 <div className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-900 bg-mivn-blue flex items-center justify-center text-[8px] text-white font-black">+12</div>
                                             </div>
-                                            <button className="text-[10px] font-black text-mivn-blue uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform">Entrar al Grupo</button>
+                                            <Link href="/grupos" className="text-[10px] font-black text-mivn-blue uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform">Entrar al Grupo</Link>
                                         </div>
                                     </div>
                                 ))}
@@ -366,9 +351,9 @@ export default async function DashboardPage() {
                                     </div>
                                 ))}
                             </div>
-                            <button className="w-full mt-12 bg-mivn-blue text-white py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all">
+                            <Link href="/eventos" className="block w-full mt-12 bg-mivn-blue text-white py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all text-center">
                                 Calendario Completo
-                            </button>
+                            </Link>
                         </section>
 
                         {/* C. Quick Links */}

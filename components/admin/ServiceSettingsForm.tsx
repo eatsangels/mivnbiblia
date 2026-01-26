@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { updateServiceSettings, type ServiceSettings } from "@/app/(estudio)/admin/settings/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ interface ServiceSettingsFormProps {
 }
 
 export function ServiceSettingsForm({ settings }: ServiceSettingsFormProps) {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         next_service_title: settings?.next_service_title || '',
@@ -41,6 +43,7 @@ export function ServiceSettingsForm({ settings }: ServiceSettingsFormProps) {
                 toast.error(result.error);
             } else {
                 toast.success('Configuración actualizada correctamente');
+                router.refresh();
             }
         } catch (error) {
             toast.error('Error al actualizar la configuración');

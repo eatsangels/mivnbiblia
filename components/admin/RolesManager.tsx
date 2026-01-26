@@ -5,8 +5,11 @@ import { createClient } from "@/lib/supabase/client";
 import {
     ShieldCheck, Users, Lock, ChevronRight, Plus,
     Search, Filter, MoreHorizontal, Check, X,
-    AlertCircle, FileText, Download, Trash2, Edit3, Settings
+    AlertCircle, FileText, Download, Trash2, Edit3, Settings, Loader2
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { updateRolePermissions, getRolePermissions } from "@/app/(estudio)/admin/settings/actions";
+import { toast } from "sonner";
 
 type Permission = "view" | "create" | "edit" | "delete" | "export";
 
@@ -24,6 +27,7 @@ export interface RolesManagerProps {
 }
 
 export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) {
+    const router = useRouter();
     const [activeRole, setActiveRole] = useState<string>("admin");
     const [searchQuery, setSearchQuery] = useState("");
     const [localRolesSummary, setLocalRolesSummary] = useState(rolesSummary);
@@ -37,7 +41,7 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
         { id: "member", name: "Miembro", description: "Usuario regular con acceso limitado", usersCount: localRolesSummary.member || 0, color: "bg-slate-400" },
     ];
 
-    const modules: ModulePermissions[] = [
+    const initialModules: ModulePermissions[] = [
         { id: "dashboard", name: "Dashboard", description: "Vista general y estadísticas", permissions: ["view", "export"], enabled: ["view"] },
         { id: "users", name: "Miembros", description: "Gestión de usuarios y perfiles", permissions: ["view", "create", "edit", "delete", "export"], enabled: ["view", "create", "edit"] },
         { id: "finance", name: "Finanzas", description: "Control de diezmos y ofrendas", permissions: ["view", "create", "edit", "delete", "export"], enabled: ["view", "create"] },
@@ -45,6 +49,9 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
         { id: "content", name: "Contenido Web", description: "Gestión del sitio web público", permissions: ["view", "create", "edit", "delete"], enabled: ["view", "edit"] },
         { id: "settings", name: "Configuración", description: "Ajustes globales del sistema", permissions: ["view", "edit"], enabled: ["view"] },
     ];
+
+    const [rolePermissions, setRolePermissions] = useState<ModulePermissions[]>(initialModules);
+    const [isSaving, setIsSaving] = useState(false);
 
     const [users, setUsers] = useState<any[]>(initialUsers);
     const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +62,28 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const supabase = useMemo(() => createClient(), []);
+
+    useEffect(() => {
+        const fetchPermissions = async () => {
+            const dbPermissions = await getRolePermissions(activeRole);
+
+            setRolePermissions(initialModules.map(mod => {
+                const dbMod = dbPermissions.find((p: any) => p.module === mod.id);
+                if (!dbMod) return mod;
+
+                const enabled: Permission[] = [];
+                if (dbMod.can_view) enabled.push("view" as Permission);
+                if (dbMod.can_create) enabled.push("create" as Permission);
+                if (dbMod.can_edit) enabled.push("edit" as Permission);
+                if (dbMod.can_delete) enabled.push("delete" as Permission);
+                if (dbMod.can_export) enabled.push("export" as Permission);
+
+                return { ...mod, enabled };
+            }));
+        };
+
+        fetchPermissions();
+    }, [activeRole]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -195,9 +224,45 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
             if (usersData) setUsers(usersData);
         } catch (err: any) {
             setError(err.message || "Error al revocar rol");
-        } finally {
-            setIsLoading(false);
         }
+    };
+
+    const handlePermissionChange = (moduleId: string, permission: Permission, checked: boolean) => {
+        setRolePermissions(prev => prev.map(mod => {
+            if (mod.id !== moduleId) return mod;
+            return {
+                ...mod,
+                enabled: checked
+                    ? [...mod.enabled, permission]
+                    : mod.enabled.filter(p => p !== permission)
+            };
+        }));
+    };
+
+    const handleSavePermissions = async () => {
+        setIsSaving(true);
+        try {
+            const result = await updateRolePermissions(activeRole, rolePermissions);
+            if (result.error) {
+                toast.error(result.error);
+            } else {
+                toast.success("Permisos actualizados correctamente");
+                setSuccessMessage("Permisos guardados");
+                router.refresh();
+                setTimeout(() => setSuccessMessage(null), 3000);
+            }
+        } catch (error) {
+            toast.error("Error al guardar permisos");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleSelectAll = () => {
+        setRolePermissions(prev => prev.map(mod => ({
+            ...mod,
+            enabled: [...mod.permissions]
+        })));
     };
 
     return (
@@ -272,8 +337,13 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
                         <button className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-mivn-blue hover:border-mivn-blue transition-all">
                             <Settings className="w-5 h-5" />
                         </button>
-                        <button className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[10px] shadow-xl hover:scale-105 transition-all">
-                            <SaveIcon className="w-4 h-4" /> Guardar Cambios
+                        <button
+                            onClick={handleSavePermissions}
+                            disabled={isSaving}
+                            className="flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[10px] shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <SaveIcon className="w-4 h-4" />}
+                            {isSaving ? "Guardando..." : "Guardar Cambios"}
                         </button>
                     </div>
                 </div>
@@ -286,7 +356,10 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
                             <p className="text-xs text-slate-500 mt-1">Define qué acciones puede realizar este rol en cada módulo.</p>
                         </div>
                         <div className="flex gap-2">
-                            <button className="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-mivn-blue transition-colors">
+                            <button
+                                onClick={handleSelectAll}
+                                className="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-mivn-blue transition-colors"
+                            >
                                 Seleccionar Todo
                             </button>
                         </div>
@@ -305,7 +378,7 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {modules.map((module) => (
+                                {rolePermissions.map((module) => (
                                     <tr key={module.id} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
                                         <td className="py-6 px-6">
                                             <div className="flex items-center gap-3">
@@ -322,7 +395,8 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
                                                             <input
                                                                 type="checkbox"
                                                                 className="peer sr-only"
-                                                                defaultChecked={module.enabled.includes(perm as Permission)}
+                                                                checked={module.enabled.includes(perm as Permission)}
+                                                                onChange={(e) => handlePermissionChange(module.id, perm as Permission, e.target.checked)}
                                                             />
                                                             <div className="w-6 h-6 border-2 border-slate-200 dark:border-slate-600 rounded-lg peer-checked:bg-mivn-blue peer-checked:border-mivn-blue transition-all flex items-center justify-center">
                                                                 <Check className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transform scale-50 peer-checked:scale-100 transition-all duration-300" strokeWidth={3} />
