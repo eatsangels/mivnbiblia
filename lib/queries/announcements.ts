@@ -25,7 +25,14 @@ export const getPinnedAnnouncements = cache(async (limit = 3) => {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("announcements")
-        .select("*")
+        .select(`
+            *,
+            profiles:created_by (
+                full_name,
+                avatar_url,
+                role
+            )
+        `)
         .eq("is_pinned", true)
         .order("created_at", { ascending: false })
         .limit(limit);
@@ -45,7 +52,14 @@ export const getActiveAnnouncements = cache(async () => {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("announcements")
-        .select("*")
+        .select(`
+            *,
+            profiles:created_by (
+                full_name,
+                avatar_url,
+                role
+            )
+        `)
         .order("created_at", { ascending: false });
 
     if (error) throw error;

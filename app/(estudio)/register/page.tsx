@@ -48,10 +48,12 @@ export default function RegisterPage() {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
+
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault()
 
         if (step === 1) {
+            // Validate Step 1
             if (!formData.firstName || !formData.lastName || !formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
                 setError("Por favor completa todos los campos.")
                 return
@@ -73,55 +75,11 @@ export default function RegisterPage() {
                 return
             }
 
-            setIsLoading(true)
+            // Move to Step 2 without creating account yet
             setError(null)
-
-            const { data, error } = await supabase.auth.signUp({
-                email: formData.email,
-                password: formData.password,
-                options: {
-                    emailRedirectTo: `${location.origin}/auth/callback`,
-                    data: {
-                        full_name: `${formData.firstName} ${formData.lastName}`,
-                        username: formData.username,
-                        first_name: formData.firstName,
-                        last_name: formData.lastName
-                    }
-                }
-            })
-
-            if (error) {
-                setError(error.message)
-                setIsLoading(false)
-            } else {
-                // If sign up works, we move to step 2
-                // Note: Even if they need to verify email, we can let them finish the UI steps
-                // or redirect if they are already logged in (session existed)
-                setStep(2)
-                setIsLoading(false)
-            }
-        } else if (step === 2) {
-            setIsLoading(true)
-
-            // Here we would ideally update the profile or user metadata
-            // Since we might not have the columns in profiles yet, we'll try to update metadata
-            const { error: updateError } = await supabase.auth.updateUser({
-                data: {
-                    baptized: formData.baptized,
-                    ministry: formData.ministry,
-                    referral_source: formData.referral,
-                    interests: formData.interests
-                }
-            })
-
-            if (updateError) {
-                console.error("Error updating onboarding data:", updateError)
-                // We proceed anyway for the sake of the flow
-            }
-
-            setStep(3)
-            setIsLoading(false)
+            setStep(2)
         }
+        // Logic for Step 2 is handled in handleStep2Submit
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -513,21 +471,37 @@ export default function RegisterPage() {
     const handleStep2Submit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setError(null);
 
-        const { error: updateError } = await supabase.auth.updateUser({
-            data: {
-                baptized: formData.baptized,
-                ministry: formData.ministry,
-                referral_source: formData.referral,
-                interests: formData.interests
+        // Perform the consolidated Sign Up here with all collected data
+        const { data, error } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.password,
+            options: {
+                emailRedirectTo: `${location.origin}/auth/callback`,
+                data: {
+                    // Step 1 Data
+                    full_name: `${formData.firstName} ${formData.lastName}`,
+                    username: formData.username,
+                    first_name: formData.firstName,
+                    last_name: formData.lastName,
+
+                    // Step 2 Data
+                    baptized: formData.baptized,
+                    ministry: formData.ministry,
+                    referral_source: formData.referral,
+                    interests: formData.interests
+                }
             }
         })
 
-        if (!updateError) {
-            setStep(3);
+        if (error) {
+            setError(error.message);
         } else {
-            setError(updateError.message);
+            // Success! Move to celebration step
+            setStep(3);
         }
+
         setIsLoading(false);
     }
 
