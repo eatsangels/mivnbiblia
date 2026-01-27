@@ -30,7 +30,8 @@ import {
     School,
     Settings,
     Compass,
-    Map
+    Map,
+    Camera
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
@@ -89,6 +90,7 @@ export default async function DashboardPage() {
         { name: "Ministerios", icon: HandHeart, href: "/ministerios" },
         { name: "Templo", icon: Compass, href: "/dashboard/temple" },
         { name: "Mapas", icon: Map, href: "/dashboard/maps" },
+        { name: "Galería", icon: Camera, href: "/galeria" },
         { name: "Donaciones", icon: Heart, href: "/dashboard/donations" },
         { name: "Perfil", icon: User, href: "/dashboard/profile" },
     ];

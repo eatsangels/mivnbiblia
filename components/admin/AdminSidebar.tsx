@@ -2,7 +2,7 @@
 
 import {
     LayoutDashboard, Users, Calendar, Banknote,
-    Settings, Database, Menu, X, LucideIcon, Megaphone, GraduationCap, Radio, MessageSquareQuote, LayoutTemplate, Home, BarChart3, Package
+    Settings, Database, Menu, X, LucideIcon, Megaphone, GraduationCap, Radio, MessageSquareQuote, LayoutTemplate, Home, BarChart3, Package, Camera, Info
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,8 @@ const navItems: NavItem[] = [
     { name: "Media", icon: Radio, href: "/admin/media", description: "Transmisiones" },
     { name: "Testimonios", icon: MessageSquareQuote, href: "/admin/testimonials", description: "Moderación" },
     { name: "Gestión Web", icon: LayoutTemplate, href: "/admin/gestion-web", description: "Portada y Contenido" },
+    { name: "Galería", icon: Camera, href: "/admin/gallery", description: "Gestionar Fotos" },
+    { name: "Sobre Nosotros", icon: Info, href: "/admin/about-us", description: "Información de la Iglesia" },
     { name: "Anuncios", icon: Megaphone, href: "/admin/announcements", description: "Gestión de noticias" },
     { name: "Configuración", icon: Settings, href: "/admin/settings", description: "Ajustes del sistema" },
 ];

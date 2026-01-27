@@ -25,6 +25,20 @@ export interface SmallGroup {
     is_location_public?: boolean | null;
 }
 
+export interface GroupMember {
+    id: string;
+    user_id: string;
+    group_id: string;
+    status: 'pending' | 'approved' | 'rejected';
+    role: 'member' | 'leader';
+    joined_at: string;
+    profile?: {
+        full_name: string | null;
+        avatar_url: string | null;
+        email?: string;
+    };
+}
+
 // Get all small groups
 export async function getSmallGroups(): Promise<SmallGroup[]> {
     const supabase = await createClient();
@@ -85,6 +99,8 @@ export async function createSmallGroup(group: {
     }
 
     revalidatePath('/grupos');
+    revalidatePath('/admin/groups');
+    revalidatePath('/admin/analytics');
     return { success: true, data };
 }
 
@@ -129,6 +145,7 @@ export async function updateSmallGroup(id: string, group: {
     }
 
     revalidatePath('/grupos');
+    revalidatePath('/admin/analytics');
     return { success: true };
 }
 
@@ -159,19 +176,135 @@ export async function deleteSmallGroup(id: string) {
     }
 
     revalidatePath('/grupos');
+    revalidatePath('/admin/groups');
+    revalidatePath('/admin/analytics');
     return { success: true };
 }
 
-// Get public member locations for community map
-export async function getPublicMemberLocations() {
+// Group Membership Actions
+
+export async function joinGroup(groupId: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return { error: 'Debes iniciar sesión para unirte' };
+
+    const { error } = await supabase
+        .from('group_members')
+        .insert({
+            user_id: user.id,
+            group_id: groupId,
+            status: 'pending',
+            role: 'member'
+        });
+
+    if (error) {
+        if (error.code === '23505') return { error: 'Ya has solicitado unirte a este grupo' };
+        return { error: error.message };
+    }
+
+    revalidatePath('/grupos');
+    return { success: true };
+}
+
+export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
     const supabase = await createClient();
 
     const { data, error } = await supabase
+        .from('group_members')
+        .select(`
+            *,
+            profile:profiles(full_name, avatar_url)
+        `)
+        .eq('group_id', groupId)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching members:', error);
+        return [];
+    }
+
+    return data as any[] || [];
+}
+
+export async function updateMembershipStatus(
+    membershipId: string,
+    status?: 'approved' | 'rejected',
+    role?: 'member' | 'leader'
+) {
+    const supabase = await createClient();
+
+    // Check permissions
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: 'No autenticado' };
+
+    const { data: profile } = await supabase
         .from('profiles')
-        .select('id, full_name, avatar_url, latitude, longitude, address')
-        .eq('is_location_public', true)
-        .not('latitude', 'is', null)
-        .not('longitude', 'is', null);
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    const allowedRoles = ['admin', 'super_admin', 'pastor'];
+
+    if (!profile || !allowedRoles.includes(profile.role || '')) {
+        // Leaders can only update status (approve/reject), not assign other leaders
+        if (profile?.role === 'leader' && role) {
+            return { error: 'Solo Pastores o Administradores pueden asignar líderes' };
+        }
+        if (profile?.role !== 'leader') {
+            return { error: 'No autorizado para gestionar miembros' };
+        }
+    }
+
+    // Prepare updates
+    const updates: any = {};
+    if (status) updates.status = status;
+    if (role) {
+        // Enforce the rule: only admins/pastors can promote
+        if (!allowedRoles.includes(profile?.role || '')) {
+            return { error: 'Solo Pastores o Administradores pueden asignar líderes' };
+        }
+        updates.role = role;
+    }
+
+    const { error } = await supabase
+        .from('group_members')
+        .update(updates)
+        .eq('id', membershipId);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/groups');
+    revalidatePath('/admin/analytics');
+    return { success: true };
+}
+
+export async function getUserGroupStatus(groupId: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    const { data } = await supabase
+        .from('group_members')
+        .select('status')
+        .eq('group_id', groupId)
+        .eq('user_id', user.id)
+        .single();
+
+    return data?.status || null;
+}
+
+export async function getPublicMemberLocations(): Promise<any[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from('group_members')
+        .select(`
+            id,
+            group_id,
+            profile:profiles(full_name, avatar_url)
+        `)
+        .eq('status', 'approved');
 
     if (error) {
         console.error('Error fetching member locations:', error);

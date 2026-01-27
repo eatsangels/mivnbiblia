@@ -91,7 +91,7 @@ export async function getWeeklyActivities(): Promise<WeeklyActivity[]> {
 }
 
 // Create weekly activity
-export async function createWeeklyActivity(activity: Omit<WeeklyActivity, 'id' | 'created_at'>) {
+export async function createWeeklyActivity(activity: Omit<WeeklyActivity, 'id' | 'created_at' | 'updated_at'>) {
     const supabase = await createClient();
 
     // Check if user is admin

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { createSmallGroup, updateSmallGroup, deleteSmallGroup, type SmallGroup } from "@/app/(estudio)/admin/groups/actions";
+import { useState, useEffect } from "react";
+import { createSmallGroup, updateSmallGroup, deleteSmallGroup, type SmallGroup, getGroupMembers, updateMembershipStatus, type GroupMember } from "@/app/(estudio)/admin/groups/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,7 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
     const [groups, setGroups] = useState(initialGroups);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [isAdding, setIsAdding] = useState(false);
+    const [managingGroupId, setManagingGroupId] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         name: '',
         category: 'General',
@@ -388,6 +389,15 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
                                 </div>
                                 <div className="flex gap-2">
                                     <Button
+                                        onClick={() => setManagingGroupId(group.id)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0 rounded-full hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-500"
+                                        title="Gestionar Miembros"
+                                    >
+                                        <Users className="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button
                                         onClick={() => handleEdit(group)}
                                         variant="ghost"
                                         size="sm"
@@ -408,6 +418,130 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Membership Management Modal */}
+            {managingGroupId && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-2xl max-h-[80vh] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-2xl flex flex-col">
+                        <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                            <div>
+                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Gestionar Miembros</h3>
+                                <p className="text-slate-500 text-sm">Administra las solicitudes y miembros del grupo.</p>
+                            </div>
+                            <Button onClick={() => setManagingGroupId(null)} variant="ghost" size="icon" className="rounded-full">
+                                <X className="w-6 h-6" />
+                            </Button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-8">
+                            <GroupMembersList groupId={managingGroupId} />
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function GroupMembersList({ groupId }: { groupId: string }) {
+    const [members, setMembers] = useState<GroupMember[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchMembers = async () => {
+        setIsLoading(true);
+        const data = await getGroupMembers(groupId);
+        setMembers(data);
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        fetchMembers();
+    }, [groupId]);
+
+    const handleStatusUpdate = async (membershipId: string, status: 'approved' | 'rejected') => {
+        const result = await updateMembershipStatus(membershipId, status);
+        if (result.error) {
+            toast.error(result.error);
+        } else {
+            toast.success(status === 'approved' ? 'Miembro aprobado' : 'Solicitud rechazada');
+            setMembers(prev => prev.map(m => m.id === membershipId ? { ...m, status } : m));
+        }
+    };
+
+    const handleToggleRole = async (membershipId: string, currentRole: 'member' | 'leader') => {
+        const newRole = currentRole === 'member' ? 'leader' : 'member';
+        // Note: I'll update updateMembershipStatus in actions.ts to handle role as well
+        const result = await updateMembershipStatus(membershipId, undefined as any, newRole);
+        if (result.error) {
+            toast.error(result.error);
+        } else {
+            toast.success(newRole === 'leader' ? 'Ascendido a Líder' : 'Removido como Líder');
+            setMembers(prev => prev.map(m => m.id === membershipId ? { ...m, role: newRole } : m));
+        }
+    };
+
+    if (isLoading) return <div className="text-center py-10">Cargando miembros...</div>;
+
+    const pending = members.filter(m => m.status === 'pending');
+    const approved = members.filter(m => m.status === 'approved');
+
+    return (
+        <div className="space-y-8">
+            {pending.length > 0 && (
+                <div className="space-y-4">
+                    <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500">Solicitudes Pendientes ({pending.length})</h5>
+                    <div className="space-y-3">
+                        {pending.map(m => (
+                            <div key={m.id} className="flex items-center justify-between p-4 bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-2xl">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm relative">
+                                        {m.profile?.avatar_url && <Image src={m.profile.avatar_url} alt={m.profile.full_name || ''} fill className="object-cover" />}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-slate-900 dark:text-white">{m.profile?.full_name || 'Usuario desconocido'}</p>
+                                        <p className="text-[10px] text-slate-500">Solicitó unirse {new Date(m.joined_at).toLocaleDateString()}</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button onClick={() => handleStatusUpdate(m.id, 'approved')} className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-4 h-9 text-xs font-bold">Aprobar</Button>
+                                    <Button onClick={() => handleStatusUpdate(m.id, 'rejected')} variant="ghost" className="text-red-500 hover:bg-red-50 rounded-xl px-4 h-9 text-xs font-bold">Rechazar</Button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="space-y-4">
+                <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Miembros Aprobados ({approved.length})</h5>
+                {approved.length === 0 ? (
+                    <p className="text-sm text-slate-400 italic text-center py-4">No hay miembros aprobados aún.</p>
+                ) : (
+                    <div className="grid grid-cols-1 gap-3">
+                        {approved.map(m => (
+                            <div key={m.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border-2 border-white relative">
+                                        {m.profile?.avatar_url && <Image src={m.profile.avatar_url} alt={m.profile.full_name || ''} fill className="object-cover" />}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-slate-900 dark:text-white">{m.profile?.full_name}</p>
+                                        <button
+                                            onClick={() => handleToggleRole(m.id, m.role)}
+                                            className="text-[9px] font-black bg-mivn-blue/10 text-mivn-blue px-2 py-0.5 rounded-full uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-colors"
+                                            title="Cambiar rol"
+                                        >
+                                            {m.role === 'leader' ? 'Líder' : 'Miembro'}
+                                        </button>
+                                    </div>
+                                </div>
+                                <Button onClick={() => handleStatusUpdate(m.id, 'rejected')} variant="ghost" className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full w-8 h-8 p-0">
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

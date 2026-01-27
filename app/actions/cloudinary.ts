@@ -20,3 +20,13 @@ export async function signCloudinaryParameters(params: Record<string, any> = {})
 
     return { timestamp, signature };
 }
+
+export async function deleteImage(publicId: string) {
+    try {
+        const result = await cloudinary.uploader.destroy(publicId);
+        return { success: true, result };
+    } catch (error) {
+        console.error("Cloudinary delete error:", error);
+        return { success: false, error };
+    }
+}

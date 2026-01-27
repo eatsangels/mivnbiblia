@@ -8,7 +8,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type SmallGroup } from "@/app/(estudio)/admin/groups/actions";
+import { type SmallGroup, joinGroup, getUserGroupStatus } from "@/app/(estudio)/admin/groups/actions";
+import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 // Leaflet imports
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
@@ -68,11 +70,47 @@ export function GroupsExplorer({ initialGroups, memberLocations = [] }: GroupsEx
     const [selectedGroup, setSelectedGroup] = useState<SmallGroup | any | null>(null);
     const [showMembers, setShowMembers] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
+    const [userMembershipStatus, setUserMembershipStatus] = useState<Record<string, string | null>>({});
+    const [userId, setUserId] = useState<string | null>(null);
+    const [isJoining, setIsJoining] = useState<string | null>(null);
 
     // Leaflet needs to be initialized only on the client
     useEffect(() => {
         setIsMounted(true);
-    }, []);
+        const initUser = async () => {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setUserId(user.id);
+                // Fetch initial statuses
+                const statuses: Record<string, string | null> = {};
+                for (const group of initialGroups) {
+                    const status = await getUserGroupStatus(group.id);
+                    statuses[group.id] = status;
+                }
+                setUserMembershipStatus(statuses);
+            }
+        };
+        initUser();
+    }, [initialGroups]);
+
+    const handleJoinRequest = async (groupId: string, groupName: string) => {
+        if (!userId) {
+            toast.error("Debes iniciar sesión para unirte");
+            return;
+        }
+
+        setIsJoining(groupId);
+        const result = await joinGroup(groupId);
+        setIsJoining(null);
+
+        if (result.error) {
+            toast.error(result.error);
+        } else {
+            toast.success(`Solicitud enviada para ${groupName}`);
+            setUserMembershipStatus(prev => ({ ...prev, [groupId]: 'pending' }));
+        }
+    };
 
     const categories = ["Todos", "Jóvenes", "Parejas", "Alabanza", "Oración", "Estudio", "Niños"];
 
@@ -350,12 +388,36 @@ export function GroupsExplorer({ initialGroups, memberLocations = [] }: GroupsEx
                                             <MapIcon className="w-4 h-4" />
                                             {group.location || 'Ver ubicación'}
                                         </button>
-                                        <Link
-                                            href={`/contacto?interest=group&group_id=${group.id}`}
-                                            className="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-mivn-blue group-hover:text-white transition-all duration-300"
-                                        >
-                                            <Plus className="w-4 h-4" />
-                                        </Link>
+
+                                        {userId ? (
+                                            <button
+                                                onClick={() => handleJoinRequest(group.id, group.name)}
+                                                disabled={isJoining === group.id || !!userMembershipStatus[group.id]}
+                                                className={`
+                                                px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all
+                                                ${userMembershipStatus[group.id] === 'pending'
+                                                        ? 'bg-amber-100 text-amber-600 cursor-default'
+                                                        : userMembershipStatus[group.id] === 'approved'
+                                                            ? 'bg-emerald-100 text-emerald-600 cursor-default'
+                                                            : 'bg-mivn-blue text-white hover:scale-105 active:scale-95 shadow-lg shadow-mivn-blue/20'
+                                                    }
+                                                disabled:opacity-50
+                                            `}
+                                            >
+                                                {isJoining === group.id ? 'Enviando...' :
+                                                    userMembershipStatus[group.id] === 'pending' ? 'Pendiente' :
+                                                        userMembershipStatus[group.id] === 'approved' ? 'Eres Miembro' :
+                                                            'Solicitar Unirme'}
+                                            </button>
+                                        ) : (
+                                            <Link
+                                                href={`/contacto?interest=group&group_name=${encodeURIComponent(group.name)}`}
+                                                className="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-mivn-blue group-hover:text-white transition-all duration-300"
+                                                title="Contactar para más información"
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
                             );

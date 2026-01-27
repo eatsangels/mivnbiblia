@@ -7,7 +7,7 @@ import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/lib/image-utils";
 
 interface ImageUploaderProps {
-    onUploadComplete: (url: string) => void;
+    onUploadComplete: (url: string, publicId: string) => void;
     currentImage?: string;
     bucket?: string; // Se mantiene por retrocompatibilidad pero no se usa
     folder?: string;
@@ -66,9 +66,10 @@ export function ImageUploader({
 
             const data = await response.json();
             const secureUrl = data.secure_url;
+            const publicId = data.public_id;
 
             setPreview(secureUrl);
-            onUploadComplete(secureUrl);
+            onUploadComplete(secureUrl, publicId);
             setImageToCrop(null);
         } catch (err: any) {
             console.error('Error uploading image to Cloudinary:', err);
@@ -134,7 +135,7 @@ export function ImageUploader({
 
     const removeImage = () => {
         setPreview(null);
-        onUploadComplete('');
+        onUploadComplete('', '');
     };
 
     return (

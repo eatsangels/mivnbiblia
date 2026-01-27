@@ -33,7 +33,7 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse, onOpenWorkshop 
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [loadingTradition, setLoadingTradition] = useState(false);
 
-    const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+    const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
     const [editingNoteContent, setEditingNoteContent] = useState("");
     const searchParams = useSearchParams();
     const supabase = createClient();
@@ -102,14 +102,14 @@ export function ToolsSidebar({ bookName, chapter, selectedVerse, onOpenWorkshop 
         setSaving(false);
     };
 
-    const handleDeleteNote = async (e: React.MouseEvent, id: number) => {
+    const handleDeleteNote = async (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
         if (!confirm('¿Eliminar nota?')) return;
         const { error } = await supabase.from('user_notes').delete().eq('id', id);
         if (!error) fetchNotes();
     };
 
-    const handleSaveEdit = async (id: number) => {
+    const handleSaveEdit = async (id: string) => {
         const { error } = await (supabase.from('user_notes') as any)
             .update({ content: editingNoteContent })
             .eq('id', id);

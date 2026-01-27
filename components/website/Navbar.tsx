@@ -20,6 +20,7 @@ export const Navbar = ({ user }: NavbarProps) => {
         { name: "Grupos", href: "/grupos" },
         { name: "Ministerios", href: "/ministerios" },
         { name: "Devocional", href: "/devocionales" },
+        { name: "Galería", href: "/galeria" },
         { name: "Nosotros", href: "/sobre-nosotros" },
     ];
 

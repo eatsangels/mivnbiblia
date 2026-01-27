@@ -113,7 +113,7 @@ export default async function OracionAdminPage() {
                                                 {prayer.requester_name}
                                             </p>
                                             <span className="text-sm text-slate-500 dark:text-slate-400">
-                                                {new Date(prayer.created_at).toLocaleDateString('es-ES')}
+                                                {prayer.created_at ? new Date(prayer.created_at).toLocaleDateString('es-ES') : ''}
                                             </span>
                                             {prayer.is_anonymous && (
                                                 <span className="px-2 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
@@ -152,7 +152,7 @@ export default async function OracionAdminPage() {
                                                     {prayer.requester_name}
                                                 </p>
                                                 <span className="text-sm text-slate-500 dark:text-slate-400">
-                                                    {new Date(prayer.created_at).toLocaleDateString('es-ES')}
+                                                    {prayer.created_at ? new Date(prayer.created_at).toLocaleDateString('es-ES') : ''}
                                                 </span>
                                             </div>
                                             <p className="text-slate-700 dark:text-slate-300">

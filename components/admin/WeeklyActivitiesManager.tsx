@@ -49,7 +49,7 @@ export function WeeklyActivitiesManager({ activities: initialActivities }: Weekl
         setFormData({
             day_of_week: activity.day_of_week,
             title: activity.title,
-            time: activity.time,
+            time: activity.time || '',
             description: activity.description || '',
             category: activity.category || 'general',
             icon_name: activity.icon_name || 'Star',

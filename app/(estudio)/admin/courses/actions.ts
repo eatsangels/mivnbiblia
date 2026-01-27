@@ -40,7 +40,7 @@ export async function getCourses() {
 
             const enrolled_count = enrollments?.length || 0;
             const avg_progress = enrolled_count > 0
-                ? Math.round(enrollments!.reduce((sum, e) => sum + e.progress_percentage, 0) / enrolled_count)
+                ? Math.round(enrollments!.reduce((sum, e) => sum + (e.progress_percentage || 0), 0) / enrolled_count)
                 : 0;
 
             return {
@@ -219,6 +219,8 @@ export async function getCourseLessons(courseId: string) {
  * Create a new lesson
  */
 export async function createLesson(lessonData: Omit<CourseLesson, 'id' | 'created_at'>) {
+    if (!lessonData.course_id) throw new Error('Course ID is required');
+
     const supabase = await createClient();
 
     const { data, error } = await supabase

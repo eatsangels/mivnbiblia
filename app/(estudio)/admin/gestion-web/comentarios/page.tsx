@@ -102,14 +102,14 @@ export default async function ComentariosAdminPage() {
                                         <div className="flex items-center gap-2 mb-2">
                                             {comment.profiles?.full_name || 'Usuario Anónimo'}
                                             <span className="text-sm text-slate-500 dark:text-slate-400">
-                                                {new Date(comment.created_at).toLocaleDateString('es-ES')}
+                                                {comment.created_at ? new Date(comment.created_at).toLocaleDateString('es-ES') : ''}
                                             </span>
                                             <span className="px-2 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                                                {comment.devotional_id ? 'Devocional' : 'Sermón'}
+                                                {comment.content_type === 'devotional' ? 'Devocional' : 'General'}
                                             </span>
                                         </div>
                                         <p className="text-slate-700 dark:text-slate-300">
-                                            {comment.content}
+                                            {comment.comment}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -148,14 +148,14 @@ export default async function ComentariosAdminPage() {
                                                     {comment.profiles?.full_name || 'Usuario Anónimo'}
                                                 </p>
                                                 <span className="text-sm text-slate-500 dark:text-slate-400">
-                                                    {new Date(comment.created_at).toLocaleDateString('es-ES')}
+                                                    {comment.created_at ? new Date(comment.created_at).toLocaleDateString('es-ES') : ''}
                                                 </span>
                                                 <span className="px-2 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                                                    {comment.devotional_id ? 'Devocional' : 'Sermón'}
+                                                    {comment.content_type === 'devotional' ? 'Devocional' : 'General'}
                                                 </span>
                                             </div>
                                             <p className="text-slate-700 dark:text-slate-300">
-                                                {comment.content}
+                                                {comment.comment}
                                             </p>
                                         </div>
                                         <div>
