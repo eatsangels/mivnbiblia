@@ -3,7 +3,8 @@
 import { MapPin, Phone, Mail, Clock, Send, ChevronDown, Facebook, Instagram, Youtube, ExternalLink, HelpCircle, MessageCircle, ShieldCheck, Landmark } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export const ContactInfo = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -32,6 +33,21 @@ export const ContactInfo = () => {
             a: "Si donas vía web, el recibo llega a tu correo automáticamente. Para recibos fiscales oficiales (deducibles), por favor envía tu comprobante a donaciones@mivn.org."
         }
     ];
+
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const interest = searchParams.get('interest');
+        const groupName = searchParams.get('group_name');
+
+        if (interest === 'group' && groupName) {
+            setFormData(prev => ({
+                ...prev,
+                subject: "Voluntariado / Servir",
+                message: `Hola, estoy interesado en unirme al grupo '${groupName}'.`
+            }));
+        }
+    }, [searchParams]);
 
     return (
         <div className="bg-background-light dark:bg-background-dark min-h-screen font-lexend">
@@ -95,6 +111,8 @@ export const ContactInfo = () => {
                                         type="text"
                                         className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-[2rem] py-6 px-10 text-lg text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-4 focus:ring-mivn-blue/5 outline-none transition-all placeholder:text-slate-300 italic font-light"
                                         placeholder="Tu nombre..."
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     />
                                 </div>
                                 <div className="space-y-4 relative z-10">
@@ -103,6 +121,8 @@ export const ContactInfo = () => {
                                         type="email"
                                         className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-[2rem] py-6 px-10 text-lg text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-4 focus:ring-mivn-blue/5 outline-none transition-all placeholder:text-slate-300 italic font-light"
                                         placeholder="tu@email.com"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -110,7 +130,11 @@ export const ContactInfo = () => {
                             <div className="space-y-4 relative z-10">
                                 <label className="text-[10px] font-black uppercase tracking-[0.3em] text-mivn-gold ml-6">Asunto del Mensaje</label>
                                 <div className="relative">
-                                    <select className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-[2rem] py-6 px-10 text-lg text-slate-900 dark:text-white focus:border-mivn-blue outline-none transition-all appearance-none cursor-pointer italic font-light">
+                                    <select
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-[2rem] py-6 px-10 text-lg text-slate-900 dark:text-white focus:border-mivn-blue outline-none transition-all appearance-none cursor-pointer italic font-light"
+                                        value={formData.subject}
+                                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                                    >
                                         <option>Información General</option>
                                         <option>Petición de Oración</option>
                                         <option>Visitas y Horarios</option>
@@ -127,6 +151,8 @@ export const ContactInfo = () => {
                                     rows={5}
                                     className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-[3rem] py-8 px-10 text-lg text-slate-900 dark:text-white focus:border-mivn-blue focus:ring-4 focus:ring-mivn-blue/5 outline-none transition-all resize-none placeholder:text-slate-300 italic font-light"
                                     placeholder="¿En qué podemos ayudarte espiritualmente hoy?"
+                                    value={formData.message}
+                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                 />
                             </div>
 

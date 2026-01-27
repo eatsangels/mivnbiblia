@@ -18,7 +18,7 @@ export const SmallGroups = () => {
         {
             name: "Matrimonios Firmes",
             category: "Parejas",
-            leader: "Pastores Gómez",
+            leader: "Los Pastores Luis Santana y Mercedes Trinidad",
             desc: "Edificando familias sólidas sobre la roca que es Cristo. Charlas, cenas y oración.",
             members: 28,
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCsZyVlHkGKkZEBAj_cFkMttR3q40_Ep-GlEUzsIJwhcw93wIBfrBQ0gpmSPai62XAaGvZHihXwfTrdqyKZ-4SUXqGQlhHmS0_5L3yd3kmLL7bbDYDHkAKLvfhZ7EQ-zvsycXDoVINsc2Wphsf8xONHFvKhpktLdFLztVEVeHqq9B2tfH2mbAaDtvNMiJ3W2_GO5EAqYwyToBf3U_ML05auYT9T1dSVR3ChxpyF_--1vpedFhkJBvBQWjVNt_JiEhiLp68hbM6EmYY",
@@ -137,7 +137,7 @@ export const SmallGroups = () => {
                                         <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzGyUmf4tniVAHAf_Ls1x_NEmpa2e-66syXDjmG-zchKjvvQ-mGmYzHtXQcdT9vS-o1m-nEF2r8LuUXQHOzoOAfA4XLnmM9IuSKUkDsjEIsrUzkv-A7al_8mL3vwlwk9QpexnjujLqdSegiIX1KhbwLuAtMfh6xINPqRsUPiWMApjlj2V1YR8WwaSyj6r2VvDbXonM4PS83ThgIAcX5jlFZ8c65jlRvPPun8pccPpgkVWA5VHybbdu6EdFe8Oz6o6c-zEj05mDEUI" alt="User" fill className="object-cover" />
                                     </div>
                                     <div className="space-y-2">
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">Ricardo Torres <span className="text-slate-500 font-light">en Generación Diferente</span></p>
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">Juan Pérez <span className="text-slate-500 font-light">en Generación Diferente</span></p>
                                         <p className="text-[10px] text-mivn-blue font-black uppercase tracking-widest">Hace 2 horas</p>
                                         <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                                             <p className="text-sm text-slate-600 dark:text-slate-400 italic">"¡Increíble tiempo de estudio anoche! Gracias a todos los que asistieron. 🙌"</p>
@@ -150,8 +150,8 @@ export const SmallGroups = () => {
                                     <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex-shrink-0 relative overflow-hidden">
                                         <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1tDPLlpE1GMumRXmYdyXcOi4jSwovZmCH1lyP9zXvl5foLm9bC26wlymD-SC-3HH4N1mgUL1ymn9vcUfwaq4N0GsK9RJpifw8X7XS8EgtJPdkqkLOyVltaFYYIAyHWnmG0molcjk7hP9BgQ69BFYRw3ZtT1EeZCmBHPbE8ElF2dMwiwf72FrbdL45exUtOSpmB4JVbWFYJGWJrhWkaY40wxrLpTX6d719Ze1f-6jjehB8PKGVC4XvuY6xpWaHtD61goJMlhF4VuE" alt="User" fill className="object-cover" />
                                     </div>
-                                    <div className="space-y-3">
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">Elena Ruiz <span className="text-slate-500 font-light">subió una foto</span></p>
+                                    <div className="space-y-2">
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">Mercedes Trinidad <span className="text-slate-500 font-light">subió una foto</span></p>
                                         <p className="text-[10px] text-mivn-blue font-black uppercase tracking-widest">Hace 5 horas</p>
                                         <div className="relative h-40 w-full rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
                                             <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCXP05QC4XfA1a0QoThCrYpBgEA680cS7I1q2ugZTmWv2zBpSV-hvsD5TthR8eKnl2PrmtPO1uGF5bf5SHp8S6Y2b-QNb5CpNUaU3ZjKfw0nZutrqxXn5aFBr7T5z3SZeA5sYupCOb-jsz0MBu7ejl3hVi0EiK1-vcgy8Io-5qGgtF2km4Zvr-WtIPT9mbOLV3lQlF-xdOJJCrOcdG4WQdbUbutG0kzGVjxgD2y2dbt7e8u0Dnkmg5uycUcpaYa0-vtRmNqrC_VYY" alt="Meeting" fill className="object-cover" />

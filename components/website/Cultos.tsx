@@ -14,26 +14,47 @@ interface CultosProps {
 export const Cultos = ({ liveStream, videos }: CultosProps) => {
     const [selectedVideo, setSelectedVideo] = useState<string | null>(liveStream?.videoId || null);
     const [filter, setFilter] = useState<string>("Todos");
-    const [timeLeft, setTimeLeft] = useState({
-        days: 2,
-        hours: 14,
-        minutes: 45,
-        seconds: 0
-    });
+    const [now, setNow] = useState<Date | null>(null);
 
     // Countdown timer effect
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-                if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-                if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-                if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-                return prev;
-            });
-        }, 1000);
+        setNow(new Date());
+        const timer = setInterval(() => setNow(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    const getTimeLeft = () => {
+        if (!now) return { days: "00", hours: "00", minutes: "00", seconds: "00" };
+
+        const targetDate = new Date(now);
+        // Calculate next Sunday relative to "now"'s date component
+        targetDate.setDate(now.getDate() + (7 - now.getDay()) % 7);
+        targetDate.setHours(10, 0, 0, 0);
+
+        // If it's Sunday but after 10 AM, target NEXT Sunday
+        if (now > targetDate) {
+            targetDate.setDate(targetDate.getDate() + 7);
+        }
+
+        const difference = targetDate.getTime() - now.getTime();
+
+        if (difference > 0) {
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / 1000 / 60) % 60);
+            const seconds = Math.floor((difference / 1000) % 60);
+
+            return {
+                days: days,
+                hours: hours,
+                minutes: minutes,
+                seconds: seconds
+            };
+        }
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    };
+
+    const timeLeft = getTimeLeft();
 
     const categories = ["Todos", "Dominical", "Jóvenes", "Oración", "Estudio"];
 
@@ -99,14 +120,15 @@ export const Cultos = ({ liveStream, videos }: CultosProps) => {
                         {[
                             { label: "Días", val: timeLeft.days },
                             { label: "Horas", val: timeLeft.hours },
-                            { label: "Min", val: timeLeft.minutes }
+                            { label: "Min", val: timeLeft.minutes },
+                            { label: "Seg", val: timeLeft.seconds }
                         ].map((time, i, arr) => (
                             <div key={i} className="flex items-center gap-6 md:gap-12">
                                 <div className="flex flex-col items-center gap-4">
                                     <div className="flex h-24 w-24 md:h-32 md:w-32 items-center justify-center rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl relative group">
                                         <div className="absolute inset-0 bg-mivn-gold/5 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <p className="text-mivn-gold text-4xl md:text-6xl font-black relative z-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
-                                            {time.val < 10 ? `0${time.val}` : time.val}
+                                            {Number(time.val) < 10 ? `0${time.val}` : time.val}
                                         </p>
                                     </div>
                                     <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em]">{time.label}</p>
@@ -280,8 +302,8 @@ export const Cultos = ({ liveStream, videos }: CultosProps) => {
                                     key={cat}
                                     onClick={() => setFilter(cat)}
                                     className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${filter === cat
-                                            ? "bg-mivn-blue text-white shadow-lg"
-                                            : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                        ? "bg-mivn-blue text-white shadow-lg"
+                                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
                                         }`}
                                 >
                                     {cat}

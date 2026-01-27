@@ -1,72 +1,112 @@
 "use client";
 
-import { useState } from "react";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { useState, useCallback } from "react";
+import { Upload, X, Image as ImageIcon, Check, Scissors } from "lucide-react";
+import { signCloudinaryParameters } from "@/app/actions/cloudinary";
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "@/lib/image-utils";
 
 interface ImageUploaderProps {
     onUploadComplete: (url: string) => void;
     currentImage?: string;
-    bucket?: string;
+    bucket?: string; // Se mantiene por retrocompatibilidad pero no se usa
     folder?: string;
+    aspectRatio?: number;
+    circularCrop?: boolean;
 }
 
 export function ImageUploader({
     onUploadComplete,
     currentImage,
-    bucket = "public",
-    folder = "uploads"
+    folder = "uploads",
+    aspectRatio = 16 / 9,
+    circularCrop = false
 }: ImageUploaderProps) {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState<string | null>(currentImage || null);
     const [error, setError] = useState<string | null>(null);
     const [isDragging, setIsDragging] = useState(false);
 
+    // Cropping states
+    const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+
+    const onCropComplete = useCallback((_croppedArea: any, croppedAreaPixels: any) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    }, []);
+
+    const handleUploadToCloudinary = async (fileBlob: Blob | File) => {
+        setUploading(true);
+        setError(null);
+
+        try {
+            const { timestamp, signature } = await signCloudinaryParameters({ folder });
+
+            const formData = new FormData();
+            formData.append("file", fileBlob);
+            formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+            formData.append("timestamp", timestamp.toString());
+            formData.append("signature", signature);
+            formData.append("folder", folder);
+
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || "Error al subir archivo a Cloudinary");
+            }
+
+            const data = await response.json();
+            const secureUrl = data.secure_url;
+
+            setPreview(secureUrl);
+            onUploadComplete(secureUrl);
+            setImageToCrop(null);
+        } catch (err: any) {
+            console.error('Error uploading image to Cloudinary:', err);
+            setError(err.message || 'Error al subir la imagen');
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const processFile = async (file: File) => {
-        // Validate file type
         if (!file.type.startsWith('image/')) {
             setError('Por favor selecciona una imagen válida');
             return;
         }
 
-        // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             setError('La imagen no puede ser mayor a 5MB');
             return;
         }
 
-        setError(null);
-        setUploading(true);
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            setImageToCrop(reader.result?.toString() || null);
+        });
+        reader.readAsDataURL(file);
+    };
+
+    const confirmCrop = async () => {
+        if (!imageToCrop || !croppedAreaPixels) return;
 
         try {
-            const supabase = createClient();
-
-            // Generate unique filename
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-            // Upload to Supabase Storage
-            const { data, error: uploadError } = await supabase.storage
-                .from(bucket)
-                .upload(fileName, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-
-            if (uploadError) throw uploadError;
-
-            // Get public URL
-            const { data: { publicUrl } } = supabase.storage
-                .from(bucket)
-                .getPublicUrl(fileName);
-
-            setPreview(publicUrl);
-            onUploadComplete(publicUrl);
-        } catch (err: any) {
-            console.error('Error uploading image:', err);
-            setError(err.message || 'Error al subir la imagen');
-        } finally {
-            setUploading(false);
+            const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+            if (croppedImage) {
+                await handleUploadToCloudinary(croppedImage);
+            }
+        } catch (e) {
+            console.error(e);
+            setError("Error al procesar el recorte de la imagen");
         }
     };
 
@@ -158,10 +198,96 @@ export function ImageUploader({
                 </div>
             )}
 
+            {/* Modal de Recorte */}
+            {imageToCrop && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-500">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-[3rem] overflow-hidden flex flex-col shadow-2xl border border-white/10">
+                        <div className="p-8 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-mivn-blue/10 rounded-2xl text-mivn-blue">
+                                    <Scissors className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Editar Imagen</h3>
+                                    <p className="text-xs text-slate-500 font-medium">Ajusta el área que deseas mostrar</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setImageToCrop(null)}
+                                className="p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400 transition-colors"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="relative h-[400px] md:h-[500px] bg-slate-100 dark:bg-black/20">
+                            <Cropper
+                                image={imageToCrop}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={aspectRatio}
+                                cropShape={circularCrop ? 'round' : 'rect'}
+                                showGrid={true}
+                                onCropChange={setCrop}
+                                onCropComplete={onCropComplete}
+                                onZoomChange={setZoom}
+                            />
+                        </div>
+
+                        <div className="p-10 space-y-8 bg-slate-50 dark:bg-white/5 mt-auto">
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    <span>Zoom</span>
+                                    <span>{Math.round(zoom * 100)}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    value={zoom}
+                                    min={1}
+                                    max={3}
+                                    step={0.1}
+                                    aria-labelledby="Zoom"
+                                    onChange={(e) => setZoom(Number(e.target.value))}
+                                    className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-mivn-blue"
+                                />
+                            </div>
+
+                            <div className="flex items-center justify-end gap-6 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setImageToCrop(null)}
+                                    className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-rose-500 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={uploading}
+                                    onClick={confirmCrop}
+                                    className="flex items-center gap-4 px-10 py-5 bg-mivn-blue text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                                >
+                                    {uploading ? (
+                                        <>
+                                            <div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            Subiendo...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Check className="w-4 h-4" />
+                                            Aplicar y Subir
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {error && (
-                <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 p-3 rounded-xl flex items-center gap-2 text-rose-500 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 p-4 rounded-[1.5rem] flex items-center gap-3 text-rose-500 animate-in fade-in slide-in-from-top-2 duration-300">
                     <X className="w-4 h-4 shrink-0" />
-                    <p className="text-[10px] font-bold uppercase tracking-widest">{error}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">{error}</p>
                 </div>
             )}
         </div>

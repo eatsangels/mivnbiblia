@@ -2,16 +2,100 @@
 
 import {
     Calendar as CalendarIcon, Edit3, MapPin, User, ChevronLeft, ChevronRight,
-    Download, TrendingUp, Users, CheckCircle2, AlertCircle, PlusCircle
+    Download, TrendingUp, Users, CheckCircle2, AlertCircle, PlusCircle, Trash2
 } from "lucide-react";
 
 import Link from "next/link";
+import { useState, useTransition, useRef } from "react";
+import { createEvent, updateEvent, deleteEvent } from "@/app/(estudio)/admin/events/actions";
+import { FormCloudinaryUpload } from "@/components/ui/FormCloudinaryUpload";
+import { Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 export interface EventManagerProps {
     initialEvents: any[];
 }
 
 export function EventManager({ initialEvents }: EventManagerProps) {
+    const [isPending, startTransition] = useTransition();
+    const [editingEvent, setEditingEvent] = useState<any | null>(null);
+    const formRef = useRef<HTMLFormElement>(null);
+    const formSectionRef = useRef<HTMLDivElement>(null);
+
+    const handleScrollToForm = () => {
+        formSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const handleEditClick = (event: any) => {
+        setEditingEvent(event);
+        handleScrollToForm();
+
+        // Slight delay to allow state update before focusing or just to ensure visual readiness
+        setTimeout(() => {
+            // If we needed to manually set inputs we could do it here, but key={editingEvent?.id} on form is cleaner
+        }, 100);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingEvent(null);
+        formRef.current?.reset();
+    };
+
+    const handleDelete = (id: string) => {
+        if (confirm("¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.")) {
+            startTransition(async () => {
+                const result = await deleteEvent(id);
+                if (result.success) {
+                    alert("Evento eliminado exitosamente");
+                    if (editingEvent?.id === id) {
+                        setEditingEvent(null);
+                        formRef.current?.reset();
+                    }
+                } else {
+                    alert("Error: " + result.errorMsg);
+                }
+            });
+        }
+    };
+
+    const handleSubmit = (formData: FormData) => {
+        // Combine date and time
+        const datePart = formData.get("date_part") as string;
+        const timePart = formData.get("time_part") as string;
+
+        if (datePart && timePart) {
+            const combined = new Date(`${datePart}T${timePart}`);
+            formData.set("date", combined.toISOString());
+        }
+
+        const action = editingEvent ? updateEvent : createEvent;
+
+        // Ensure ID is appended for updates
+        if (editingEvent) {
+            formData.append("id", editingEvent.id);
+        }
+
+        const promise = new Promise(async (resolve, reject) => {
+            const result = await action(formData);
+            if (result.success) {
+                if (editingEvent) {
+                    setEditingEvent(null);
+                    formRef.current?.reset();
+                } else {
+                    formRef.current?.reset();
+                }
+                resolve(true);
+            } else {
+                reject(result.errorMsg);
+            }
+        });
+
+        toast.promise(promise, {
+            loading: editingEvent ? 'Actualizando evento...' : 'Creando evento...',
+            success: editingEvent ? 'Evento actualizado exitosamente' : 'Evento creado exitosamente',
+            error: (err: any) => `Error: ${err}`
+        });
+    };
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Page Heading */}
@@ -24,55 +108,128 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                         Administra y calendariza los eventos del Ministerio Internacional Vida Nueva.
                     </p>
                 </div>
-                <button className="flex items-center gap-3 bg-mivn-blue text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 transition-all">
+                <button
+                    onClick={handleScrollToForm}
+                    className="flex items-center gap-3 bg-mivn-blue text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 transition-all">
                     <PlusCircle className="w-5 h-5" /> Nuevo Evento
                 </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                {/* Left Sidebar: Create Form & Summary */}
-                <div className="lg:col-span-4 space-y-6">
-                    {/* Create Event Form */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-xl">
-                        <h2 className="text-xl font-bold font-playfair text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-                            <Edit3 className="w-5 h-5 text-mivn-blue" /> Crear Nuevo Evento
-                        </h2>
+                <div className="lg:col-span-4 space-y-6" ref={formSectionRef}>
+                    {/* Create/Edit Event Form */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-xl transition-all duration-300">
+                        <div className="flex justify-between items-start mb-8">
+                            <h2 className="text-xl font-bold font-playfair text-slate-900 dark:text-white flex items-center gap-3">
+                                {editingEvent ? <Edit3 className="w-5 h-5 text-mivn-gold" /> : <PlusCircle className="w-5 h-5 text-mivn-blue" />}
+                                {editingEvent ? "Editar Evento" : "Crear Nuevo Evento"}
+                            </h2>
+                            {editingEvent && (
+                                <button onClick={handleCancelEdit} className="text-xs text-rose-500 font-bold hover:underline">
+                                    Cancelar
+                                </button>
+                            )}
+                        </div>
 
-                        <form action={async (formData) => {
-                            const { createEvent } = await import("@/app/(estudio)/admin/events/actions");
-                            const result = await createEvent(formData);
-                            if (result.success) {
-                                // Simple way to reset form or show success
-                                alert("Evento creado exitosamente");
-                            } else {
-                                alert("Error: " + result.error);
-                            }
-                        }} className="space-y-6">
+                        <form
+                            ref={formRef}
+                            key={editingEvent ? editingEvent.id : 'new'}
+                            action={handleSubmit}
+                            className="space-y-6"
+                        >
+                            {editingEvent && <input type="hidden" name="id" value={editingEvent.id} />}
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Título del Evento</label>
                                 <input
                                     name="title"
                                     required
+                                    defaultValue={editingEvent?.title || ""}
                                     className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold placeholder:text-slate-400 placeholder:font-normal"
                                     placeholder="Ej: Gran Congreso de Alabanza"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Fecha</label>
-                                <input
-                                    type="datetime-local"
-                                    name="date"
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Descripción del Evento</label>
+                                <textarea
+                                    name="description"
                                     required
-                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
+                                    defaultValue={editingEvent?.description || ""}
+                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold placeholder:text-slate-400 placeholder:font-normal h-32 resize-none"
+                                    placeholder="Describe los detalles del evento..."
                                 />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Imagen del Evento</label>
+                                <div className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4">
+                                    <FormCloudinaryUpload
+                                        name="image_url"
+                                        label="Arrastra o selecciona una imagen"
+                                        defaultValue={editingEvent?.image_url || editingEvent?.image || ""}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-4 bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10">
+                                <div className="flex items-center gap-2">
+                                    <Sparkles className={`w-5 h-5 ${editingEvent?.is_featured ? 'text-mivn-gold' : 'text-slate-400'}`} />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Destacado</span>
+                                </div>
+                                <label className="relative inline-flex items-center cursor-pointer ml-auto">
+                                    <input type="checkbox" name="is_featured" className="sr-only peer" defaultChecked={editingEvent?.is_featured} />
+                                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-mivn-gold"></div>
+                                </label>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Fecha</label>
+                                    <input
+                                        type="date"
+                                        name="date_part"
+                                        required
+                                        defaultValue={(() => {
+                                            const dateVal = editingEvent?.start_time || editingEvent?.event_date;
+                                            if (!dateVal) return "";
+                                            try {
+                                                const date = new Date(dateVal);
+                                                return date.toISOString().slice(0, 10);
+                                            } catch (e) { return ""; }
+                                        })()}
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold appearance-none"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Hora</label>
+                                    <input
+                                        type="time"
+                                        name="time_part"
+                                        required
+                                        defaultValue={(() => {
+                                            const dateVal = editingEvent?.start_time || editingEvent?.event_date;
+                                            if (!dateVal) return "19:30";
+                                            try {
+                                                const date = new Date(dateVal);
+                                                // Adjust to local time string for input type=time
+                                                const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+                                                return localDate.toISOString().slice(11, 16);
+                                            } catch (e) { return "19:30"; }
+                                        })()}
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold appearance-none"
+                                    />
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Categoría</label>
-                                    <select name="category" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold text-sm appearance-none cursor-pointer">
+                                    <select
+                                        name="category"
+                                        defaultValue={editingEvent?.category || "Culto"}
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold text-sm appearance-none cursor-pointer"
+                                    >
                                         <option>Culto</option>
                                         <option>Taller</option>
                                         <option>Congreso</option>
@@ -84,6 +241,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                     <input
                                         type="number"
                                         name="capacity"
+                                        defaultValue={editingEvent?.capacity || ""}
                                         className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                         placeholder="0"
                                     />
@@ -96,6 +254,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                     <MapPin className="absolute left-5 top-4 w-5 h-5 text-slate-400" />
                                     <input
                                         name="location"
+                                        defaultValue={editingEvent?.location || ""}
                                         className="w-full pl-14 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pr-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                         placeholder="Templo Principal"
                                     />
@@ -108,14 +267,18 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                     <User className="absolute left-5 top-4 w-5 h-5 text-slate-400" />
                                     <input
                                         name="speaker"
+                                        defaultValue={editingEvent?.speaker || ""}
                                         className="w-full pl-14 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pr-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-900 dark:text-white font-bold"
                                         placeholder="Nombre del Invitado"
                                     />
                                 </div>
                             </div>
 
-                            <button type="submit" className="w-full bg-mivn-blue text-white font-black uppercase tracking-[0.2em] text-xs py-5 rounded-[1.5rem] shadow-xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all mt-4">
-                                Programar Evento
+                            <button
+                                type="submit"
+                                disabled={isPending}
+                                className={`w-full text-white font-black uppercase tracking-[0.2em] text-xs py-5 rounded-[1.5rem] shadow-xl hover:scale-[1.02] active:scale-95 transition-all mt-4 disabled:opacity-70 disabled:cursor-not-allowed ${editingEvent ? 'bg-mivn-gold shadow-mivn-gold/20' : 'bg-mivn-blue shadow-mivn-blue/20'}`}>
+                                {isPending ? (editingEvent ? "Guardando..." : "Programando...") : (editingEvent ? "Guardar Cambios" : "Programar Evento")}
                             </button>
                         </form>
                     </div>
@@ -132,7 +295,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-slate-500 font-medium">Próximos</span>
                                 <span className="text-mivn-gold font-bold text-xl">
-                                    {initialEvents.filter(e => new Date(e.date) >= new Date()).length}
+                                    {initialEvents.filter(e => new Date(e.event_date) >= new Date()).length}
                                 </span>
                             </div>
                         </div>
@@ -192,8 +355,10 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                                 <td className="px-8 py-6">
                                                     <div className="flex flex-col">
                                                         <span className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight">{event.title}</span>
-                                                        <span className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wide">
-                                                            {new Date(event.date).toLocaleDateString()} | {event.time}
+                                                        <span className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-wide">
+                                                            {new Date(event.event_date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                                            <span className="mx-2">•</span>
+                                                            {event.start_time ? new Date(event.start_time).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true }) : 'Hora por definir'}
                                                         </span>
                                                     </div>
                                                 </td>
@@ -203,8 +368,15 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                                     </span>
                                                 </td>
                                                 <td className="px-8 py-6 text-right">
-                                                    <button className="inline-flex items-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-all">
+                                                    <button
+                                                        onClick={() => handleEditClick(event)}
+                                                        className="inline-flex items-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-all">
                                                         <Edit3 className="w-3 h-3" /> Editar
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(event.id)}
+                                                        className="inline-flex items-center gap-2 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all ml-2">
+                                                        <Trash2 className="w-3 h-3" />
                                                     </button>
                                                 </td>
                                             </tr>

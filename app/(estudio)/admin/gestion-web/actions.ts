@@ -86,42 +86,50 @@ export async function updateWebSettings(settings: Partial<WebSettings>) {
     return { success: true };
 }
 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 /**
- * Upload logo to Supabase Storage
+ * Upload logo to Cloudinary
  */
 export async function uploadLogo(formData: FormData, type: 'main' | 'footer' = 'main') {
-    const supabase = await createClient();
     const file = formData.get('file') as File;
 
     if (!file) {
         throw new Error('No file provided');
     }
 
-    // Generate unique filename
-    const fileExt = file.name.split('.').pop();
-    const fileName = `logo_${type}_${Date.now()}.${fileExt}`;
-    const filePath = `logos/${fileName}`;
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
-        .from('public')
-        .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: true
-        });
+        const uploadResult = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream({
+                folder: 'logos',
+                public_id: `logo_${type}_${Date.now()}`,
+                resource_type: 'auto'
+            }, (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            }).end(buffer);
+        }) as any;
 
-    if (error) throw error;
+        const publicUrl = uploadResult.secure_url;
 
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-        .from('public')
-        .getPublicUrl(filePath);
+        // Update site settings
+        const settingKey = type === 'main' ? 'logo_url' : 'logo_footer_url';
+        await updateWebSettings({ [settingKey]: publicUrl });
 
-    // Update site settings
-    const settingKey = type === 'main' ? 'logo_url' : 'logo_footer_url';
-    await updateWebSettings({ [settingKey]: publicUrl });
-
-    return { success: true, url: publicUrl };
+        return { success: true, url: publicUrl };
+    } catch (error: any) {
+        console.error('Error uploading logo to Cloudinary:', error);
+        throw new Error(error.message || 'Error al subir el logo');
+    }
 }
 
 /**

@@ -1,9 +1,11 @@
-'use client';
-
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
-import { Camera, Loader2, User as UserIcon } from 'lucide-react';
+import { Camera, Loader2, User as UserIcon, Check, X, Scissors } from 'lucide-react';
 import Image from 'next/image';
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "@/lib/image-utils";
+
+import { signCloudinaryParameters } from '@/app/actions/cloudinary';
 
 interface AvatarUploadProps {
     userId: string;
@@ -16,36 +18,53 @@ export function AvatarUpload({ userId, initialUrl, onUploadComplete }: AvatarUpl
     const [avatarUrl, setAvatarUrl] = useState<string | null>(initialUrl || null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // Cropping states
+    const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+
     const supabase = createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onCropComplete = useCallback((_croppedArea: any, croppedAreaPixels: any) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    }, []);
+
+    const handleUploadToCloudinary = async (fileBlob: Blob | File) => {
         try {
             setUploading(true);
 
-            if (!event.target.files || event.target.files.length === 0) {
-                throw new Error('Debes seleccionar una imagen para subir.');
+            // 1. Get Signature from Server
+            const { timestamp, signature } = await signCloudinaryParameters({ folder: "avatars" });
+
+            // 2. Upload to Cloudinary via REST API
+            const formData = new FormData();
+            formData.append("file", fileBlob);
+            formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+            formData.append("timestamp", timestamp.toString());
+            formData.append("signature", signature);
+            formData.append("folder", "avatars");
+
+            const uploadResponse = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            if (!uploadResponse.ok) {
+                const errorData = await uploadResponse.json();
+                throw new Error(errorData.error?.message || "Error al subir archivo a Cloudinary");
             }
 
-            const file = event.target.files[0];
-            const fileExt = file.name.split('.').pop();
-            const filePath = `${userId}-${Math.random()}.${fileExt}`;
+            const uploadData = await uploadResponse.json();
+            const publicUrl = uploadData.secure_url;
 
-            // 1. Upload to Supabase Storage
-            const { error: uploadError } = await supabase.storage
-                .from('avatars')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            // 2. Get Public URL
-            const { data: { publicUrl } } = supabase.storage
-                .from('avatars')
-                .getPublicUrl(filePath);
-
-            // 3. Update Profile Table
+            // 3. Update Profile Table in Supabase
             const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ avatar_url: publicUrl })
@@ -55,11 +74,38 @@ export function AvatarUpload({ userId, initialUrl, onUploadComplete }: AvatarUpl
 
             setAvatarUrl(publicUrl);
             if (onUploadComplete) onUploadComplete(publicUrl);
+            setImageToCrop(null);
 
         } catch (error: any) {
+            console.error('Avatar upload error:', error);
             alert(error.message);
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!event.target.files || event.target.files.length === 0) return;
+
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            setImageToCrop(reader.result?.toString() || null);
+        });
+        reader.readAsDataURL(file);
+    };
+
+    const confirmCrop = async () => {
+        if (!imageToCrop || !croppedAreaPixels) return;
+
+        try {
+            const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+            if (croppedImage) {
+                await handleUploadToCloudinary(croppedImage);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error al procesar el recorte de la imagen");
         }
     };
 
@@ -96,10 +142,78 @@ export function AvatarUpload({ userId, initialUrl, onUploadComplete }: AvatarUpl
             <input
                 type="file"
                 ref={fileInputRef}
-                onChange={handleUpload}
+                onChange={handleFileChange}
                 accept="image/*"
                 className="hidden"
             />
+
+            {/* Modal de Recorte de Avatar */}
+            {imageToCrop && (
+                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
+                    <div className="bg-gray-900 w-full max-w-lg rounded-[2.5rem] overflow-hidden flex flex-col border border-white/10 shadow-3xl">
+                        <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-gold-500/10 rounded-xl text-gold-500">
+                                    <Scissors className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-lg font-bold text-white uppercase tracking-tight">Recortar Foto</h3>
+                            </div>
+                            <button onClick={() => setImageToCrop(null)} className="text-gray-500 hover:text-white transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="relative h-[350px] bg-black">
+                            <Cropper
+                                image={imageToCrop}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                cropShape="round"
+                                showGrid={false}
+                                onCropChange={setCrop}
+                                onCropComplete={onCropComplete}
+                                onZoomChange={setZoom}
+                            />
+                        </div>
+
+                        <div className="p-8 space-y-6">
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-gray-500">
+                                    <span>Zoom</span>
+                                    <span>{Math.round(zoom * 100)}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    value={zoom}
+                                    min={1}
+                                    max={3}
+                                    step={0.1}
+                                    onChange={(e) => setZoom(Number(e.target.value))}
+                                    className="w-full h-1 bg-gray-800 rounded-full appearance-none cursor-pointer accent-gold-500"
+                                />
+                            </div>
+
+                            <div className="flex items-center justify-end gap-4">
+                                <button
+                                    onClick={() => setImageToCrop(null)}
+                                    className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    disabled={uploading}
+                                    onClick={confirmCrop}
+                                    className="flex items-center gap-3 px-8 py-4 bg-gold-600 text-black rounded-2xl font-black uppercase tracking-widest text-[9px] hover:bg-gold-500 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                                >
+                                    {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                    Guardar Foto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

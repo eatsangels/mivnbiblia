@@ -90,8 +90,8 @@ export const getEventBySlug = cache(async (slug: string) => {
         .select("*")
         .eq("slug", slug)
         .or('is_published.eq.true,is_published.is.null')
-        .single();
+        .maybeSingle();
 
     if (error) throw error;
-    return data as Event;
+    return data as Event | null;
 });

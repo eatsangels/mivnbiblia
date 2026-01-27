@@ -8,10 +8,11 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function signCloudinaryParameters() {
+export async function signCloudinaryParameters(params: Record<string, any> = {}) {
     const timestamp = Math.round(new Date().getTime() / 1000);
     const signature = cloudinary.utils.api_sign_request(
         {
+            ...params,
             timestamp,
         },
         process.env.CLOUDINARY_API_SECRET!

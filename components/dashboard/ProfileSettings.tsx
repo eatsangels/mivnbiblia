@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
     User, Mail, Phone, Calendar, MapPin, Church,
     Heart, Shield, Bell, LogOut, Save, Camera,
     Check, Loader2, Star, Users, Home, BookOpen,
-    ArrowLeft, BellRing, UserCheck, ShieldCheck, Info
+    ArrowLeft, BellRing, UserCheck, ShieldCheck, Info, Scissors, X
 } from "lucide-react";
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "@/lib/image-utils";
+import { signCloudinaryParameters } from "@/app/actions/cloudinary";
 
 export interface ProfileData {
     id: string;
@@ -24,6 +27,9 @@ export interface ProfileData {
     small_group?: string | null;
     ministry?: string | null;
     baptism_date?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    is_location_public?: boolean | null;
     role?: string | null;
 }
 
@@ -35,12 +41,21 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [activeSection, setActiveSection] = useState("personal");
 
+    // Cropping states
+    const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+
     const [formData, setFormData] = useState({
         username: profile.username || '',
         full_name: profile.full_name || '',
         phone: profile.phone || '',
         birth_date: profile.birth_date || '',
         address: profile.address || '',
+        latitude: profile.latitude || 0,
+        longitude: profile.longitude || 0,
+        is_location_public: profile.is_location_public || false,
         notifications_email: true,
         notifications_push: false,
     });
@@ -50,43 +65,81 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files || e.target.files.length === 0) return;
+    const onCropComplete = useCallback((_croppedArea: any, croppedAreaPixels: any) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    }, []);
 
-        const file = e.target.files[0];
-        const fileExt = file.name.split('.').pop();
-        const filePath = `${profile.id}/${Math.random()}.${fileExt}`;
-
+    const handleUploadToCloudinary = async (fileBlob: Blob | File) => {
         setIsLoading(true);
         setMessage(null);
 
-        const { error: uploadError } = await supabase.storage
-            .from('avatars')
-            .upload(filePath, file);
+        try {
+            const { timestamp, signature } = await signCloudinaryParameters({ folder: "avatars" });
 
-        if (uploadError) {
-            setMessage({ type: 'error', text: 'Error al subir imagen.' });
-            setIsLoading(false);
-            return;
-        }
+            const formDataToCloudinary = new FormData();
+            formDataToCloudinary.append("file", fileBlob);
+            formDataToCloudinary.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+            formDataToCloudinary.append("timestamp", timestamp.toString());
+            formDataToCloudinary.append("signature", signature);
+            formDataToCloudinary.append("folder", "avatars");
 
-        const { data: { publicUrl } } = supabase.storage
-            .from('avatars')
-            .getPublicUrl(filePath);
+            const uploadResponse = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formDataToCloudinary,
+                }
+            );
 
-        const { error: updateError } = await supabase
-            .from('profiles')
-            .update({ avatar_url: publicUrl })
-            .eq('id', profile.id);
+            if (!uploadResponse.ok) {
+                const errorData = await uploadResponse.json();
+                throw new Error(errorData.error?.message || "Error al subir archivo a Cloudinary");
+            }
 
-        if (updateError) {
-            setMessage({ type: 'error', text: 'Error al actualizar perfil.' });
-        } else {
+            const uploadData = await uploadResponse.json();
+            const publicUrl = uploadData.secure_url;
+
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ avatar_url: publicUrl })
+                .eq('id', profile.id);
+
+            if (updateError) throw updateError;
+
             setAvatarUrl(publicUrl);
             setMessage({ type: 'success', text: 'Foto de perfil actualizada.' });
+            setImageToCrop(null);
             router.refresh();
+        } catch (error: any) {
+            console.error('Avatar upload error:', error);
+            setMessage({ type: 'error', text: error.message || 'Error al subir imagen.' });
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
+    };
+
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) return;
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            setImageToCrop(reader.result?.toString() || null);
+        });
+        reader.readAsDataURL(file);
+    };
+
+    const confirmCrop = async () => {
+        if (!imageToCrop || !croppedAreaPixels) return;
+
+        try {
+            const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+            if (croppedImage) {
+                await handleUploadToCloudinary(croppedImage);
+            }
+        } catch (e) {
+            console.error(e);
+            setMessage({ type: 'error', text: "Error al procesar el recorte de la imagen" });
+        }
     };
 
     const handleSave = async (e: React.FormEvent) => {
@@ -101,7 +154,10 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                 username: formData.username,
                 phone: formData.phone,
                 birth_date: formData.birth_date || null,
-                address: formData.address || null
+                address: formData.address || null,
+                latitude: formData.latitude || null,
+                longitude: formData.longitude || null,
+                is_location_public: formData.is_location_public
             })
             .eq('id', profile.id);
 
@@ -271,12 +327,78 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                 </div>
                                 <div className="space-y-3 md:col-span-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Dirección</label>
+                                    <div className="flex gap-4">
+                                        <input
+                                            type="text"
+                                            value={formData.address || ''}
+                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                            className="grow bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none"
+                                            placeholder="Ingresa tu dirección para aparecer en el mapa"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                if (!formData.address) {
+                                                    setMessage({ type: 'error', text: 'Ingresa una dirección primero.' });
+                                                    return;
+                                                }
+                                                setIsLoading(true);
+                                                try {
+                                                    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(formData.address)}`);
+                                                    const data = await res.json();
+                                                    if (data && data.length > 0) {
+                                                        const { lat, lon } = data[0];
+                                                        setFormData({ ...formData, latitude: parseFloat(lat), longitude: parseFloat(lon) });
+                                                        setMessage({ type: 'success', text: 'Ubicación encontrada correctamente.' });
+                                                    } else {
+                                                        setMessage({ type: 'error', text: 'No se encontraron coordenadas.' });
+                                                    }
+                                                } catch (e) {
+                                                    setMessage({ type: 'error', text: 'Error al buscar ubicación.' });
+                                                }
+                                                setIsLoading(false);
+                                            }}
+                                            className="bg-mivn-blue text-white px-6 rounded-2xl hover:scale-105 transition-transform"
+                                            title="Buscar coordenadas"
+                                        >
+                                            <MapPin className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Latitud</label>
                                     <input
-                                        type="text"
-                                        value={formData.address || ''}
-                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                        type="number"
+                                        step="any"
+                                        value={formData.latitude || ''}
+                                        onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) || 0 })}
                                         className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none"
                                     />
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Longitud</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        value={formData.longitude || ''}
+                                        onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) || 0 })}
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none"
+                                    />
+                                </div>
+                                <div className="md:col-span-2 p-6 bg-mivn-blue/5 rounded-3xl border border-mivn-blue/10 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white">Compartir en Mapa Comunitario</p>
+                                        <p className="text-xs text-slate-500 italic font-light">Muestra tu ubicación general a otros miembros para contactar contigo.</p>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.is_location_public}
+                                            onChange={(e) => setFormData({ ...formData, is_location_public: e.target.checked })}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-14 h-7 bg-slate-200 dark:bg-white/10 rounded-full peer peer-checked:bg-mivn-blue after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-5 after:w-7 after:transition-all peer-checked:after:translate-x-full" />
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -435,6 +557,76 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                     </div>
 
                 </form>
+
+                {/* Modal de Recorte de Avatar */}
+                {imageToCrop && (
+                    <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-4">
+                        <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl border border-white/10">
+                            <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-mivn-blue/10 rounded-xl text-mivn-blue">
+                                        <Scissors className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-tight">Recortar Foto</h3>
+                                </div>
+                                <button onClick={() => setImageToCrop(null)} className="text-slate-400 hover:text-rose-500 transition-colors">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="relative h-[350px] bg-slate-100 dark:bg-black/40">
+                                <Cropper
+                                    image={imageToCrop}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    aspect={1}
+                                    cropShape="round"
+                                    showGrid={false}
+                                    onCropChange={setCrop}
+                                    onCropComplete={onCropComplete}
+                                    onZoomChange={setZoom}
+                                />
+                            </div>
+
+                            <div className="p-8 space-y-6 bg-slate-50 dark:bg-white/5">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-slate-400">
+                                        <span>Zoom</span>
+                                        <span>{Math.round(zoom * 100)}%</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        value={zoom}
+                                        min={1}
+                                        max={3}
+                                        step={0.1}
+                                        onChange={(e) => setZoom(Number(e.target.value))}
+                                        className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-mivn-blue"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-end gap-6 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setImageToCrop(null)}
+                                        className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-rose-500 transition-colors"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        disabled={isLoading}
+                                        onClick={confirmCrop}
+                                        className="flex items-center gap-3 px-8 py-4 bg-mivn-blue text-white rounded-2xl font-black uppercase tracking-widest text-[9px] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-mivn-blue/20 disabled:opacity-50"
+                                    >
+                                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                        Finalizar Recorte
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div >
         </div >
     );

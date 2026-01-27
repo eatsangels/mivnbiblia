@@ -193,7 +193,7 @@ export function SpiritualAnalytics() {
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                 {[
-                                    { name: "Ricardo M.", code: "RM", members: 14, status: "Creciendo", color: "text-emerald-500 bg-emerald-500/10", health: 3 },
+                                    { name: "Usuario A.", code: "UA", members: 14, status: "Creciendo", color: "text-emerald-500 bg-emerald-500/10", health: 3 },
                                     { name: "Sofía L.", code: "SL", members: 8, status: "Estable", color: "text-amber-500 bg-amber-500/10", health: 2 },
                                     { name: "Carlos P.", code: "CP", members: 5, status: "Atención", color: "text-rose-500 bg-rose-500/10", health: 1 },
                                 ].map((group, i) => (

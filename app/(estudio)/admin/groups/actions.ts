@@ -5,7 +5,25 @@ import { revalidatePath } from "next/cache";
 
 import { Database } from "@/lib/database.types";
 
-export type SmallGroup = Database['public']['Tables']['small_groups']['Row'];
+// export type SmallGroup = Database['public']['Tables']['small_groups']['Row'];
+export interface SmallGroup {
+    id: string;
+    name: string;
+    category: string;
+    leader: string;
+    description: string | null;
+    members_count: number;
+    image_url: string | null;
+    leader_image_url: string | null;
+    schedule: string | null;
+    location: string | null;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    is_location_public?: boolean | null;
+}
 
 // Get all small groups
 export async function getSmallGroups(): Promise<SmallGroup[]> {
@@ -26,7 +44,21 @@ export async function getSmallGroups(): Promise<SmallGroup[]> {
 }
 
 // Create small group
-export async function createSmallGroup(group: Omit<SmallGroup, 'id' | 'created_at' | 'updated_at'>) {
+export async function createSmallGroup(group: {
+    name: string;
+    category: string;
+    leader: string;
+    description?: string;
+    members_count: number;
+    image_url?: string;
+    leader_image_url?: string;
+    schedule?: string;
+    location?: string;
+    is_active: boolean;
+    latitude?: number;
+    longitude?: number;
+    is_location_public?: boolean;
+}) {
     const supabase = await createClient();
 
     // Check admin
@@ -57,7 +89,21 @@ export async function createSmallGroup(group: Omit<SmallGroup, 'id' | 'created_a
 }
 
 // Update small group
-export async function updateSmallGroup(id: string, group: Partial<SmallGroup>) {
+export async function updateSmallGroup(id: string, group: {
+    name?: string;
+    category?: string;
+    leader?: string;
+    description?: string;
+    members_count?: number;
+    image_url?: string;
+    leader_image_url?: string;
+    schedule?: string;
+    location?: string;
+    is_active?: boolean;
+    latitude?: number;
+    longitude?: number;
+    is_location_public?: boolean;
+}) {
     const supabase = await createClient();
 
     // Check admin
@@ -114,4 +160,23 @@ export async function deleteSmallGroup(id: string) {
 
     revalidatePath('/grupos');
     return { success: true };
+}
+
+// Get public member locations for community map
+export async function getPublicMemberLocations() {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url, latitude, longitude, address')
+        .eq('is_location_public', true)
+        .not('latitude', 'is', null)
+        .not('longitude', 'is', null);
+
+    if (error) {
+        console.error('Error fetching member locations:', error);
+        return [];
+    }
+
+    return data || [];
 }

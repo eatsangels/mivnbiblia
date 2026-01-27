@@ -573,7 +573,7 @@ export default function RegisterPage() {
                             <p className="text-xl md:text-2xl text-slate-800 dark:text-gray-200 font-light italic leading-relaxed max-w-3xl mx-auto">
                                 "Nos alegra inmensamente que hayas dado este paso de fe. MIVN no es solo una iglesia, es tu casa y tu familia. ¡Estamos emocionados de verte crecer y servir juntos!"
                             </p>
-                            <p className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">— Pastores Juan & Elena</p>
+                            <p className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">— Los Pastores Luis Santana y Mercedes Trinidad</p>
                         </div>
                     </div>
                 </div>

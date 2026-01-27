@@ -1,20 +1,44 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
     MapPin, Plus, Minus, Crosshair, Users, ChevronDown,
-    Map, ChevronRight, Calendar, User, Search, Clock,
-    Music, Heart, BookOpen
+    ChevronRight, Calendar, User, Search, Clock,
+    Music, Heart, BookOpen, Map as MapIcon, Sparkles
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type SmallGroup } from "@/app/(estudio)/admin/groups/actions";
 
+// Leaflet imports
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default marker icons in Leaflet with Next.js
+const customIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const memberIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
 interface GroupsExplorerProps {
     initialGroups: SmallGroup[];
+    memberLocations?: any[];
 }
 
-// Helper function to get icon based on category
 const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
         case 'jóvenes': return User;
@@ -27,9 +51,28 @@ const getCategoryIcon = (category: string) => {
     }
 };
 
-export function GroupsExplorer({ initialGroups }: GroupsExplorerProps) {
+const defaultCenter: [number, number] = [33.7490, -84.3880];
+
+// Component to handle map center changes
+function ChangeView({ center, zoom }: { center: [number, number], zoom: number }) {
+    const map = useMap();
+    useEffect(() => {
+        map.setView(center, zoom);
+    }, [center, zoom, map]);
+    return null;
+}
+
+export function GroupsExplorer({ initialGroups, memberLocations = [] }: GroupsExplorerProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("Todos");
+    const [selectedGroup, setSelectedGroup] = useState<SmallGroup | any | null>(null);
+    const [showMembers, setShowMembers] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
+
+    // Leaflet needs to be initialized only on the client
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const categories = ["Todos", "Jóvenes", "Parejas", "Alabanza", "Oración", "Estudio", "Niños"];
 
@@ -46,70 +89,144 @@ export function GroupsExplorer({ initialGroups }: GroupsExplorerProps) {
         });
     }, [initialGroups, searchQuery, categoryFilter]);
 
-    const scrollToGroups = () => {
-        const element = document.getElementById('results-list');
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
+    // const scrollToGroups = () => {
+    //     const element = document.getElementById('results-list');
+    //     if (element) {
+    //         element.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    // };
+
+    const mapCenter: [number, number] = selectedGroup && selectedGroup.latitude && selectedGroup.longitude
+        ? [selectedGroup.latitude, selectedGroup.longitude]
+        : defaultCenter;
 
     return (
-        <div className="flex flex-col md:row h-[calc(100vh-64px)] overflow-hidden">
+        <div className="flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
             {/* Left Pane: Interactive Map */}
             <section className="flex-1 relative order-2 md:order-1 h-1/2 md:h-full bg-slate-200">
                 <div className="absolute inset-0">
-                    <Image
-                        src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000"
-                        alt="Mapa de la ciudad"
-                        fill
-                        className="object-cover opacity-80"
-                    />
-
-                    {/* Dynamic Pins - Conceptual positioning based on ID parity/count */}
-                    {filteredGroups.slice(0, 5).map((group, i) => (
-                        <div
-                            key={group.id}
-                            style={{
-                                top: `${20 + (i * 15) % 60}%`,
-                                left: `${20 + (i * 20) % 60}%`
-                            }}
-                            className="absolute text-mivn-gold drop-shadow-xl cursor-pointer hover:scale-125 transition-transform group"
-                            onClick={() => {
-                                const el = document.getElementById(`group-${group.id}`);
-                                el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }}
-                        >
-                            <MapPin className="w-10 h-10 fill-current" />
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white dark:bg-slate-900 px-3 py-1 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-slate-100 dark:border-white/10">
-                                <p className="text-[10px] font-black uppercase tracking-widest">{group.name}</p>
+                    {!isMounted ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900/50 p-8 text-center space-y-6">
+                            <div className="relative">
+                                <MapIcon className="w-20 h-20 text-slate-300 dark:text-slate-700 animate-pulse" />
                             </div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Preparando Mapa...</span>
                         </div>
-                    ))}
+                    ) : (
+                        <MapContainer
+                            center={defaultCenter}
+                            zoom={13}
+                            scrollWheelZoom={true}
+                            style={{ width: '100%', height: '100%' }}
+                            zoomControl={false}
+                        >
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+
+                            <ChangeView center={mapCenter} zoom={selectedGroup ? 15 : 13} />
+
+                            {filteredGroups.map((group) => {
+                                if (!group.latitude || !group.longitude || !group.is_location_public) return null;
+                                return (
+                                    <Marker
+                                        key={group.id}
+                                        position={[group.latitude, group.longitude]}
+                                        icon={customIcon}
+                                        eventHandlers={{
+                                            click: () => setSelectedGroup(group),
+                                        }}
+                                    >
+                                        <Popup>
+                                            <div className="p-1 min-w-[150px]">
+                                                <h3 className="font-bold text-slate-900 m-0">{group.name}</h3>
+                                                <p className="text-xs text-slate-500 m-0">{group.location}</p>
+                                                <div className="flex items-center gap-2 mt-2">
+                                                    <div className="w-6 h-6 rounded-full overflow-hidden bg-slate-100 shrink-0">
+                                                        <img
+                                                            src={group.image_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&q=80"}
+                                                            alt={group.leader}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                    <span className="text-[10px] font-bold text-slate-700 truncate">{group.leader}</span>
+                                                </div>
+                                            </div>
+                                        </Popup>
+                                    </Marker>
+                                );
+                            })}
+
+                            {showMembers && memberLocations?.map((member) => (
+                                <Marker
+                                    key={member.id}
+                                    position={[member.latitude, member.longitude]}
+                                    icon={memberIcon}
+                                    eventHandlers={{
+                                        click: () => setSelectedGroup(member),
+                                    }}
+                                >
+                                    <Popup>
+                                        <div className="p-1 min-w-[150px]">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 shrink-0 border border-mivn-blue/20">
+                                                    <img
+                                                        src={member.avatar_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&q=80"}
+                                                        alt={member.full_name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                                <h3 className="font-bold text-slate-900 m-0 text-sm">{member.full_name}</h3>
+                                            </div>
+                                            <p className="text-[10px] text-slate-500 m-0 flex items-center gap-1">
+                                                <MapPin className="w-3 h-3" />
+                                                Miembro de la Comunidad
+                                            </p>
+                                            {member.address && (
+                                                <p className="text-[10px] text-slate-400 mt-1 italic">{member.address}</p>
+                                            )}
+                                        </div>
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </MapContainer>
+                    )}
                 </div>
 
-                {/* Map Controls */}
-                <div className="absolute bottom-8 left-8 flex flex-col gap-3">
+                {/* Map Controls (Custom logic for Leaflet) */}
+                <div className="absolute bottom-8 left-8 flex flex-col gap-3 z-[1000]">
                     <div className="flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-2xl shadow-slate-900/10 overflow-hidden border border-slate-100 dark:border-white/10">
-                        <button className="p-3 border-b border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <button
+                            className="p-3 border-b border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                            title="Aumentar Zoom"
+                        >
                             <Plus className="w-6 h-6 text-slate-700 dark:text-slate-200" />
                         </button>
-                        <button className="p-3 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <button
+                            className="p-3 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                            title="Disminuir Zoom"
+                        >
                             <Minus className="w-6 h-6 text-slate-700 dark:text-slate-200" />
                         </button>
                     </div>
-                    <button className="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-2xl shadow-slate-900/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border border-slate-100 dark:border-white/10">
+                    <button
+                        onClick={() => setSelectedGroup(null)}
+                        className="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-2xl shadow-slate-900/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors border border-slate-100 dark:border-white/10"
+                        title="Centrar Mapa"
+                    >
                         <Crosshair className="w-6 h-6 text-slate-700 dark:text-slate-200" />
                     </button>
                 </div>
 
                 {/* Floating CTA */}
-                <button
-                    onClick={scrollToGroups}
-                    className="absolute bottom-8 right-8 bg-mivn-gold text-white font-bold py-4 px-8 rounded-full shadow-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all z-10 group border-2 border-white/20 backdrop-blur-sm"
+                <Link
+                    href="/contacto?interest=group"
+                    className="absolute bottom-8 right-8 bg-mivn-gold text-white font-bold py-4 px-8 rounded-full shadow-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all z-[1000] group border-2 border-white/20 backdrop-blur-sm"
                 >
                     <Users className="w-5 h-5" />
                     <span className="uppercase tracking-wider text-xs">Unirme a un grupo</span>
-                </button>
+                </Link>
             </section>
 
             {/* Right Pane: Sidebar */}
@@ -150,6 +267,16 @@ export function GroupsExplorer({ initialGroups }: GroupsExplorerProps) {
                                 {cat}
                             </button>
                         ))}
+                        <button
+                            onClick={() => setShowMembers(!showMembers)}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${showMembers
+                                ? 'bg-mivn-blue/10 text-mivn-blue border-mivn-blue/20 shadow-lg'
+                                : 'bg-slate-50 dark:bg-white/5 text-slate-400 border-slate-200 dark:border-white/10 opacity-50'
+                                }`}
+                        >
+                            <MapPin className="w-3 h-3" />
+                            Miembros
+                        </button>
                     </div>
                 </div>
 
@@ -211,8 +338,16 @@ export function GroupsExplorer({ initialGroups }: GroupsExplorerProps) {
                                         </div>
                                     </div>
                                     <div className="mt-5 pt-4 border-t border-slate-50 dark:border-white/5 flex items-center justify-between">
-                                        <button className="text-mivn-blue text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:underline decoration-2 underline-offset-4">
-                                            <Map className="w-4 h-4" />
+                                        <button
+                                            onClick={() => {
+                                                if (group.latitude && group.longitude && group.is_location_public) {
+                                                    setSelectedGroup(group);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }
+                                            }}
+                                            className="text-mivn-blue text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:underline decoration-2 underline-offset-4"
+                                        >
+                                            <MapIcon className="w-4 h-4" />
                                             {group.location || 'Ver ubicación'}
                                         </button>
                                         <Link
@@ -227,7 +362,6 @@ export function GroupsExplorer({ initialGroups }: GroupsExplorerProps) {
                         })
                     )}
 
-                    {/* Padding for bottom scroll */}
                     <div className="h-4" />
                 </div>
             </aside>

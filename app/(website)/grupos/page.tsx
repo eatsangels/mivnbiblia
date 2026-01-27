@@ -1,4 +1,4 @@
-import { getSmallGroups } from "@/app/(estudio)/admin/groups/actions";
+import { getSmallGroups, getPublicMemberLocations } from "@/app/(estudio)/admin/groups/actions";
 import { GroupsExplorer } from "@/components/website/GroupsExplorer";
 import { Metadata } from "next";
 
@@ -8,8 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default async function GruposPage() {
-    // Fetch groups from database
+    // Fetch data from database
     const groups = await getSmallGroups();
+    const members = await getPublicMemberLocations();
 
-    return <GroupsExplorer initialGroups={groups} />;
+    return <GroupsExplorer initialGroups={groups} memberLocations={members} />;
 }

@@ -24,16 +24,20 @@ export async function getEmailByUsername(username: string): Promise<string | nul
     // Service role bypasses RLS, so we can query profiles freely
     const { data: profile, error: profileError } = await supabaseAdmin
         .from('profiles')
-        .select('id')
-        .eq('username', username)
+        .select('id, email')
+        .ilike('username', username)
         .single()
 
     if (profileError || !profile) {
-        // If not found or error, return null
         return null
     }
 
-    // Then get the user email via admin API using the ID found in profiles
+    // If email is already in profile, return it
+    if (profile.email) {
+        return profile.email
+    }
+
+    // Otherwise get it via admin API
     const { data: { user }, error: userError } = await supabaseAdmin.auth.admin.getUserById(profile.id)
 
     if (userError || !user) {

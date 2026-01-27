@@ -19,7 +19,7 @@ export default function InstitutePage() {
         },
         {
             title: "Liderazgo Nivel 1",
-            instructor: "Dra. Elena Ríos",
+            instructor: "Mercedes Trinidad",
             progress: 30,
             category: "Liderazgo",
             imageSrc: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
@@ -28,7 +28,7 @@ export default function InstitutePage() {
         },
         {
             title: "Teología Básica",
-            instructor: "Mtro. Juan Pérez",
+            instructor: "Luis Santana",
             progress: 0,
             category: "Académico",
             imageSrc: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=800",

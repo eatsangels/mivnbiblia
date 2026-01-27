@@ -58,7 +58,7 @@ export const Ministries = () => {
 
     const leaders = [
         {
-            name: "Pastores Pérez",
+            name: "Los Pastores Luis Santana y Mercedes Trinidad",
             role: "Pastores Principales",
             quote: "Apasionados por ver familias transformadas por el poder de Dios.",
             img: "https://images.unsplash.com/photo-1544928147-79723ec4242d?auto=format&fit=crop&q=80&w=1000"
@@ -76,7 +76,7 @@ export const Ministries = () => {
             img: "https://images.unsplash.com/photo-1519491050282-fb00c7b9c8bd?auto=format&fit=crop&q=80&w=1000"
         },
         {
-            name: "Elena Ramos",
+            name: "Mercedes Trinidad",
             role: "Ministerio Infantil",
             quote: "Cuidando y enseñando con amor el tesoro más grande de la iglesia.",
             img: "https://images.unsplash.com/photo-1541976844346-f18aeac57b06?auto=format&fit=crop&q=80&w=1000"

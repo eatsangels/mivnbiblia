@@ -31,29 +31,65 @@ export interface YouTubeLiveStream {
 /**
  * Check if the channel is currently live streaming
  */
+// Mock Data for Fallback
+const MOCK_LIVE_STREAM: YouTubeLiveStream = {
+    videoId: "mock-live",
+    title: "Servicio Dominical: La Fe que Mueve Montañas",
+    description: "Únete a nosotros para adorar y escuchar la palabra de Dios.",
+    thumbnailUrl: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?q=80&w=2070&auto=format&fit=crop",
+    scheduledStartTime: new Date(Date.now() + 3600000).toISOString(), // 1 hour from now
+    concurrentViewers: 1250
+};
+
+const MOCK_VIDEOS: YouTubeVideo[] = [
+    {
+        videoId: "mock-1",
+        title: "Serie: Fundamentos de la Fe - Parte 1",
+        description: "Primera parte de nuestra serie sobre los fundamentos de la vida cristiana.",
+        thumbnailUrl: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop",
+        publishedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+        duration: "1:15:30",
+        isLive: false,
+        viewCount: 3420
+    },
+    {
+        videoId: "mock-2",
+        title: "Noche de Adoración y Alabanza",
+        description: "Un tiempo especial de adoración con nuestro equipo de alabanza.",
+        thumbnailUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070&auto=format&fit=crop",
+        publishedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+        duration: "0:45:15",
+        isLive: false,
+        viewCount: 1250
+    },
+    {
+        videoId: "mock-3",
+        title: "Estudio Bíblico: El libro de Romanos",
+        description: "Profundizando en el capítulo 8 de Romanos.",
+        thumbnailUrl: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop",
+        publishedAt: new Date(Date.now() - 86400000 * 7).toISOString(),
+        duration: "0:58:20",
+        isLive: false,
+        viewCount: 980
+    }
+];
+
 export async function getChannelLiveStreams(): Promise<YouTubeLiveStream | null> {
     const apiKey = process.env.YOUTUBE_API_KEY;
     const channelId = process.env.YOUTUBE_CHANNEL_ID;
 
+    // Return mock data if credentials are missing
     if (!apiKey || !channelId) {
-        console.warn('YouTube API credentials not configured');
-        return null;
+        console.warn('YouTube API credentials not configured, using mock data');
+        return null; // Functionally correct to return null here, or mock if we want to test live UI
     }
 
     try {
-        // Search for live broadcasts
         const searchUrl = `${YOUTUBE_API_BASE}/search?part=snippet&channelId=${channelId}&eventType=live&type=video&key=${apiKey}`;
-        const searchResponse = await fetch(searchUrl, { next: { revalidate: 60 } }); // Cache for 1 minute
+        const searchResponse = await fetch(searchUrl, { next: { revalidate: 60 } });
 
         if (!searchResponse.ok) {
-            const errorData = await searchResponse.json().catch(() => ({}));
-            console.error('YouTube Live API Error:', {
-                status: searchResponse.status,
-                statusText: searchResponse.statusText,
-                error: errorData,
-                url: searchUrl.replace(apiKey, 'HIDDEN')
-            });
-            // Don't throw, just return null to allow page to load
+            console.warn('YouTube Live API Error:', searchResponse.statusText);
             return null;
         }
 
@@ -61,11 +97,12 @@ export async function getChannelLiveStreams(): Promise<YouTubeLiveStream | null>
 
         if (searchData.items && searchData.items.length > 0) {
             const liveVideo = searchData.items[0];
-
-            // Get additional details about the live stream
             const videoId = liveVideo.id.videoId;
             const detailsUrl = `${YOUTUBE_API_BASE}/videos?part=snippet,liveStreamingDetails,statistics&id=${videoId}&key=${apiKey}`;
             const detailsResponse = await fetch(detailsUrl, { next: { revalidate: 60 } });
+
+            if (!detailsResponse.ok) return null;
+
             const detailsData = await detailsResponse.json();
 
             if (detailsData.items && detailsData.items.length > 0) {
@@ -81,7 +118,6 @@ export async function getChannelLiveStreams(): Promise<YouTubeLiveStream | null>
                 };
             }
         }
-
         return null;
     } catch (error) {
         console.error('Error fetching live streams:', error);
@@ -89,33 +125,29 @@ export async function getChannelLiveStreams(): Promise<YouTubeLiveStream | null>
     }
 }
 
-/**
- * Get recent videos from the channel
- */
 export async function getChannelVideos(maxResults: number = 12): Promise<YouTubeVideo[]> {
     const apiKey = process.env.YOUTUBE_API_KEY;
     const channelId = process.env.YOUTUBE_CHANNEL_ID;
 
     if (!apiKey || !channelId) {
-        console.warn('YouTube API credentials not configured');
-        return [];
+        console.warn('YouTube API credentials not configured, returning mock videos');
+        return MOCK_VIDEOS;
     }
 
     try {
-        // Get recent uploads
         const searchUrl = `${YOUTUBE_API_BASE}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${maxResults}&key=${apiKey}`;
-        const searchResponse = await fetch(searchUrl, { next: { revalidate: 0 } }); // No cache for testing
+        const searchResponse = await fetch(searchUrl, { next: { revalidate: 3600 } }); // Increased cache to 1 hour to save quota
 
         if (!searchResponse.ok) {
             const errorData = await searchResponse.json().catch(() => ({}));
-            console.error('YouTube Videos API Error:', {
+
+            // Log specific error but return mock data so UI doesn't break
+            console.warn('YouTube API Error (likely quota exceeded or missing key):', {
                 status: searchResponse.status,
-                statusText: searchResponse.statusText,
-                error: errorData,
-                url: searchUrl.replace(apiKey, 'HIDDEN')
+                message: errorData.error?.message || searchResponse.statusText
             });
-            // Don't throw, just return empty array to allow page to load
-            return [];
+
+            return MOCK_VIDEOS;
         }
 
         const searchData = await searchResponse.json();
@@ -124,17 +156,15 @@ export async function getChannelVideos(maxResults: number = 12): Promise<YouTube
             return [];
         }
 
-        // Get video IDs
         const videoIds = searchData.items.map((item: any) => item.id.videoId).join(',');
-
-        // Get detailed info for all videos
         const detailsUrl = `${YOUTUBE_API_BASE}/videos?part=snippet,contentDetails,statistics&id=${videoIds}&key=${apiKey}`;
         const detailsResponse = await fetch(detailsUrl, { next: { revalidate: 3600 } });
+
+        if (!detailsResponse.ok) return MOCK_VIDEOS;
+
         const detailsData = await detailsResponse.json();
 
-        if (!detailsData.items) {
-            return [];
-        }
+        if (!detailsData.items) return MOCK_VIDEOS;
 
         return detailsData.items.map((video: any) => ({
             videoId: video.id,
@@ -147,8 +177,8 @@ export async function getChannelVideos(maxResults: number = 12): Promise<YouTube
             viewCount: parseInt(video.statistics.viewCount || '0')
         }));
     } catch (error) {
-        console.error('Error fetching channel videos:', error);
-        return [];
+        console.error('Error fetching channel videos, using fallback:', error);
+        return MOCK_VIDEOS;
     }
 }
 

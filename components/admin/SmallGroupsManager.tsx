@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Plus, Edit, Trash2, Save, X, Users, Image as ImageIcon } from "lucide-react";
+import { Plus, Edit, Trash2, Save, X, Users, Image as ImageIcon, MapPin, Search } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { ImageUploader } from "./ImageUploader";
@@ -29,6 +29,9 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
         leader_image_url: '',
         schedule: '',
         location: '',
+        latitude: 0,
+        longitude: 0,
+        is_location_public: true,
         is_active: true,
     });
 
@@ -43,6 +46,9 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
             leader_image_url: '',
             schedule: '',
             location: '',
+            latitude: 0,
+            longitude: 0,
+            is_location_public: true,
             is_active: true,
         });
         setEditingId(null);
@@ -60,10 +66,41 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
             leader_image_url: group.leader_image_url || '',
             schedule: group.schedule || '',
             location: group.location || '',
+            latitude: group.latitude || 0,
+            longitude: group.longitude || 0,
+            is_location_public: group.is_location_public ?? true,
             is_active: group.is_active,
         });
         setEditingId(group.id);
         setIsAdding(false);
+    };
+
+    const handleGeocode = async () => {
+        if (!formData.location) {
+            toast.error('Por favor, ingresa una ubicación primero');
+            return;
+        }
+
+        const loadingToast = toast.loading('Buscando coordenadas...');
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(formData.location)}`);
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                const { lat, lon } = data[0];
+                setFormData(prev => ({
+                    ...prev,
+                    latitude: parseFloat(lat),
+                    longitude: parseFloat(lon)
+                }));
+                toast.success('Coordenadas encontradas correctamente', { id: loadingToast });
+            } else {
+                toast.error('No se encontraron coordenadas para esta dirección', { id: loadingToast });
+            }
+        } catch (error) {
+            console.error('Geocoding error:', error);
+            toast.error('Error al conectar con el servicio de mapas', { id: loadingToast });
+        }
     };
 
     const handleSave = async () => {
@@ -197,13 +234,64 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Ubicación (Opcional)</Label>
+                            <Label>Ubicación (Dirección)</Label>
+                            <div className="flex gap-2">
+                                <Input
+                                    value={formData.location}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                                    placeholder="Ej: 123 Street, Atlanta, GA"
+                                    className="rounded-2xl"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={handleGeocode}
+                                    className="rounded-2xl shrink-0"
+                                    title="Buscar coordenadas automáticamente"
+                                >
+                                    <MapPin className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Latitud (Google Maps)</Label>
                             <Input
-                                value={formData.location}
-                                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                                placeholder="Ej: Salón 3"
+                                type="number"
+                                step="any"
+                                value={formData.latitude}
+                                onChange={(e) => setFormData(prev => ({ ...prev, latitude: parseFloat(e.target.value) || 0 }))}
+                                placeholder="Ej: 18.4861"
                                 className="rounded-2xl"
                             />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Longitud (Google Maps)</Label>
+                            <Input
+                                type="number"
+                                step="any"
+                                value={formData.longitude}
+                                onChange={(e) => setFormData(prev => ({ ...prev, longitude: parseFloat(e.target.value) || 0 }))}
+                                placeholder="Ej: -69.9312"
+                                className="rounded-2xl"
+                            />
+                        </div>
+
+                        <div className="space-y-2 flex flex-col justify-center">
+                            <Label className="mb-2">Privacidad de Ubicación</Label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="is_location_public"
+                                    checked={formData.is_location_public}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, is_location_public: e.target.checked }))}
+                                    className="w-4 h-4 rounded border-slate-300 text-mivn-blue focus:ring-mivn-blue"
+                                />
+                                <Label htmlFor="is_location_public" className="text-sm font-normal cursor-pointer">
+                                    Mostrar ubicación exacta en el mapa público
+                                </Label>
+                            </div>
                         </div>
 
                         <div className="space-y-2">

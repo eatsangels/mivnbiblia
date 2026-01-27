@@ -17,7 +17,7 @@ export const Navbar = ({ user }: NavbarProps) => {
         { name: "Estudio", href: "/read" },
         { name: "Donar", href: "/donaciones" },
         { name: "En Vivo", href: "/en-vivo" },
-        { name: "Comunidad", href: "/grupos" },
+        { name: "Grupos", href: "/grupos" },
         { name: "Ministerios", href: "/ministerios" },
         { name: "Devocional", href: "/devocionales" },
         { name: "Nosotros", href: "/sobre-nosotros" },

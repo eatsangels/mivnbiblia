@@ -80,7 +80,7 @@ export default async function DashboardPage() {
     const sidebarLinks: any[] = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", active: true },
         { name: "En Vivo (Chat)", icon: MessageSquare, href: "/en-vivo" },
-        { name: "Comunidad", icon: Users, href: "/grupos" },
+        { name: "Grupos", icon: Users, href: "/grupos" },
         { name: "Instituto", icon: School, href: "/instituto" },
         { name: "Mi Crecimiento", icon: TrendingUp, href: "/dashboard/growth" },
         { name: "Devocionales", icon: BookOpen, href: "/devocionales" },
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
                         <div className="flex items-center gap-4">
                             <div className="text-right hidden sm:block">
                                 <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">
-                                    {profile?.full_name?.split(' ')[0] || 'Ricardo'}
+                                    {profile?.full_name?.split(' ')[0] || 'Usuario'}
                                 </p>
                                 <p className="text-[10px] text-mivn-gold mt-1 uppercase font-black tracking-widest">
                                     {(profile?.role === 'admin' && 'Administrador') ||
@@ -276,7 +276,7 @@ export default async function DashboardPage() {
                         {/* 4. Prayer Requests Section */}
                         <DashboardPrayerSection
                             initialRequests={prayerRequests}
-                            userName={profile?.full_name || 'Ricardo'}
+                            userName={profile?.full_name || 'Hermano/a'}
                         />
 
                     </div>

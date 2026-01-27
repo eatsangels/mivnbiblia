@@ -1,5 +1,5 @@
 import { getUpcomingEvents, getFeaturedEvents } from "@/lib/queries/events";
-import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowRight, Clock, User } from "lucide-react";
 import Link from "next/link";
 
 export default async function EventosPage() {
@@ -145,6 +145,12 @@ export default async function EventosPage() {
                                                     {event.location}
                                                 </div>
                                             )}
+                                            {event.speaker && (
+                                                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                                                    <User className="w-4 h-4" />
+                                                    {event.speaker}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <h4 className="text-2xl font-playfair font-bold text-slate-900 dark:text-white group-hover:text-mivn-blue transition-colors">
@@ -170,6 +176,6 @@ export default async function EventosPage() {
                     )}
                 </section>
             </main>
-        </div>
+        </div >
     );
 }

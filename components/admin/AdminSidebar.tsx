@@ -18,6 +18,7 @@ interface NavItem {
 const navItems: NavItem[] = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/admin", description: "Vista general" },
     { name: "Miembros", icon: Users, href: "/admin/members", description: "Base de datos" },
+    { name: "Grupos", icon: Users, href: "/admin/groups", description: "Gestión de Grupos de Vida" },
     { name: "Eventos", icon: Calendar, href: "/admin/events", description: "Gestión de calendario" },
     { name: "Finanzas", icon: Banknote, href: "/admin/finances", description: "Módulo administrativo" },
     { name: "Inventario", icon: Package, href: "/admin/inventory", description: "Activos y Recursos" },
