@@ -2,6 +2,8 @@ import { getUpcomingEvents, getFeaturedEvents } from "@/lib/queries/events";
 import { Calendar, MapPin, Users, ArrowRight, Clock, User } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function EventosPage() {
     const upcomingEvents = await getUpcomingEvents(10);
     const featuredEvents = await getFeaturedEvents(3);

@@ -28,7 +28,9 @@ import {
     Shield,
     Home,
     School,
-    Settings
+    Settings,
+    Compass,
+    Map
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
@@ -54,7 +56,7 @@ export default async function DashboardPage() {
         .eq('id', user.id)
         .single() as any;
 
-    const { data: progress } = await supabase
+    const { data: progress } = await (supabase as any)
         .from('user_progress')
         .select('*')
         .eq('user_id', user.id)
@@ -85,6 +87,8 @@ export default async function DashboardPage() {
         { name: "Mi Crecimiento", icon: TrendingUp, href: "/dashboard/growth" },
         { name: "Devocionales", icon: BookOpen, href: "/devocionales" },
         { name: "Ministerios", icon: HandHeart, href: "/ministerios" },
+        { name: "Templo", icon: Compass, href: "/dashboard/temple" },
+        { name: "Mapas", icon: Map, href: "/dashboard/maps" },
         { name: "Donaciones", icon: Heart, href: "/dashboard/donations" },
         { name: "Perfil", icon: User, href: "/dashboard/profile" },
     ];

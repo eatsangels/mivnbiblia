@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { createEvent, updateEvent, deleteEvent } from "@/app/(estudio)/admin/events/actions";
 import { FormCloudinaryUpload } from "@/components/ui/FormCloudinaryUpload";
 import { Sparkles } from "lucide-react";
@@ -16,10 +16,31 @@ export interface EventManagerProps {
     initialEvents: any[];
 }
 
+import { useRouter } from "next/navigation";
+
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 export function EventManager({ initialEvents }: EventManagerProps) {
+    const router = useRouter();
     const [isPending, startTransition] = useTransition();
+    const [events, setEvents] = useState<any[]>(initialEvents);
     const [editingEvent, setEditingEvent] = useState<any | null>(null);
     const formRef = useRef<HTMLFormElement>(null);
+
+    // Sync state with props when router.refresh() happens
+    useEffect(() => {
+        setEvents(initialEvents);
+    }, [initialEvents]);
     const formSectionRef = useRef<HTMLDivElement>(null);
 
     const handleScrollToForm = () => {
@@ -29,11 +50,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
     const handleEditClick = (event: any) => {
         setEditingEvent(event);
         handleScrollToForm();
-
-        // Slight delay to allow state update before focusing or just to ensure visual readiness
-        setTimeout(() => {
-            // If we needed to manually set inputs we could do it here, but key={editingEvent?.id} on form is cleaner
-        }, 100);
+        setTimeout(() => { }, 100);
     };
 
     const handleCancelEdit = () => {
@@ -42,24 +59,24 @@ export function EventManager({ initialEvents }: EventManagerProps) {
     };
 
     const handleDelete = (id: string) => {
-        if (confirm("¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.")) {
-            startTransition(async () => {
-                const result = await deleteEvent(id);
-                if (result.success) {
-                    alert("Evento eliminado exitosamente");
-                    if (editingEvent?.id === id) {
-                        setEditingEvent(null);
-                        formRef.current?.reset();
-                    }
-                } else {
-                    alert("Error: " + result.errorMsg);
+        startTransition(async () => {
+            const result = await deleteEvent(id);
+            if (result.success) {
+                toast.success("Evento eliminado exitosamente");
+                router.refresh();
+                if (editingEvent?.id === id) {
+                    setEditingEvent(null);
+                    formRef.current?.reset();
                 }
-            });
-        }
+            } else {
+                toast.error("Error: " + result.errorMsg);
+            }
+        });
     };
 
     const handleSubmit = (formData: FormData) => {
-        // Combine date and time
+        const imageRaw = formData.get("image_url");
+
         const datePart = formData.get("date_part") as string;
         const timePart = formData.get("time_part") as string;
 
@@ -70,7 +87,6 @@ export function EventManager({ initialEvents }: EventManagerProps) {
 
         const action = editingEvent ? updateEvent : createEvent;
 
-        // Ensure ID is appended for updates
         if (editingEvent) {
             formData.append("id", editingEvent.id);
         }
@@ -78,6 +94,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
         const promise = new Promise(async (resolve, reject) => {
             const result = await action(formData);
             if (result.success) {
+                router.refresh();
                 if (editingEvent) {
                     setEditingEvent(null);
                     formRef.current?.reset();
@@ -96,6 +113,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
             error: (err: any) => `Error: ${err}`
         });
     };
+
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Page Heading */}
@@ -368,16 +386,38 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                                                     </span>
                                                 </td>
                                                 <td className="px-8 py-6 text-right">
-                                                    <button
-                                                        onClick={() => handleEditClick(event)}
-                                                        className="inline-flex items-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-all">
-                                                        <Edit3 className="w-3 h-3" /> Editar
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(event.id)}
-                                                        className="inline-flex items-center gap-2 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all ml-2">
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </button>
+                                                    <div className="flex justify-end gap-2">
+                                                        <button
+                                                            onClick={() => handleEditClick(event)}
+                                                            className="inline-flex items-center gap-2 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-mivn-blue hover:text-white transition-all">
+                                                            <Edit3 className="w-3 h-3" /> Editar
+                                                        </button>
+
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <button
+                                                                    className="inline-flex items-center gap-2 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
+                                                                    <Trash2 className="w-3 h-3" />
+                                                                </button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl">
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle className="font-playfair font-black text-xl">¿Estás seguro absoluta?</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Esta acción no se puede deshacer. Esto eliminará permanentemente el evento <strong>{event.title}</strong> de la base de datos.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel className="rounded-xl font-bold">Cancelar</AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        onClick={() => handleDelete(event.id)}
+                                                                        className="bg-red-500 text-white rounded-xl font-black uppercase tracking-widest hover:bg-red-600">
+                                                                        Sí, Eliminar
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))

@@ -4,7 +4,49 @@ import {
     BarChart3, Users, UserPlus, Droplets, Star, Info, TrendingUp, Calendar, Download
 } from "lucide-react";
 
-export function SpiritualAnalytics() {
+interface AnalyticsProps {
+    summary: {
+        totalMembers: number;
+        newConverts: number;
+        baptisms: number;
+        activeLeaders: number;
+    };
+    ministryStats: {
+        name: string;
+        value: number;
+        percentage: number;
+    }[];
+    funnel: {
+        label: string;
+        val: number;
+        id: string;
+    }[];
+    groupHealth: {
+        name: string;
+        code: string;
+        members: number;
+        status: string;
+        health: number;
+        leader: string;
+    }[];
+}
+
+export function SpiritualAnalytics({ summary, ministryStats, funnel, groupHealth }: AnalyticsProps) {
+    // Helper to calculate funnel width/color
+    const maxFunnelVal = Math.max(...funnel.map(f => f.val), 1);
+    const getFunnelStyles = (val: number, index: number) => {
+        const percentage = (val / maxFunnelVal) * 100;
+        // Simple width mapping for tailwind classes if possible, or style attribute
+        // Using style for precise width
+        let bg = "bg-mivn-blue";
+        if (index === 1) bg = "bg-mivn-blue/80";
+        if (index === 2) bg = "bg-mivn-blue/60";
+        if (index === 3) bg = "bg-mivn-blue/40";
+        if (index === 4) bg = "bg-mivn-gold shadow-lg shadow-mivn-gold/30";
+
+        return { width: `${Math.max(percentage, 20)}%`, className: bg };
+    };
+
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Page Heading */}
@@ -34,7 +76,7 @@ export function SpiritualAnalytics() {
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Miembros</p>
                         <Users className="w-5 h-5 text-mivn-blue" />
                     </div>
-                    <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">1,240</p>
+                    <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">{summary.totalMembers}</p>
                     <div className="flex items-center gap-2">
                         <span className="text-emerald-500 text-xs font-black bg-emerald-500/10 px-2 py-0.5 rounded-lg">+5.2%</span>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">vs mes anterior</span>
@@ -45,7 +87,7 @@ export function SpiritualAnalytics() {
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nuevos Convertidos</p>
                         <UserPlus className="w-5 h-5 text-mivn-blue" />
                     </div>
-                    <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">42</p>
+                    <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">{summary.newConverts}</p>
                     <div className="flex items-center gap-2">
                         <span className="text-emerald-500 text-xs font-black bg-emerald-500/10 px-2 py-0.5 rounded-lg">+12%</span>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">nuevas decisiones</span>
@@ -56,7 +98,7 @@ export function SpiritualAnalytics() {
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Bautismos</p>
                         <Droplets className="w-5 h-5 text-mivn-blue" />
                     </div>
-                    <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">15</p>
+                    <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">{summary.baptisms}</p>
                     <div className="flex items-center gap-2">
                         <span className="text-mivn-blue text-[10px] font-black uppercase tracking-wider">Próxima Fecha</span>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">24 de Oct</span>
@@ -71,7 +113,7 @@ export function SpiritualAnalytics() {
                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Líderes Activos</p>
                             <Star className="w-5 h-5 text-mivn-gold" />
                         </div>
-                        <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">88</p>
+                        <p className="text-4xl font-black text-slate-900 dark:text-white mb-2">{summary.activeLeaders}</p>
                         <div className="flex items-center gap-2">
                             <span className="text-mivn-gold text-xs font-black bg-mivn-gold/10 px-2 py-0.5 rounded-lg">8% Elite</span>
                             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">retención alta</span>
@@ -82,7 +124,7 @@ export function SpiritualAnalytics() {
 
             {/* Charts Section 1 */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Growth Chart */}
+                {/* Growth Chart - KEEPING STATIC FOR NOW AS IT NEEDS COMPLEX HISTORY, BUT CAN BE DYNAMIC LATER */}
                 <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-xl">
                     <div className="flex justify-between items-center mb-8">
                         <h2 className="text-lg font-playfair font-bold text-slate-900 dark:text-white">Crecimiento y Asistencia</h2>
@@ -99,7 +141,7 @@ export function SpiritualAnalytics() {
                     </div>
 
                     <div className="h-64 flex items-end justify-between gap-4 relative">
-                        {/* Bars */}
+                        {/* Bars - MOCKED FOR UI CONSISTENCY UNTIL WE HAVE DAILY HISTORY */}
                         {['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN'].map((month, i) => {
                             const height = [60, 50, 70, 75, 90, 80][i];
                             return (
@@ -125,22 +167,19 @@ export function SpiritualAnalytics() {
                 <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-xl flex flex-col">
                     <h2 className="text-lg font-playfair font-bold text-slate-900 dark:text-white mb-8">Participación Ministerios</h2>
                     <div className="space-y-6 flex-1">
-                        {[
-                            { name: "Jóvenes", value: 85 },
-                            { name: "Alabanza", value: 70 },
-                            { name: "Niños", value: 60 },
-                            { name: "Misiones", value: 45 }
-                        ].map((min) => (
+                        {ministryStats.length > 0 ? ministryStats.map((min) => (
                             <div key={min.name} className="space-y-2">
                                 <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                                     <span>{min.name}</span>
-                                    <span>{min.value}%</span>
+                                    <span>{min.percentage}%</span>
                                 </div>
                                 <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
-                                    <div className="h-full bg-mivn-blue rounded-full" style={{ width: `${min.value}%` }}></div>
+                                    <div className="h-full bg-mivn-blue rounded-full" style={{ width: `${min.percentage}%` }}></div>
                                 </div>
                             </div>
-                        ))}
+                        )) : (
+                            <p className="text-gray-500 italic text-sm">No hay datos de ministerios aún.</p>
+                        )}
                     </div>
                     <div className="mt-8 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl flex gap-3 items-start">
                         <Info className="w-5 h-5 text-mivn-blue flex-shrink-0 mt-0.5" />
@@ -157,18 +196,17 @@ export function SpiritualAnalytics() {
                 <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-xl">
                     <h2 className="text-lg font-playfair font-bold text-slate-900 dark:text-white mb-8">Embudo de Madurez Espiritual</h2>
                     <div className="flex flex-col items-center space-y-2">
-                        {[
-                            { label: "Primera Visita", val: 420, w: "w-full", bg: "bg-mivn-blue" },
-                            { label: "Segunda Visita", val: 210, w: "w-[85%]", bg: "bg-mivn-blue/80" },
-                            { label: "Consolidación", val: 155, w: "w-[70%]", bg: "bg-mivn-blue/60" },
-                            { label: "Bautismo", val: 82, w: "w-[55%]", bg: "bg-mivn-blue/40" },
-                            { label: "Líder Activo", val: 18, w: "w-[40%]", bg: "bg-mivn-gold shadow-lg shadow-mivn-gold/30" },
-                        ].map((step) => (
-                            <div key={step.label} className={`${step.w} ${step.bg} h-12 rounded-xl flex items-center justify-between px-6 text-white transition-all hover:scale-[1.02]`}>
-                                <span className="text-[10px] font-black uppercase tracking-widest">{step.label}</span>
-                                <span className="font-bold">{step.val}</span>
-                            </div>
-                        ))}
+                        {funnel.length > 0 ? funnel.map((step, index) => {
+                            const style = getFunnelStyles(step.val, index);
+                            return (
+                                <div key={step.id} style={{ width: style.width }} className={`${style.className} h-12 rounded-xl flex items-center justify-between px-6 text-white transition-all hover:scale-[1.02]`}>
+                                    <span className="text-[10px] font-black uppercase tracking-widest">{step.label}</span>
+                                    <span className="font-bold">{step.val}</span>
+                                </div>
+                            );
+                        }) : (
+                            <p className="text-gray-500 italic text-sm">No hay datos del embudo aún.</p>
+                        )}
                     </div>
                     <p className="text-center mt-6 text-xs text-slate-400 font-medium uppercase tracking-widest">
                         Conversión Visita → Líder: <span className="text-mivn-blue font-black">4.2%</span>
@@ -192,31 +230,31 @@ export function SpiritualAnalytics() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {[
-                                    { name: "Usuario A.", code: "UA", members: 14, status: "Creciendo", color: "text-emerald-500 bg-emerald-500/10", health: 3 },
-                                    { name: "Sofía L.", code: "SL", members: 8, status: "Estable", color: "text-amber-500 bg-amber-500/10", health: 2 },
-                                    { name: "Carlos P.", code: "CP", members: 5, status: "Atención", color: "text-rose-500 bg-rose-500/10", health: 1 },
-                                ].map((group, i) => (
-                                    <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-mivn-blue/10 flex items-center justify-center text-[10px] font-black text-mivn-blue">{group.code}</div>
-                                                <span className="text-sm font-bold text-slate-900 dark:text-white">{group.name}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-xs font-medium text-slate-500">{group.members} miemb.</td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${group.color}`}>{group.status}</span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex gap-1">
-                                                {[1, 2, 3].map((dot) => (
-                                                    <div key={dot} className={`w-2 h-2 rounded-full ${dot <= group.health ? (group.health === 3 ? 'bg-emerald-500' : group.health === 2 ? 'bg-amber-500' : 'bg-rose-500') : 'bg-slate-200 dark:bg-slate-700'}`}></div>
-                                                ))}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {groupHealth.map((group, i) => {
+                                    const statusColor = group.status === 'Creciendo' ? "text-emerald-500 bg-emerald-500/10" :
+                                        group.status === 'Estable' ? "text-amber-500 bg-amber-500/10" : "text-rose-500 bg-rose-500/10";
+                                    return (
+                                        <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-full bg-mivn-blue/10 flex items-center justify-center text-[10px] font-black text-mivn-blue">{group.code}</div>
+                                                    <span className="text-sm font-bold text-slate-900 dark:text-white max-w-[120px] truncate" title={group.name}>{group.name}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-xs font-medium text-slate-500">{group.members} miemb.</td>
+                                            <td className="px-6 py-4">
+                                                <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${statusColor}`}>{group.status}</span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex gap-1">
+                                                    {[1, 2, 3].map((dot) => (
+                                                        <div key={dot} className={`w-2 h-2 rounded-full ${dot <= group.health ? (group.health === 3 ? 'bg-emerald-500' : group.health === 2 ? 'bg-amber-500' : 'bg-rose-500') : 'bg-slate-200 dark:bg-slate-700'}`}></div>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

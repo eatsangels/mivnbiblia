@@ -17,7 +17,13 @@ export async function getMembers() {
 /**
  * Get all events with optional filtering
  */
+import { unstable_noStore as noStore } from 'next/cache';
+
+/**
+ * Get all events with optional filtering
+ */
 export async function getEvents() {
+    noStore();
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("events")

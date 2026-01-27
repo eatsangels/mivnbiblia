@@ -1,6 +1,9 @@
 import { EventManager } from "@/components/admin/EventManager";
 import { getEvents } from "@/lib/queries/admin";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function EventsPage() {
     let events: any[] = [];
     try {

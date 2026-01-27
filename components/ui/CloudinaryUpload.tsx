@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload, X, Loader2, Check, ZoomIn } from "lucide-react";
 import { signCloudinaryParameters } from "@/app/actions/cloudinary";
@@ -32,17 +32,22 @@ export function CloudinaryUpload({
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const [isCropping, setIsCropping] = useState(false);
 
-    // Determine type of existing url if provided
-    useState(() => {
-        if (currentUrl) {
+    // Track previous currentUrl to avoid overwriting new uploads with old prop values
+    const prevUrlRef = useRef(currentUrl);
+
+    useEffect(() => {
+        // Only update preview if currentUrl prop has actively changed from outside
+        if (currentUrl && currentUrl !== prevUrlRef.current) {
             const ext = currentUrl.split('.').pop()?.toLowerCase();
             if (ext && ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) {
                 setFileType('image');
             } else if (ext && ['mp4', 'webm', 'mov'].includes(ext)) {
                 setFileType('video');
             }
+            setPreview(currentUrl);
         }
-    });
+        prevUrlRef.current = currentUrl;
+    }, [currentUrl]);
 
     const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -89,7 +94,7 @@ export function CloudinaryUpload({
         } catch (error: any) {
             console.error("Upload error:", error);
             toast.error(error.message || "Error al subir archivo");
-            setPreview(null);
+            setPreview(currentUrl || null); // Revert to currentUrl on error
         } finally {
             setUploading(false);
         }

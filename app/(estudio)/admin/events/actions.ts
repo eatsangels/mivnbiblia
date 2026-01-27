@@ -46,7 +46,8 @@ export async function createEvent(formData: FormData) {
             description: (formData.get("description") as string) || "",
             image_url,
             image: image_url, // Keep both synced if schema requires it, or just use one
-            is_featured
+            is_featured,
+            is_published: true
         });
 
     if (error) {
@@ -70,7 +71,6 @@ export async function updateEvent(formData: FormData) {
     const location = (formData.get("location") as string) || "";
     const speaker = (formData.get("speaker") as string) || "";
     const image_url = (formData.get("image_url") as string) || "";
-    console.log("updateEvent received image_url:", image_url);
     const is_featured = formData.get("is_featured") === "on";
 
     const capacityRaw = formData.get("capacity");
@@ -88,12 +88,17 @@ export async function updateEvent(formData: FormData) {
         location,
         description: (formData.get("description") as string) || "",
         is_featured,
+        is_published: true,
         updated_at: new Date().toISOString()
     };
 
+    // Log received image_url for debugging
+    console.log("updateEvent ID:", id);
+    console.log("updateEvent image_url raw:", image_url);
+
     // Only update image if a new one is provided. 
-    // If image_url is empty string, it often means the form didn't re-submit the existing image.
-    if (image_url) {
+    // We check for string type to allow clearing (empty string) if intended
+    if (typeof image_url === "string") {
         updates.image_url = image_url;
         updates.image = image_url;
     }

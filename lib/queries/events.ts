@@ -45,11 +45,16 @@ export const getEvents = cache(async () => {
  */
 export const getUpcomingEvents = cache(async (limit?: number) => {
     const supabase = await createClient();
+
+    // Use start of today to show events happening today even if start time passed
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     let query = supabase
         .from("events")
         .select("*")
         .or('is_published.eq.true,is_published.is.null')
-        .gte("event_date", new Date().toISOString())
+        .gte("event_date", today.toISOString())
         .order("event_date", { ascending: true });
 
     if (limit) {
@@ -67,12 +72,16 @@ export const getUpcomingEvents = cache(async (limit?: number) => {
  */
 export const getFeaturedEvents = cache(async (limit: number = 3) => {
     const supabase = await createClient();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const { data, error } = await supabase
         .from("events")
         .select("*")
         .or('is_published.eq.true,is_published.is.null')
         .eq("is_featured", true)
-        .gte("event_date", new Date().toISOString())
+        .gte("event_date", today.toISOString())
         .order("event_date", { ascending: true })
         .limit(limit);
 

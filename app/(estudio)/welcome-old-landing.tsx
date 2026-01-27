@@ -133,7 +133,7 @@ export default async function Home() {
             </Link>
 
             <Link
-              href="/temple"
+              href="/dashboard/temple"
               className="group px-10 py-5 bg-transparent border border-white/10 hover:border-gold-500/50 text-white font-black uppercase tracking-widest text-xs rounded-full transition-all hover:bg-gold-500/5 backdrop-blur-md"
             >
               <span className="flex items-center justify-center gap-3">
@@ -160,7 +160,7 @@ export default async function Home() {
             </Link>
 
             {/* Maps Module */}
-            <Link href="/maps" className="group relative h-64 rounded-[2.5rem] overflow-hidden transition-all hover:-translate-y-2 border border-white/5 hover:border-emerald-500/30 shadow-2xl">
+            <Link href="/dashboard/maps" className="group relative h-64 rounded-[2.5rem] overflow-hidden transition-all hover:-translate-y-2 border border-white/5 hover:border-emerald-500/30 shadow-2xl">
               <div className="absolute inset-0 bg-[url('/bible-covers/hechos.jpg')] bg-cover bg-center opacity-60 group-hover:scale-110 transition-transform duration-1000" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#051120] via-[#051120]/40 to-transparent" />
               <div className="relative h-full w-full p-8 flex flex-col justify-between z-10">
