@@ -60,7 +60,7 @@ export async function getRecentActivity() {
 
     const { data: newTestimonies } = await supabase
         .from("testimonies")
-        .select("author_name, created_at")
+        .select("full_name, created_at")
         .order("created_at", { ascending: false })
         .limit(3);
 
