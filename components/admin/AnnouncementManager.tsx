@@ -50,32 +50,41 @@ export function AnnouncementManager() {
             .delete()
             .eq('id', id);
 
-        if (!error) {
+        if (error) {
+            alert(`Error al eliminar: ${error.message}`);
+            console.error("Error deleting:", error);
+        } else {
             fetchAnnouncements();
         }
     };
 
     const handleEdit = (ann: any) => {
-        setEditingId(ann.id);
-        
-        // Helper to format date for datetime-local (YYYY-MM-DDThh:mm)
-        const formatDate = (dateString: string | null) => {
-            if (!dateString) return "";
-            const date = new Date(dateString);
-            // Adjust to get local time string in ISO format
-            const offset = date.getTimezoneOffset() * 60000;
-            return new Date(date.getTime() - offset).toISOString().slice(0, 16);
-        };
+        try {
+            setEditingId(ann.id);
 
-        setFormData({
-            message: ann.message,
-            target_audience: ann.target_audience,
-            scheduled_for: formatDate(ann.scheduled_for),
-            is_notified: ann.is_notified,
-            is_pinned: ann.is_pinned,
-            expires_at: formatDate(ann.expires_at)
-        });
-        document.getElementById('create-form')?.scrollIntoView({ behavior: 'smooth' });
+            // Helper to format date for datetime-local (YYYY-MM-DDThh:mm)
+            const formatDate = (dateString: string | null) => {
+                if (!dateString) return "";
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return ""; // Handle invalid date
+                // Adjust to get local time string in ISO format
+                const offset = date.getTimezoneOffset() * 60000;
+                return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+            };
+
+            setFormData({
+                message: ann.message,
+                target_audience: ann.target_audience,
+                scheduled_for: formatDate(ann.scheduled_for),
+                is_notified: ann.is_notified,
+                is_pinned: ann.is_pinned,
+                expires_at: formatDate(ann.expires_at)
+            });
+            document.getElementById('create-form')?.scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+            console.error("Error preparing edit form:", err);
+            alert("Hubo un error al cargar los datos para editar.");
+        }
     };
 
     const handleCancelEdit = () => {
@@ -93,43 +102,53 @@ export function AnnouncementManager() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (!user) {
+            alert("No estás autenticado.");
+            return;
+        }
 
-        if (editingId) {
-            // Update existing
-            // @ts-ignore
-            const { error } = await supabase.from('announcements')
-                .update({
+        try {
+            if (editingId) {
+                // Update existing
+                // @ts-ignore
+                const { error } = await supabase.from('announcements')
+                    .update({
+                        message: formData.message,
+                        target_audience: formData.target_audience,
+                        scheduled_for: formData.scheduled_for || null,
+                        is_notified: formData.is_notified,
+                        is_pinned: formData.is_pinned,
+                        expires_at: formData.expires_at || null
+                    } as any)
+                    .eq('id', editingId);
+
+                if (error) throw error;
+
+                alert("Anuncio actualizado correctamente.");
+                handleCancelEdit(); // Resets form and editingId
+                fetchAnnouncements();
+            } else {
+                // Create new
+                // @ts-ignore
+                const { error } = await supabase.from('announcements').insert([{
                     message: formData.message,
                     target_audience: formData.target_audience,
                     scheduled_for: formData.scheduled_for || null,
                     is_notified: formData.is_notified,
                     is_pinned: formData.is_pinned,
-                    expires_at: formData.expires_at || null
-                } as any)
-                .eq('id', editingId);
+                    expires_at: formData.expires_at || null,
+                    created_by: user.id
+                } as any]);
 
-            if (!error) {
-                handleCancelEdit(); // Resets form and editingId
-                fetchAnnouncements();
-            }
-        } else {
-            // Create new
-            // @ts-ignore
-            const { error } = await supabase.from('announcements').insert([{
-                message: formData.message,
-                target_audience: formData.target_audience,
-                scheduled_for: formData.scheduled_for || null,
-                is_notified: formData.is_notified,
-                is_pinned: formData.is_pinned,
-                expires_at: formData.expires_at || null,
-                created_by: user.id
-            } as any]);
+                if (error) throw error;
 
-            if (!error) {
+                alert("Anuncio creado correctamente.");
                 setFormData({ message: "", target_audience: "Todos los miembros", scheduled_for: "", is_notified: true, is_pinned: false, expires_at: "" });
                 fetchAnnouncements();
             }
+        } catch (error: any) {
+            console.error("Error details:", error);
+            alert(`Error: ${error.message || 'Ocurrió un error inesperado.'}`);
         }
     };
 
