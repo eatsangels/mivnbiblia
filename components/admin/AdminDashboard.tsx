@@ -128,11 +128,11 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: 
                                 pendingTestimonies.map((item, i) => (
                                     <div key={i} className="p-6 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors flex gap-4">
                                         <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-500 font-bold uppercase">
-                                            {item.author_name.charAt(0)}
+                                            {(item.full_name || item.author_name || 'A').charAt(0)}
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex justify-between items-start mb-1">
-                                                <h4 className="font-bold text-slate-900 dark:text-white">{item.author_name}</h4>
+                                                <h4 className="font-bold text-slate-900 dark:text-white">{item.full_name || item.author_name || 'Anónimo'}</h4>
                                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
                                                     {new Date(item.created_at).toLocaleDateString()}
                                                 </span>
@@ -215,7 +215,7 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: 
                                     <div className={`w-2.5 h-2.5 rounded-full bg-mivn-blue mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900`}></div>
                                     <div>
                                         <p className="text-xs text-slate-600 dark:text-slate-400">
-                                            <span className="font-bold text-slate-900 dark:text-white">{testimony.author_name}</span> envió un testimonio.
+                                            <span className="font-bold text-slate-900 dark:text-white">{testimony.full_name || testimony.author_name || 'Anónimo'}</span> envió un testimonio.
                                         </p>
                                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
                                             {new Date(testimony.created_at).toLocaleDateString()}

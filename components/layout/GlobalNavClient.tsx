@@ -28,12 +28,14 @@ export const GlobalNavClient = ({ user, navItems }: GlobalNavClientProps) => {
     useEffect(() => {
         // Check initial theme
         const theme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const shouldBeDark = theme === 'dark' || (!theme && prefersDark);
+        // Removed system preference check to default to light
+        const shouldBeDark = theme === 'dark';
 
         setIsDark(shouldBeDark);
         if (shouldBeDark) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
     }, []);
 
