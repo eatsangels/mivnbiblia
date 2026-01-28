@@ -30,12 +30,12 @@ export async function submitTestimony(data: TestimonySubmission) {
         .from('testimonies')
         .insert({
             user_id: user.id,
-            author_name: profile.full_name,
-            author_role: data.category || 'Miembro', // Map category to author_role
-            image: data.image || null,
+            full_name: profile.full_name || 'Anónimo', // Mapped from author_name, handle null
+            category: data.category || 'Miembro', // Mapped from author_role
+            avatar_url: data.image || null, // Mapped from image
             content: data.content,
             is_approved: false,
-            is_featured: false,
+            featured: false, // Mapped from is_featured
         });
 
     if (error) return { error: error.message };
@@ -84,12 +84,12 @@ export async function updateTestimony(id: string, data: TestimonySubmission) {
 
     const updateData: any = {
         content: data.content,
-        author_role: data.category || 'Miembro',
+        category: data.category || 'Miembro', // Mapped from author_role
     };
 
     // Only update image if provided
     if (data.image) {
-        updateData.image = data.image;
+        updateData.avatar_url = data.image; // Mapped from image
     }
 
     const { error } = await supabase
