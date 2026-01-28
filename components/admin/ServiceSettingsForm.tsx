@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Calendar, MapPin, User, FileText, MessageSquare, Save, Loader2 } from "lucide-react";
+import { Calendar, MapPin, User, FileText, MessageSquare, Save, Loader2, Tag, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface ServiceSettingsFormProps {
     settings: ServiceSettings | null;
@@ -27,6 +28,9 @@ export function ServiceSettingsForm({ settings }: ServiceSettingsFormProps) {
         offline_message: settings?.offline_message || '',
         offline_subtitle: settings?.offline_subtitle || '',
         google_maps_url: settings?.google_maps_url || '',
+        next_service_image_url: settings?.next_service_image_url || '',
+        next_service_image_public_id: settings?.next_service_image_public_id || '',
+        next_service_tags: settings?.next_service_tags?.join(', ') || 'Culto Dominical',
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -37,6 +41,7 @@ export function ServiceSettingsForm({ settings }: ServiceSettingsFormProps) {
             const result = await updateServiceSettings({
                 ...formData,
                 next_service_date: new Date(formData.next_service_date).toISOString(),
+                next_service_tags: formData.next_service_tags.split(',').map(tag => tag.trim()).filter(Boolean),
             });
 
             if (result.error) {
@@ -141,6 +146,36 @@ export function ServiceSettingsForm({ settings }: ServiceSettingsFormProps) {
                             className="rounded-2xl"
                         />
                     </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="tags" className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                            <Tag className="w-4 h-4" /> Etiquetas (separadas por comas)
+                        </Label>
+                        <Input
+                            id="tags"
+                            value={formData.next_service_tags}
+                            onChange={(e) => handleChange('next_service_tags', e.target.value)}
+                            placeholder="Culto Dominical, Santa Cena, Especial"
+                            className="rounded-2xl"
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                        <ImageIcon className="w-4 h-4" /> Imagen Principal del Servicio
+                    </Label>
+                    <ImageUploader
+                        onUploadComplete={(url, publicId) => {
+                            setFormData(prev => ({
+                                ...prev,
+                                next_service_image_url: url,
+                                next_service_image_public_id: publicId
+                            }));
+                        }}
+                        currentImage={formData.next_service_image_url}
+                        folder="services"
+                    />
                 </div>
 
                 <div className="space-y-2">

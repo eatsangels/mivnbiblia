@@ -137,9 +137,9 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
                             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
                                 {isLive
                                     ? "Servicio en Vivo"
-                                    : (serviceSettings?.next_service_date
+                                    : (serviceSettings?.offline_subtitle || (serviceSettings?.next_service_date
                                         ? `Próximo servicio: ${new Date(serviceSettings.next_service_date).toLocaleDateString('es-ES', { weekday: 'long', hour: 'numeric', minute: '2-digit' })}`
-                                        : "Próximo servicio: Domingo 10:00 AM")
+                                        : "Próximo servicio: Domingo 10:00 AM"))
                                 }
                             </p>
                         </div>

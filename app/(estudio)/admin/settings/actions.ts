@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 
 import { Database } from "@/lib/database.types";
 
-export type ServiceSettings = Database['public']['Tables']['service_settings']['Row'];
+export type ServiceSettings = Database['public']['Tables']['service_settings']['Row'] & {
+    next_service_image_url: string | null;
+    next_service_image_public_id: string | null;
+    next_service_tags: string[] | null;
+};
 export type WeeklyActivity = Database['public']['Tables']['weekly_activities']['Row'];
 
 // Get service settings
@@ -22,7 +26,7 @@ export async function getServiceSettings(): Promise<ServiceSettings | null> {
         return null;
     }
 
-    return data;
+    return data as ServiceSettings;
 }
 
 // Update service settings

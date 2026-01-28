@@ -172,15 +172,18 @@ export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities }
                         <div className="flex flex-col lg:flex-row gap-16 items-center relative z-10">
                             <div className="w-full lg:w-2/5 aspect-video bg-slate-100 dark:bg-slate-800 rounded-[3rem] overflow-hidden shadow-2xl group-hover:scale-105 transition-transform duration-700">
                                 <img
-                                    src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=1000"
+                                    src={serviceSettings?.next_service_image_url || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=1000"}
                                     className="w-full h-full object-cover"
                                     alt="Pastor Predicando"
                                 />
                             </div>
                             <div className="flex-1 space-y-10 text-center lg:text-left">
                                 <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-                                    <span className="bg-mivn-blue/10 text-mivn-blue px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border border-mivn-blue/20">Culto Dominical</span>
-                                    <span className="bg-mivn-gold/10 text-mivn-gold px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border border-mivn-gold/20">Especial</span>
+                                    {(serviceSettings?.next_service_tags || ["Culto Dominical", "Especial"]).map((tag, i) => (
+                                        <span key={i} className={`px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border ${i % 2 === 0 ? "bg-mivn-blue/10 text-mivn-blue border-mivn-blue/20" : "bg-mivn-gold/10 text-mivn-gold border-mivn-gold/20"}`}>
+                                            {tag}
+                                        </span>
+                                    ))}
                                 </div>
 
                                 <h2 className="text-4xl md:text-6xl font-playfair font-bold text-slate-900 dark:text-white leading-tight">
