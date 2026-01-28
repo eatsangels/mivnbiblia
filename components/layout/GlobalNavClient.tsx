@@ -104,10 +104,10 @@ export const GlobalNavClient = ({ user, navItems }: GlobalNavClientProps) => {
                         {/* Donate - Only for authenticated users */}
                         {user && (
                             <Link
-                                href="/donaciones"
+                                href="/ofrendas"
                                 className="hidden md:block text-slate-700 dark:text-slate-300 hover:text-mivn-blue dark:hover:text-mivn-blue font-medium text-[15px] transition-colors"
                             >
-                                Donar
+                                Ofrendar
                             </Link>
                         )}
 
@@ -165,11 +165,11 @@ export const GlobalNavClient = ({ user, navItems }: GlobalNavClientProps) => {
 
                             {user && (
                                 <Link
-                                    href="/donaciones"
+                                    href="/ofrendas"
                                     onClick={() => setIsOpen(false)}
                                     className="text-slate-700 dark:text-slate-300 hover:text-mivn-blue font-medium py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                                 >
-                                    Donar
+                                    Ofrendar
                                 </Link>
                             )}
 

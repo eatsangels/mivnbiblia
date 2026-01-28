@@ -17,8 +17,8 @@ export const FAQ = () => {
             a: "Los 'Grupos de Vida' son el corazón de nuestra iglesia. Puedes inscribirte directamente en el módulo de información después de cada servicio, o a través de nuestra App en la sección 'Comunidad'. Tenemos grupos divididos por sectores geográficos y etapas de vida."
         },
         {
-            q: "¿Cómo obtengo mi recibo de donación?",
-            a: "Si realizas tu donación vía transferencia bancaria o a través de nuestro portal web, recibirás un comprobante automático en tu correo. Para recibos deducibles de impuestos oficiales, por favor envía una foto de tu comprobante junto con tus datos fiscales a donaciones@mivn.org."
+            q: "¿Cómo obtengo mi recibo de ofrenda?",
+            a: "Si realizas tu ofrenda vía transferencia bancaria o a través de nuestro portal web, recibirás un comprobante automático en tu correo. Para recibos deducibles de impuestos oficiales, por favor envía una foto de tu comprobante junto con tus datos fiscales a ofrendas@mivn.org."
         },
         {
             q: "¿Tienen programas para niños durante los servicios?",
@@ -35,7 +35,7 @@ export const FAQ = () => {
             bg: "bg-mivn-blue/10"
         },
         {
-            title: "Donaciones",
+            title: "Ofrendas",
             description: "Diezmos, ofrendas y recibos fiscales.",
             icon: HeartHandshake,
             color: "text-mivn-gold",
@@ -88,7 +88,7 @@ export const FAQ = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="flex-1 bg-transparent border-none focus:ring-0 text-slate-800 dark:text-white px-6 text-lg md:text-xl placeholder:text-slate-300 italic font-light"
-                                placeholder="Busca temas como 'donaciones' o 'horarios'..."
+                                placeholder="Busca temas como 'ofrendas' o 'horarios'..."
                             />
                             <button className="hidden md:flex bg-mivn-blue text-white px-10 py-4 lg:py-6 h-full rounded-[2rem] font-black uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all items-center gap-3">
                                 Buscar

@@ -29,8 +29,8 @@ export const ContactInfo = () => {
             a: "Los 'Grupos de Vida' son el corazón de nuestra iglesia. Puedes inscribirte en el módulo de información o a través de nuestra App en la sección 'Comunidad'."
         },
         {
-            q: "¿Cómo obtengo mi recibo de donación?",
-            a: "Si donas vía web, el recibo llega a tu correo automáticamente. Para recibos fiscales oficiales (deducibles), por favor envía tu comprobante a donaciones@mivn.org."
+            q: "¿Cómo obtengo mi recibo de ofrenda?",
+            a: "Si ofrendas vía web, el recibo llega a tu correo automáticamente. Para recibos fiscales oficiales (deducibles), por favor envía tu comprobante a ofrendas@mivn.org."
         }
     ];
 

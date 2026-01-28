@@ -12,13 +12,15 @@ export const DonationsBanner = () => {
     const amounts = ["$25", "$50", "$100", "$250", "$500", "Otro"];
     const frequencies = ["Única vez", "Semanal", "Mensual"];
 
+    const [paymentMethod, setPaymentMethod] = useState("card");
+
     return (
         <section className="bg-background-light dark:bg-background-dark py-24 px-4 font-lexend">
             <div className="max-w-7xl mx-auto space-y-16">
 
                 {/* Header */}
                 <header className="text-center space-y-6">
-                    <h1 className="text-4xl md:text-6xl font-playfair font-bold text-mivn-blue dark:text-white">Portal de Donaciones & Diezmos</h1>
+                    <h1 className="text-4xl md:text-6xl font-playfair font-bold text-mivn-blue dark:text-white">Portal de Ofrendas & Diezmos</h1>
                     <p className="max-w-2xl mx-auto text-xl text-slate-500 dark:text-slate-400 italic font-light">
                         "Cada uno dé como propuso en su corazón: no con tristeza, ni por necesidad, porque Dios ama al dador alegre." <br />
                         <span className="text-mivn-gold font-black uppercase tracking-widest text-xs not-italic">— 2 Corintios 9:7</span>
@@ -95,28 +97,69 @@ export const DonationsBanner = () => {
                             {/* Payment Methods */}
                             <div className="space-y-6">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Método de Pago</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <button className="flex items-center justify-center gap-4 p-6 border-2 border-slate-100 dark:border-slate-800 rounded-3xl hover:border-mivn-blue transition-all group">
-                                        <CreditCard className="w-6 h-6 text-slate-400 group-hover:text-mivn-blue" />
-                                        <span className="font-bold text-sm text-slate-700 dark:text-white uppercase tracking-widest">Tarjeta</span>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <button
+                                        onClick={() => setPaymentMethod('card')}
+                                        className={`flex flex-col items-center justify-center gap-3 p-6 border-2 rounded-3xl transition-all group ${paymentMethod === 'card' ? 'border-mivn-blue bg-mivn-blue/5 text-mivn-blue' : 'border-slate-100 dark:border-slate-800 hover:border-mivn-blue'}`}
+                                    >
+                                        <CreditCard className={`w-6 h-6 ${paymentMethod === 'card' ? 'text-mivn-blue' : 'text-slate-400 group-hover:text-mivn-blue'}`} />
+                                        <span className="font-bold text-xs uppercase tracking-widest">Tarjeta</span>
                                     </button>
-                                    <button className="flex items-center justify-center gap-4 p-6 border-2 border-slate-100 dark:border-slate-800 rounded-3xl hover:border-blue-500 transition-all group">
-                                        <Wallet className="w-6 h-6 text-slate-400 group-hover:text-blue-500" />
-                                        <span className="font-bold text-sm text-slate-700 dark:text-white uppercase tracking-widest">PayPal</span>
+                                    <button
+                                        onClick={() => setPaymentMethod('zelle')}
+                                        className={`flex flex-col items-center justify-center gap-3 p-6 border-2 rounded-3xl transition-all group ${paymentMethod === 'zelle' ? 'border-mivn-blue bg-mivn-blue/5 text-mivn-blue' : 'border-slate-100 dark:border-slate-800 hover:border-mivn-blue'}`}
+                                    >
+                                        <svg viewBox="0 0 24 24" className={`w-6 h-6 fill-current ${paymentMethod === 'zelle' ? 'text-mivn-blue' : 'text-slate-400 group-hover:text-mivn-blue'}`} xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" /><path d="M15.5 8.5h-5c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1h5c.55 0 1-.45 1-1v-5c0-.55-.45-1-1-1zm-1 5h-3v-3h3v3z" /></svg>
+                                        <span className="font-bold text-xs uppercase tracking-widest">Zelle</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentMethod('paypal')}
+                                        className={`flex flex-col items-center justify-center gap-3 p-6 border-2 rounded-3xl transition-all group ${paymentMethod === 'paypal' ? 'border-blue-500 bg-blue-500/5 text-blue-500' : 'border-slate-100 dark:border-slate-800 hover:border-blue-500'}`}
+                                    >
+                                        <Wallet className={`w-6 h-6 ${paymentMethod === 'paypal' ? 'text-blue-500' : 'text-slate-400 group-hover:text-blue-500'}`} />
+                                        <span className="font-bold text-xs uppercase tracking-widest">PayPal</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <button className="w-full bg-mivn-blue text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group">
-                                Realizar Donación <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                            </button>
-                            <div className="flex items-center justify-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                                Transacción Segura Encriptada SSL
+                        {paymentMethod === 'zelle' ? (
+                            <div className="space-y-6 animate-in fade-in zoom-in duration-300">
+                                <div className="bg-slate-50 dark:bg-slate-800/50 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-700">
+                                    <div className="flex flex-col items-center gap-6 text-center">
+                                        <div className="bg-white p-4 rounded-xl shadow-lg">
+                                            <Image
+                                                src="/zelle-qr.jpg"
+                                                alt="Scan to Pay with Zelle"
+                                                width={180}
+                                                height={180}
+                                                className="rounded-lg"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Enviar ofrenda a:</p>
+                                            <p className="text-base font-bold text-slate-900 dark:text-white">MINISTERIO INTERNACIONAL VIDA NUEVA, IN</p>
+                                        </div>
+                                        <div className="text-xs text-slate-500 bg-slate-200/50 dark:bg-slate-700/30 px-6 py-3 rounded-xl max-w-sm">
+                                            Escanea el código QR desde tu aplicación bancaria compatible con Zelle o usa la información de la cuenta.
+                                        </div>
+                                    </div>
+                                </div>
+                                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group">
+                                    <CheckCircle2 className="w-5 h-5" /> Confirmar Transferencia Zelle
+                                </button>
                             </div>
-                        </div>
+                        ) : (
+                            <div className="space-y-6">
+                                <button className="w-full bg-mivn-blue text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group">
+                                    Realizar Ofrenda <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                                </button>
+                                <div className="flex items-center justify-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                                    Transacción Segura Encriptada SSL
+                                </div>
+                            </div>
+                        )}
                     </section>
 
                     {/* Right Column: User Info & History */}

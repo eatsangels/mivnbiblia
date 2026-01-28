@@ -15,7 +15,7 @@ export const Navbar = ({ user }: NavbarProps) => {
     const navLinks = [
         { name: "Inicio", href: "/" },
         { name: "Estudio", href: "/read" },
-        { name: "Donar", href: "/donaciones" },
+        { name: "Ofrendar", href: "/ofrendas" },
         { name: "En Vivo", href: "/en-vivo" },
         { name: "Grupos", href: "/grupos" },
         { name: "Ministerios", href: "/ministerios" },
@@ -107,11 +107,11 @@ export const Navbar = ({ user }: NavbarProps) => {
                         </Link>
                     ))}
                     <Link
-                        href="/donaciones"
+                        href="/ofrendas"
                         className="block text-lg font-bold text-mivn-blue"
                         onClick={() => setIsOpen(false)}
                     >
-                        Donar
+                        Ofrendar
                     </Link>
 
                     {!user && (
