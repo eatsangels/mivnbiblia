@@ -193,7 +193,7 @@ export function EventManager({ initialEvents }: EventManagerProps) {
                             <div className="flex items-center gap-4 bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10">
                                 <div className="flex items-center gap-2">
                                     <Sparkles className={`w-5 h-5 ${editingEvent?.is_featured ? 'text-mivn-gold' : 'text-slate-400'}`} />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Destacado</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Mostrar en Inicio</span>
                                 </div>
                                 <label className="relative inline-flex items-center cursor-pointer ml-auto">
                                     <input type="checkbox" name="is_featured" className="sr-only peer" defaultChecked={editingEvent?.is_featured} />

@@ -112,6 +112,13 @@ export async function getSpiritualFunnel() {
     return funnelData;
 }
 
+export interface DashboardStats {
+    totalMembers: number;
+    newConverts: number;
+    baptisms: number;
+    activeLeaders: number;
+}
+
 export async function getGroupHealthStats() {
     const supabase = await createClient();
 
@@ -134,4 +141,61 @@ export async function getGroupHealthStats() {
         health: g.members_count > 12 ? 3 : (g.members_count > 5 ? 2 : 1),
         leader: g.leader?.full_name || 'Sin líder'
     }));
+}
+
+export async function getGrowthAndAttendanceStats() {
+    const supabase = await createClient();
+    const months = 6;
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1); // Start of 6 months ago
+
+    // Initialize map for the last 6 months
+    const statsMap = new Map<string, { month: string; growth: number; attendance: number }>();
+    for (let i = 0; i < months; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const monthName = d.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
+        statsMap.set(key, { month: monthName, growth: 0, attendance: 0 });
+    }
+
+    // 1. Growth (New Profiles)
+    const { data: newProfiles } = await supabase
+        .from('profiles')
+        .select('created_at')
+        .gte('created_at', startDate.toISOString());
+
+    if (newProfiles) {
+        newProfiles.forEach(p => {
+            if (!p.created_at) return;
+            const d = new Date(p.created_at);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            if (statsMap.has(key)) {
+                const stat = statsMap.get(key)!;
+                stat.growth++;
+            }
+        });
+    }
+
+    // 2. Attendance (Group Attendance)
+    const { data: attendance } = await supabase
+        .from('group_attendance')
+        .select('meeting_date, members_present_count, new_guests_count')
+        .gte('meeting_date', startDate.toISOString());
+
+    if (attendance) {
+        attendance.forEach(a => {
+            if (!a.meeting_date) return;
+            const d = new Date(a.meeting_date);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            // If the record falls into next month's bucket created by timezone issues or edge cases, ignore or map correctly.
+            // Using simple string key matching.
+            if (statsMap.has(key)) {
+                const stat = statsMap.get(key)!;
+                stat.attendance += (a.members_present_count || 0) + (a.new_guests_count || 0);
+            }
+        });
+    }
+
+    // Convert map to array and reverse to show oldest first
+    return Array.from(statsMap.values()).reverse();
 }

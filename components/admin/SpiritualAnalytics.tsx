@@ -29,11 +29,25 @@ interface AnalyticsProps {
         health: number;
         leader: string;
     }[];
+    growthAndAttendance: {
+        month: string;
+        growth: number;
+        attendance: number;
+    }[];
 }
 
-export function SpiritualAnalytics({ summary, ministryStats, funnel, groupHealth }: AnalyticsProps) {
+export function SpiritualAnalytics({ summary, ministryStats, funnel, groupHealth, growthAndAttendance }: AnalyticsProps) {
     // Helper to calculate funnel width/color
     const maxFunnelVal = Math.max(...funnel.map(f => f.val), 1);
+
+    // Calculate average attendance for the last available month (or average of all if preferred, using last month for now as "current status")
+    const lastMonthStats = growthAndAttendance[growthAndAttendance.length - 1] || { attendance: 0, growth: 0 };
+    const avgAttendance = lastMonthStats.attendance; // Simplification: using monthly total as proxy for "activity", ideally would divide by # of events if we had that count.
+    // For "Retention", we can use a mock calculation or a real one if we define it.
+    // Real retention is hard without historical individual data. Using a placeholder calculation based on growth vs total members?
+    // Let's fallback to specific logic or keep it static if complex.
+    // Let's use a safe static value or simple calc for now to avoid breaking UI.
+    const retentionRate = 92; // Placeholder until we have a real formula defined by user.
     const getFunnelStyles = (val: number, index: number) => {
         const percentage = (val / maxFunnelVal) * 100;
         // Simple width mapping for tailwind classes if possible, or style attribute
@@ -141,25 +155,30 @@ export function SpiritualAnalytics({ summary, ministryStats, funnel, groupHealth
                     </div>
 
                     <div className="h-64 flex items-end justify-between gap-4 relative">
-                        {/* Bars - MOCKED FOR UI CONSISTENCY UNTIL WE HAVE DAILY HISTORY */}
-                        {['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN'].map((month, i) => {
-                            const height = [60, 50, 70, 75, 90, 80][i];
+                        {growthAndAttendance.length > 0 ? growthAndAttendance.map((stat, i) => {
+                            // Normalize heights relative to max value for visualization
+                            const maxVal = Math.max(...growthAndAttendance.map(s => Math.max(s.growth, s.attendance)), 10); // Min 10 to avoid div by zero
+                            const attendanceHeight = (stat.attendance / maxVal) * 100;
+                            const growthHeight = (stat.growth / maxVal) * 100;
+
                             return (
-                                <div key={month} className="flex-1 flex flex-col justify-end h-full gap-2 group cursor-pointer">
-                                    <div className="w-full bg-mivn-blue/10 dark:bg-mivn-blue/5 rounded-t-xl relative overflow-hidden transition-all group-hover:bg-mivn-blue/20" style={{ height: `${height}%` }}>
-                                        <div className="absolute bottom-0 w-full bg-mivn-blue transition-all group-hover:bg-blue-600" style={{ height: `${height * 0.7}%` }}></div>
+                                <div key={stat.month} className="flex-1 flex flex-col justify-end h-full gap-2 group cursor-pointer">
+                                    <div className="w-full bg-mivn-blue/10 dark:bg-mivn-blue/5 rounded-t-xl relative overflow-hidden transition-all group-hover:bg-mivn-blue/20" style={{ height: `${Math.max(attendanceHeight, 5)}%` }}>
+                                        <div className="absolute bottom-0 w-full bg-mivn-blue transition-all group-hover:bg-blue-600" style={{ height: `${Math.max(growthHeight, 0)}%`, maxHeight: '100%' }}></div>
                                     </div>
-                                    <span className="text-[10px] font-black text-slate-300 text-center uppercase tracking-widest">{month}</span>
+                                    <span className="text-[10px] font-black text-slate-300 text-center uppercase tracking-widest">{stat.month}</span>
                                 </div>
                             );
-                        })}
+                        }) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">No hay datos suficientes</div>
+                        )}
                         {/* Fake Trend Line */}
                         <div className="absolute top-12 left-0 right-0 h-32 border-t-2 border-dashed border-mivn-gold/30 rotate-1 transform origin-left pointer-events-none"></div>
                     </div>
 
                     <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                        <p className="text-xs text-slate-500 font-medium">Asistencia Promedio: <span className="font-bold text-slate-900 dark:text-white">840/semana</span></p>
-                        <p className="text-xs text-slate-500 font-medium">Retención: <span className="font-bold text-emerald-500">92%</span></p>
+                        <p className="text-xs text-slate-500 font-medium">Asistencia Mensual: <span className="font-bold text-slate-900 dark:text-white">{avgAttendance}</span></p>
+                        <p className="text-xs text-slate-500 font-medium">Liderazgo: <span className="font-bold text-emerald-500">{summary.totalMembers > 0 ? Math.round((summary.activeLeaders / summary.totalMembers) * 100) : 0}%</span></p>
                     </div>
                 </div>
 

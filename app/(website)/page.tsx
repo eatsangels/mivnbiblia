@@ -4,12 +4,14 @@ import { Play, ArrowRight, Calendar, MapPin, Quote } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getPinnedAnnouncements } from "@/lib/queries/announcements";
+import { getFeaturedEvents } from "@/lib/queries/events";
 import { AnnouncementsFeed } from "@/components/home/AnnouncementsFeed";
 
 export default async function WebsiteHome() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     const announcements = await getPinnedAnnouncements();
+    const upcomingEvents = await getFeaturedEvents(3);
 
     return (
         <>
@@ -78,60 +80,61 @@ export default async function WebsiteHome() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {/* Card 1 */}
-                            <div className="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                                <div className="flex gap-5">
-                                    <div className="flex flex-col items-center justify-center bg-mivn-blue/10 dark:bg-mivn-blue/20 text-mivn-blue rounded-xl px-4 py-3 min-w-[70px]">
-                                        <span className="text-2xl font-bold">14</span>
-                                        <span className="text-xs uppercase font-bold tracking-tighter">OCT</span>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h4 className="text-xl font-bold group-hover:text-mivn-blue transition-colors text-slate-900 dark:text-white">Vigilia de Oración</h4>
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
-                                            🕒 19:00 PM
-                                        </p>
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
-                                            📍 Templo Central
-                                        </p>
-                                    </div>
+                            {upcomingEvents.length > 0 ? (
+                                upcomingEvents.map((event, index) => {
+                                    const date = new Date(event.event_date);
+                                    // Use explicit locale for consistent formatting
+                                    const day = date.getDate();
+                                    const month = date.toLocaleString('es-ES', { month: 'short' }).replace('.', '').toUpperCase();
+
+                                    // Helper for formatting time
+                                    let timeStr = "Horario por definir";
+                                    if (event.start_time) {
+                                        try {
+                                            const timeDate = new Date(event.start_time);
+                                            // Validate timestamp
+                                            if (!isNaN(timeDate.getTime())) {
+                                                timeStr = timeDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true });
+                                            } else {
+                                                // Fallback if Date parsing fails but string exists
+                                                timeStr = "Horario por definir";
+                                            }
+                                        } catch (e) {
+                                            timeStr = "Horario por definir";
+                                        }
+                                    }
+
+                                    // Alternate styles or based on category
+                                    const isGold = index % 2 !== 0; // Simple alternation matching the design roughly
+                                    const colorClass = isGold ? "text-mivn-gold bg-mivn-gold/10" : "text-mivn-blue bg-mivn-blue/10 dark:bg-mivn-blue/20";
+
+                                    return (
+                                        <div key={event.id} className="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                                            <div className="flex gap-5">
+                                                <div className={`flex flex-col items-center justify-center rounded-xl px-4 py-3 min-w-[70px] ${colorClass}`}>
+                                                    <span className="text-2xl font-bold">{day}</span>
+                                                    <span className="text-xs uppercase font-bold tracking-tighter">{month}</span>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <h4 className="text-xl font-bold group-hover:text-mivn-blue transition-colors text-slate-900 dark:text-white line-clamp-2">
+                                                        {event.title}
+                                                    </h4>
+                                                    <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+                                                        🕒 {timeStr}
+                                                    </p>
+                                                    <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
+                                                        📍 {event.location || 'Templo Central'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="col-span-3 text-center py-12 text-slate-400 italic bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+                                    No hay eventos programados próximamente.
                                 </div>
-                            </div>
-                            {/* Card 2 */}
-                            <div className="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                                <div className="flex gap-5">
-                                    <div className="flex flex-col items-center justify-center bg-mivn-gold/10 text-mivn-gold rounded-xl px-4 py-3 min-w-[70px]">
-                                        <span className="text-2xl font-bold">18</span>
-                                        <span className="text-xs uppercase font-bold tracking-tighter">OCT</span>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h4 className="text-xl font-bold group-hover:text-mivn-blue transition-colors text-slate-900 dark:text-white">Grupo de Jóvenes</h4>
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
-                                            🕒 18:30 PM
-                                        </p>
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
-                                            📍 Salón Comunitario
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Card 3 */}
-                            <div className="group bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                                <div className="flex gap-5">
-                                    <div className="flex flex-col items-center justify-center bg-mivn-blue/10 dark:bg-mivn-blue/20 text-mivn-blue rounded-xl px-4 py-3 min-w-[70px]">
-                                        <span className="text-2xl font-bold">20</span>
-                                        <span className="text-xs uppercase font-bold tracking-tighter">OCT</span>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h4 className="text-xl font-bold group-hover:text-mivn-blue transition-colors text-slate-900 dark:text-white">Culto de Adoración</h4>
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
-                                            🕒 10:00 AM
-                                        </p>
-                                        <p className="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1">
-                                            📍 Auditorio Principal
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </section>
