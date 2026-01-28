@@ -92,7 +92,7 @@ export default async function DashboardPage() {
         { name: "Templo", icon: Compass, href: "/dashboard/temple" },
         { name: "Mapas", icon: Map, href: "/dashboard/maps" },
         { name: "Galería", icon: Camera, href: "/dashboard/galeria" },
-        { name: "Donaciones", icon: Heart, href: "/dashboard/donations" },
+        { name: "Ofrendas", icon: Heart, href: "/dashboard/ofrendas" },
         { name: "Perfil", icon: User, href: "/dashboard/profile" },
     ];
 
@@ -368,7 +368,7 @@ export default async function DashboardPage() {
                             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-10">Enlaces Rápidos</h3>
                             <ul className="space-y-6">
                                 {[
-                                    { label: "Donaciones y Diezmos", icon: Heart, href: "/dashboard/donations" },
+                                    { label: "Ofrendas y Diezmos", icon: Heart, href: "/dashboard/ofrendas" },
                                     { label: "Templo", icon: Compass, href: "/dashboard/temple" },
                                     { label: "Mapas", icon: Map, href: "/dashboard/maps" },
                                     { label: "Soporte Pastoral", icon: Users, href: "/soporte" },

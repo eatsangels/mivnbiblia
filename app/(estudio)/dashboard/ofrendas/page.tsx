@@ -42,7 +42,7 @@ export default async function DonationsDashboardPage() {
 
                     <nav className="hidden lg:flex items-center gap-10">
                         <Link href="/dashboard" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-mivn-blue transition-colors">Dashboard</Link>
-                        <Link href="/dashboard/donations" className="text-[10px] font-black uppercase tracking-widest text-mivn-blue border-b-2 border-mivn-blue pb-1">Donaciones</Link>
+                        <Link href="/dashboard/ofrendas" className="text-[10px] font-black uppercase tracking-widest text-mivn-blue border-b-2 border-mivn-blue pb-1">Ofrendas</Link>
                         <Link href="/eventos" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-mivn-blue transition-colors">Eventos</Link>
                         <Link href="/ministerios" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-mivn-blue transition-colors">Ministerios</Link>
                     </nav>
@@ -78,7 +78,7 @@ export default async function DonationsDashboardPage() {
             {/* Mobile Bottom Navigation */}
             <div className="lg:hidden fixed bottom-6 left-6 right-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 px-8 py-5 rounded-[2.5rem] flex justify-between items-center z-50 shadow-2xl">
                 <Link href="/dashboard" className="text-slate-400"><LayoutDashboard className="w-6 h-6" /></Link>
-                <Link href="/dashboard/donations" className="text-mivn-blue"><Heart className="w-6 h-6" /></Link>
+                <Link href="/dashboard/ofrendas" className="text-mivn-blue"><Heart className="w-6 h-6" /></Link>
                 <Link href="/ministerios" className="text-slate-400"><Users className="w-6 h-6" /></Link>
                 <Link href="/dashboard/profile" className="text-slate-400"><User className="w-6 h-6" /></Link>
             </div>

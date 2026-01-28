@@ -51,7 +51,7 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
                     <h1 className="text-4xl md:text-5xl font-playfair font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
-                        Donaciones <span className="text-mivn-blue italic">Recurrentes</span>
+                        Ofrendas <span className="text-mivn-blue italic">Recurrentes</span>
                     </h1>
                     <p className="text-sm md:text-base text-slate-500 dark:text-gray-400 font-light italic">
                         "Administra tu generosidad y fidelidad para la obra del Señor."
@@ -115,7 +115,7 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                     <section className="space-y-8">
                         <div className="flex items-center justify-between">
                             <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white flex items-center gap-4">
-                                <Sync className="w-6 h-6 text-mivn-blue" /> Donaciones Activas
+                                <Sync className="w-6 h-6 text-mivn-blue" /> Ofrendas Activas
                             </h3>
                             <button className="text-[10px] font-black text-mivn-blue uppercase tracking-widest hover:underline">Gestionar Todo</button>
                         </div>
@@ -200,7 +200,7 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                     {/* Setup Form */}
                     <section className="bg-white dark:bg-slate-900 rounded-[3.5rem] border border-slate-100 dark:border-slate-800 p-10 shadow-2xl space-y-10 sticky top-32">
                         <div className="space-y-3">
-                            <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white uppercase tracking-tighter">Nueva Donación</h3>
+                            <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white uppercase tracking-tighter">Nueva Ofrenda</h3>
                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">Configura tu próximo aporte recurrente</p>
                         </div>
 
@@ -261,9 +261,27 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                                         </div>
                                         <CardIcon className="w-5 h-5" />
                                         <div className="flex-1">
-                                            <p className="text-xs font-bold uppercase tracking-tight">Visa •••• 4421</p>
+                                            <p className="text-xs font-bold uppercase tracking-tight">Tarjeta de Crédito / Débito</p>
                                         </div>
                                     </label>
+
+                                    <label className={`flex items-center gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${paymentMethod === 'zelle' ? 'border-mivn-blue bg-mivn-blue/5 text-mivn-blue' : 'border-slate-50 dark:border-white/5 text-slate-500'}`}>
+                                        <input
+                                            type="radio"
+                                            name="payment"
+                                            className="hidden"
+                                            checked={paymentMethod === 'zelle'}
+                                            onChange={() => setPaymentMethod('zelle')}
+                                        />
+                                        <div className={`size-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'zelle' ? 'border-mivn-blue' : 'border-slate-300'}`}>
+                                            {paymentMethod === 'zelle' && <div className="size-2.5 bg-mivn-blue rounded-full" />}
+                                        </div>
+                                        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" /><path d="M15.5 8.5h-5c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1h5c.55 0 1-.45 1-1v-5c0-.55-.45-1-1-1zm-1 5h-3v-3h3v3z" /></svg>
+                                        <div className="flex-1">
+                                            <p className="text-xs font-bold uppercase tracking-tight">Zelle</p>
+                                        </div>
+                                    </label>
+
                                     <label className={`flex items-center gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${paymentMethod === 'bank' ? 'border-mivn-blue bg-mivn-blue/5 text-mivn-blue' : 'border-slate-50 dark:border-white/5 text-slate-500'}`}>
                                         <input
                                             type="radio"
@@ -277,15 +295,51 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                                         </div>
                                         <Landmark className="w-5 h-5" />
                                         <div className="flex-1">
-                                            <p className="text-xs font-bold uppercase tracking-tight">Nueva Cuenta Bancaria</p>
+                                            <p className="text-xs font-bold uppercase tracking-tight">Cuenta Bancaria</p>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
-                            <button className="w-full bg-mivn-blue text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-4 group">
-                                <Heart className="w-4 h-4 fill-current group-hover:scale-110 transition-transform" /> Confirmar Compromiso
-                            </button>
+                            {paymentMethod === 'zelle' ? (
+                                <div className="space-y-6 animate-in fade-in zoom-in duration-300">
+                                    <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-inner">
+                                        <div className="flex flex-col items-center gap-4 text-center">
+                                            <div className="bg-white p-4 rounded-xl shadow-lg">
+                                                <Image
+                                                    src="/zelle-qr.jpg"
+                                                    alt="Scan to Pay with Zelle"
+                                                    width={150}
+                                                    height={150}
+                                                    className="rounded-lg"
+                                                />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enviar ofrenda a:</p>
+                                                <p className="text-sm font-bold text-slate-900 dark:text-white">MINISTERIO INTERNACIONAL VIDA NUEVA, IN</p>
+                                            </div>
+                                            <div className="text-xs text-slate-500 bg-slate-100 dark:bg-slate-700/50 px-4 py-2 rounded-lg">
+                                                Escanea el código o busca nuestra cuenta en tu app bancaria.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button" // Prevent form submission for now, as it's manual
+                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-4 group"
+                                        onClick={() => {
+                                            alert("¡Gracias! Por favor confirma una vez realizada la transferencia.");
+                                            // Here you could trigger a modal or redirect
+                                        }}
+                                    >
+                                        <CheckCircle2 className="w-4 h-4" /> Ya realicé la transferencia
+                                    </button>
+                                </div>
+                            ) : (
+                                <button className="w-full bg-mivn-blue text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-4 group">
+                                    <Heart className="w-4 h-4 fill-current group-hover:scale-110 transition-transform" /> Confirmar Compromiso
+                                </button>
+                            )}
 
                             <div className="pt-4 space-y-4">
                                 <div className="flex items-center gap-3 text-emerald-500">
