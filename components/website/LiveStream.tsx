@@ -5,13 +5,15 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { YouTubeLiveStream, YouTubeVideo } from "@/lib/youtube";
 import { parseDuration } from "@/lib/youtube";
+import type { ServiceSettings } from "@/app/(estudio)/admin/settings/actions";
 
 interface LiveStreamProps {
     liveStream: YouTubeLiveStream | null;
     latestVideo: YouTubeVideo | null;
+    serviceSettings: ServiceSettings | null;
 }
 
-export const LiveStream = ({ liveStream, latestVideo }: LiveStreamProps) => {
+export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStreamProps) => {
     const [chatMessage, setChatMessage] = useState("");
     const [messages, setMessages] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -133,7 +135,12 @@ export const LiveStream = ({ liveStream, latestVideo }: LiveStreamProps) => {
                                 {isLive ? "Transmisión en Vivo" : "No Estamos en Vivo"}
                             </h2>
                             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-                                {isLive ? "Servicio de Domingo • 10:00 AM CST" : "Próximo servicio: Domingo 10:00 AM"}
+                                {isLive
+                                    ? "Servicio en Vivo"
+                                    : (serviceSettings?.next_service_date
+                                        ? `Próximo servicio: ${new Date(serviceSettings.next_service_date).toLocaleDateString('es-ES', { weekday: 'long', hour: 'numeric', minute: '2-digit' })}`
+                                        : "Próximo servicio: Domingo 10:00 AM")
+                                }
                             </p>
                         </div>
                     </div>
@@ -201,7 +208,10 @@ export const LiveStream = ({ liveStream, latestVideo }: LiveStreamProps) => {
                                     <div className="text-center space-y-3">
                                         <h3 className="text-2xl font-playfair font-bold text-white">No hay transmisión disponible</h3>
                                         <p className="text-white/60 text-sm max-w-md">
-                                            Vuelve el domingo a las 10:00 AM para disfrutar de nuestro servicio en vivo.
+                                            {serviceSettings?.next_service_date
+                                                ? `Vuelve el ${new Date(serviceSettings.next_service_date).toLocaleDateString('es-ES', { weekday: 'long', hour: 'numeric', minute: '2-digit' })} para disfrutar de nuestro servicio en vivo.`
+                                                : "Vuelve el domingo a las 10:00 AM para disfrutar de nuestro servicio en vivo."
+                                            }
                                         </p>
                                     </div>
                                     <button className="px-8 py-4 bg-mivn-blue text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-mivn-blue/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
@@ -234,7 +244,7 @@ export const LiveStream = ({ liveStream, latestVideo }: LiveStreamProps) => {
                                         {displayVideo.title}
                                     </h3>
                                     <p className="text-slate-500 dark:text-slate-400 font-light italic text-lg line-clamp-2">
-                                        {displayVideo.description || "Predicador: Pastor Principal de MIVN"}
+                                        {displayVideo.description || (serviceSettings?.next_service_preacher ? `Predicador: ${serviceSettings.next_service_preacher}` : "Predicador: Pastor Principal de MIVN")}
                                     </p>
                                 </div>
                                 <div className="flex gap-4 relative z-10">

@@ -6,12 +6,16 @@ import type { YouTubeLiveStream, YouTubeVideo } from "@/lib/youtube";
 import { parseDuration } from "@/lib/youtube";
 import Link from "next/link";
 
+import type { ServiceSettings, WeeklyActivity } from "@/app/(estudio)/admin/settings/actions";
+
 interface CultosProps {
     liveStream: YouTubeLiveStream | null;
     videos: YouTubeVideo[];
+    serviceSettings: ServiceSettings | null;
+    weeklyActivities: WeeklyActivity[];
 }
 
-export const Cultos = ({ liveStream, videos }: CultosProps) => {
+export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities }: CultosProps) => {
     const [selectedVideo, setSelectedVideo] = useState<string | null>(liveStream?.videoId || null);
     const [filter, setFilter] = useState<string>("Todos");
     const [now, setNow] = useState<Date | null>(null);
@@ -26,14 +30,20 @@ export const Cultos = ({ liveStream, videos }: CultosProps) => {
     const getTimeLeft = () => {
         if (!now) return { days: "00", hours: "00", minutes: "00", seconds: "00" };
 
-        const targetDate = new Date(now);
-        // Calculate next Sunday relative to "now"'s date component
-        targetDate.setDate(now.getDate() + (7 - now.getDay()) % 7);
-        targetDate.setHours(10, 0, 0, 0);
+        let targetDate: Date;
 
-        // If it's Sunday but after 10 AM, target NEXT Sunday
-        if (now > targetDate) {
-            targetDate.setDate(targetDate.getDate() + 7);
+        if (serviceSettings?.next_service_date) {
+            targetDate = new Date(serviceSettings.next_service_date);
+        } else {
+            targetDate = new Date(now);
+            // Calculate next Sunday relative to "now"'s date component
+            targetDate.setDate(now.getDate() + (7 - now.getDay()) % 7);
+            targetDate.setHours(10, 0, 0, 0);
+
+            // If it's Sunday but after 10 AM, target NEXT Sunday
+            if (now > targetDate) {
+                targetDate.setDate(targetDate.getDate() + 7);
+            }
         }
 
         const difference = targetDate.getTime() - now.getTime();
@@ -173,25 +183,42 @@ export const Cultos = ({ liveStream, videos }: CultosProps) => {
                                     <span className="bg-mivn-gold/10 text-mivn-gold px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border border-mivn-gold/20">Especial</span>
                                 </div>
 
-                                <h2 className="text-4xl md:text-6xl font-playfair font-bold text-slate-900 dark:text-white leading-tight">La Fe que Mueve <span className="italic text-mivn-blue underline decoration-mivn-gold/30 decoration-2 underline-offset-8">Montañas</span></h2>
+                                <h2 className="text-4xl md:text-6xl font-playfair font-bold text-slate-900 dark:text-white leading-tight">
+                                    {serviceSettings?.next_service_title || "La Fe que Mueve Montañas"}
+                                </h2>
+                                <p className="text-slate-500 italic">
+                                    {serviceSettings?.next_service_description}
+                                </p>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                                    {[
-                                        { icon: User, text: "Pastor David Morales", label: "Predicador" },
-                                        { icon: Calendar, text: "Domingo, 10 de Enero", label: "Fecha" },
-                                        { icon: Clock, text: "10:00 AM CST", label: "Hora" },
-                                        { icon: MapPin, text: "Auditorio Principal, MIVN", label: "Lugar" }
-                                    ].map((info, i) => (
-                                        <div key={i} className="flex items-center gap-5 group/item">
-                                            <div className="w-12 h-12 bg-slate-50 dark:bg-white/5 rounded-2xl flex items-center justify-center text-mivn-blue group-hover/item:bg-mivn-blue group-hover/item:text-white transition-all">
-                                                <info.icon className="w-5 h-5" />
+                                    {serviceSettings ? (
+                                        [
+                                            { icon: User, text: serviceSettings.next_service_preacher || "Por confirmar", label: "Predicador" },
+                                            {
+                                                icon: Calendar, text: serviceSettings.next_service_date ? new Date(serviceSettings.next_service_date).toLocaleDateString('es-ES', {
+                                                    weekday: 'long', day: 'numeric', month: 'long'
+                                                }) : "Domingo", label: "Fecha"
+                                            },
+                                            {
+                                                icon: Clock, text: serviceSettings.next_service_date ? new Date(serviceSettings.next_service_date).toLocaleTimeString('es-ES', {
+                                                    hour: '2-digit', minute: '2-digit', hour12: true
+                                                }) : "10:00 AM", label: "Hora"
+                                            },
+                                            { icon: MapPin, text: serviceSettings.next_service_location || "Auditorio Principal, MIVN", label: "Lugar" }
+                                        ].map((info, i) => (
+                                            <div key={i} className="flex items-center gap-5 group/item">
+                                                <div className="w-12 h-12 bg-slate-50 dark:bg-white/5 rounded-2xl flex items-center justify-center text-mivn-blue group-hover/item:bg-mivn-blue group-hover/item:text-white transition-all">
+                                                    <info.icon className="w-5 h-5" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{info.label}</p>
+                                                    <p className="text-base text-slate-700 dark:text-gray-300 font-medium capitalize">{info.text}</p>
+                                                </div>
                                             </div>
-                                            <div className="text-left">
-                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{info.label}</p>
-                                                <p className="text-base text-slate-700 dark:text-gray-300 font-medium">{info.text}</p>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    ) : (
+                                        <p>No hay información disponible</p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -263,25 +290,33 @@ export const Cultos = ({ liveStream, videos }: CultosProps) => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {activities.map((act, i) => (
-                            <div key={i} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3rem] p-10 space-y-6 hover:shadow-2xl transition-all duration-500">
-                                <div className="flex justify-between items-start">
-                                    <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${act.color}`}>{act.day}</span>
-                                    <div className={`w-12 h-12 rounded-2xl ${act.bg} ${act.color} flex items-center justify-center`}>
-                                        <act.icon className="w-5 h-5" />
+                        {(weeklyActivities && weeklyActivities.length > 0 ? weeklyActivities : []).map((act, i) => {
+                            // Helper to map DB icon strings to Lucide icons
+                            const IconComponent =
+                                act.icon_name === 'Heart' ? Heart :
+                                    act.icon_name === 'Star' ? Star :
+                                        act.icon_name === 'Play' ? Play : Heart; // Default
+
+                            return (
+                                <div key={act.id} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3rem] p-10 space-y-6 hover:shadow-2xl transition-all duration-500">
+                                    <div className="flex justify-between items-start">
+                                        <span className={`text-[10px] font-black uppercase tracking-[0.3em] text-slate-500`}>{act.day_of_week}</span>
+                                        <div className={`w-12 h-12 rounded-2xl bg-mivn-blue/10 text-mivn-blue flex items-center justify-center`}>
+                                            <IconComponent className="w-5 h-5" />
+                                        </div>
                                     </div>
+                                    <div className="space-y-2">
+                                        <h4 className="text-xl font-bold text-slate-800 dark:text-white uppercase tracking-tight leading-tight group-hover:text-mivn-blue transition-colors">{act.title}</h4>
+                                        <p className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">
+                                            <Clock className="w-3 h-3" /> {act.time}
+                                        </p>
+                                    </div>
+                                    <button className="w-full pt-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-widest border-t border-slate-50 dark:border-white/5 group-hover:text-mivn-blue transition-colors">
+                                        Ver detalles
+                                    </button>
                                 </div>
-                                <div className="space-y-2">
-                                    <h4 className="text-xl font-bold text-slate-800 dark:text-white uppercase tracking-tight leading-tight group-hover:text-mivn-blue transition-colors">{act.title}</h4>
-                                    <p className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">
-                                        <Clock className="w-3 h-3" /> {act.time}
-                                    </p>
-                                </div>
-                                <button className="w-full pt-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-widest border-t border-slate-50 dark:border-white/5 group-hover:text-mivn-blue transition-colors">
-                                    Ver detalles
-                                </button>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </section>
 

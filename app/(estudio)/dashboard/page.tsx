@@ -91,7 +91,7 @@ export default async function DashboardPage() {
         { name: "Ministerios", icon: HandHeart, href: "/ministerios" },
         { name: "Templo", icon: Compass, href: "/dashboard/temple" },
         { name: "Mapas", icon: Map, href: "/dashboard/maps" },
-        { name: "Galería", icon: Camera, href: "/galeria" },
+        { name: "Galería", icon: Camera, href: "/dashboard/galeria" },
         { name: "Donaciones", icon: Heart, href: "/dashboard/donations" },
         { name: "Perfil", icon: User, href: "/dashboard/profile" },
     ];
@@ -369,6 +369,8 @@ export default async function DashboardPage() {
                             <ul className="space-y-6">
                                 {[
                                     { label: "Donaciones y Diezmos", icon: Heart, href: "/dashboard/donations" },
+                                    { label: "Templo", icon: Compass, href: "/dashboard/temple" },
+                                    { label: "Mapas", icon: Map, href: "/dashboard/maps" },
                                     { label: "Soporte Pastoral", icon: Users, href: "/soporte" },
                                     { label: "Recursos Digitales", icon: BookOpen, href: "/recursos" },
                                     { label: "Mis Testimonios", icon: MessageSquare, href: "/dashboard/testimonios" },
