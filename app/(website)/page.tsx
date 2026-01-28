@@ -6,12 +6,15 @@ import Image from "next/image";
 import { getPinnedAnnouncements } from "@/lib/queries/announcements";
 import { getFeaturedEvents } from "@/lib/queries/events";
 import { AnnouncementsFeed } from "@/components/home/AnnouncementsFeed";
+import { getTestimonials } from "@/lib/queries/testimonials";
+import { Testimonials } from "@/components/website/Testimonials";
 
 export default async function WebsiteHome() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     const announcements = await getPinnedAnnouncements();
     const upcomingEvents = await getFeaturedEvents(3);
+    const testimonials = await getTestimonials();
 
     return (
         <>
@@ -138,6 +141,9 @@ export default async function WebsiteHome() {
                         </div>
                     </div>
                 </section>
+
+                {/* Testimonials Section */}
+                <Testimonials initialTestimonials={testimonials} />
 
                 {/* Devocional Preview - Matched to Exact Visual */}
                 <section className="py-24 bg-slate-50 dark:bg-slate-900/30" id="devocional">

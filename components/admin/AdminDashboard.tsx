@@ -6,6 +6,7 @@ import {
     CalendarDays, History, Plus
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export interface AdminDashboardProps {
     stats: {
@@ -127,8 +128,17 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: 
                             {pendingTestimonies.length > 0 ? (
                                 pendingTestimonies.map((item, i) => (
                                     <div key={i} className="p-6 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors flex gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-500 font-bold uppercase">
-                                            {(item.full_name || item.author_name || 'A').charAt(0)}
+                                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-500 font-bold uppercase overflow-hidden relative">
+                                            {item.avatar_url ? (
+                                                <Image
+                                                    src={item.avatar_url}
+                                                    alt={item.full_name || "Avatar"}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                (item.full_name || item.author_name || 'A').charAt(0)
+                                            )}
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex justify-between items-start mb-1">

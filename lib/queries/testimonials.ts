@@ -15,15 +15,24 @@ export type Testimonial = {
 export const getTestimonials = cache(async () => {
     const supabase = await createClient();
     const { data, error } = await supabase
-        .from("testimonials")
+        .from("testimonies")
         .select("*")
-        .eq("is_active", true)
+        .eq("is_approved", true)
         .order("created_at", { ascending: false });
 
     if (error) {
-        console.error("Error fetching testimonials:", error);
+        console.error("Error fetching testimonies:", error);
         return [];
     }
 
-    return data as any as Testimonial[];
+    return data.map((t: any) => ({
+        id: t.id,
+        name: t.full_name || t.author_name || "Anónimo",
+        category: t.category || "General",
+        text: t.content,
+        avatar_url: t.avatar_url,
+        type: (t.featured || t.is_featured) ? 'accent' : 'text',
+        is_active: t.is_approved,
+        created_at: t.created_at
+    })) as Testimonial[];
 });
