@@ -14,6 +14,7 @@ export function AnnouncementManager() {
     const [announcements, setAnnouncements] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showPreview, setShowPreview] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [filter, setFilter] = useState<'recent' | 'scheduled'>('recent');
     const [isMounted, setIsMounted] = useState(false);
     const [formData, setFormData] = useState({
@@ -21,7 +22,8 @@ export function AnnouncementManager() {
         target_audience: "Todos los miembros",
         scheduled_for: "",
         is_notified: true,
-        is_pinned: false
+        is_pinned: false,
+        expires_at: ""
     });
 
     useEffect(() => {
@@ -33,11 +35,59 @@ export function AnnouncementManager() {
         const { data, error } = await supabase
             .from('announcements')
             .select('*, created_by_profile:profiles(full_name, avatar_url)')
-            .order('is_pinned', { ascending: false })
+            // Removed is_pinned sorting to strictly show newest first as requested
             .order('created_at', { ascending: false });
 
         if (data) setAnnouncements(data);
         setLoading(false);
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("¿Estás seguro de que quieres eliminar este anuncio?")) return;
+
+        const { error } = await supabase
+            .from('announcements')
+            .delete()
+            .eq('id', id);
+
+        if (!error) {
+            fetchAnnouncements();
+        }
+    };
+
+    const handleEdit = (ann: any) => {
+        setEditingId(ann.id);
+        
+        // Helper to format date for datetime-local (YYYY-MM-DDThh:mm)
+        const formatDate = (dateString: string | null) => {
+            if (!dateString) return "";
+            const date = new Date(dateString);
+            // Adjust to get local time string in ISO format
+            const offset = date.getTimezoneOffset() * 60000;
+            return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+        };
+
+        setFormData({
+            message: ann.message,
+            target_audience: ann.target_audience,
+            scheduled_for: formatDate(ann.scheduled_for),
+            is_notified: ann.is_notified,
+            is_pinned: ann.is_pinned,
+            expires_at: formatDate(ann.expires_at)
+        });
+        document.getElementById('create-form')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+        setFormData({
+            message: "",
+            target_audience: "Todos los miembros",
+            scheduled_for: "",
+            is_notified: true,
+            is_pinned: false,
+            expires_at: ""
+        });
     };
 
     const handleSubmit = async (e: any) => {
@@ -45,19 +95,41 @@ export function AnnouncementManager() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // @ts-ignore
-        const { error } = await supabase.from('announcements').insert([{
-            message: formData.message,
-            target_audience: formData.target_audience,
-            scheduled_for: formData.scheduled_for || null,
-            is_notified: formData.is_notified,
-            is_pinned: formData.is_pinned,
-            created_by: user.id
-        } as any]);
+        if (editingId) {
+            // Update existing
+            // @ts-ignore
+            const { error } = await supabase.from('announcements')
+                .update({
+                    message: formData.message,
+                    target_audience: formData.target_audience,
+                    scheduled_for: formData.scheduled_for || null,
+                    is_notified: formData.is_notified,
+                    is_pinned: formData.is_pinned,
+                    expires_at: formData.expires_at || null
+                } as any)
+                .eq('id', editingId);
 
-        if (!error) {
-            setFormData({ message: "", target_audience: "Todos los miembros", scheduled_for: "", is_notified: true, is_pinned: false });
-            fetchAnnouncements();
+            if (!error) {
+                handleCancelEdit(); // Resets form and editingId
+                fetchAnnouncements();
+            }
+        } else {
+            // Create new
+            // @ts-ignore
+            const { error } = await supabase.from('announcements').insert([{
+                message: formData.message,
+                target_audience: formData.target_audience,
+                scheduled_for: formData.scheduled_for || null,
+                is_notified: formData.is_notified,
+                is_pinned: formData.is_pinned,
+                expires_at: formData.expires_at || null,
+                created_by: user.id
+            } as any]);
+
+            if (!error) {
+                setFormData({ message: "", target_audience: "Todos los miembros", scheduled_for: "", is_notified: true, is_pinned: false, expires_at: "" });
+                fetchAnnouncements();
+            }
         }
     };
 
@@ -166,13 +238,27 @@ export function AnnouncementManager() {
                                                                 <NotificationsActiveIcon /> Push Enviada
                                                             </span>
                                                         )}
+                                                        {ann.expires_at && (
+                                                            <>
+                                                                <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                                                <span className="flex items-center gap-1 text-rose-500" suppressHydrationWarning>
+                                                                    <Clock className="w-3 h-3" /> Expira: {isMounted ? new Date(ann.expires_at).toLocaleDateString() : "..."}
+                                                                </span>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                                                    <button className="p-3 bg-slate-50 dark:bg-white/5 text-slate-400 hover:text-mivn-blue rounded-xl transition-all shadow-sm">
+                                                    <button
+                                                        onClick={() => handleEdit(ann)}
+                                                        className="p-3 bg-slate-50 dark:bg-white/5 text-slate-400 hover:text-mivn-blue rounded-xl transition-all shadow-sm"
+                                                    >
                                                         <Edit3Icon />
                                                     </button>
-                                                    <button className="p-3 bg-slate-50 dark:bg-white/5 text-slate-400 hover:text-rose-500 rounded-xl transition-all shadow-sm">
+                                                    <button
+                                                        onClick={() => handleDelete(ann.id)}
+                                                        className="p-3 bg-slate-50 dark:bg-white/5 text-slate-400 hover:text-rose-500 rounded-xl transition-all shadow-sm"
+                                                    >
                                                         <DeleteIcon />
                                                     </button>
                                                 </div>
@@ -203,14 +289,26 @@ export function AnnouncementManager() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <CampaignIcon className="w-6 h-6 text-mivn-blue" />
-                                <h2 className="text-2xl font-playfair font-bold text-slate-900 dark:text-white uppercase tracking-tight">Crear Anuncio</h2>
+                                <h2 className="text-2xl font-playfair font-bold text-slate-900 dark:text-white uppercase tracking-tight">
+                                    {editingId ? "Editar Anuncio" : "Crear Anuncio"}
+                                </h2>
                             </div>
-                            <button
-                                onClick={() => setShowPreview(true)}
-                                className="text-mivn-blue flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:underline"
-                            >
-                                <SmartphoneIcon /> Vista previa
-                            </button>
+                            {editingId && (
+                                <button
+                                    onClick={handleCancelEdit}
+                                    className="text-rose-500 text-[10px] font-black uppercase tracking-widest hover:underline"
+                                >
+                                    Cancelar Edición
+                                </button>
+                            )}
+                            {!editingId && (
+                                <button
+                                    onClick={() => setShowPreview(true)}
+                                    className="text-mivn-blue flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:underline"
+                                >
+                                    <SmartphoneIcon /> Vista previa
+                                </button>
+                            )}
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-8">
@@ -240,15 +338,23 @@ export function AnnouncementManager() {
                                         <option>Personal Administrativo</option>
                                     </select>
                                 </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Programar envío</label>
-                                    <input
-                                        type="datetime-local"
-                                        value={formData.scheduled_for}
-                                        onChange={(e) => setFormData({ ...formData, scheduled_for: e.target.value })}
-                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-800 dark:text-white font-bold text-xs uppercase tracking-widest"
-                                    />
-                                </div>
+                                <input
+                                    type="datetime-local"
+                                    value={formData.scheduled_for}
+                                    onChange={(e) => setFormData({ ...formData, scheduled_for: e.target.value })}
+                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-800 dark:text-white font-bold text-xs uppercase tracking-widest"
+                                />
+                            </div>
+
+
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Mostrar hasta (Opcional)</label>
+                                <input
+                                    type="datetime-local"
+                                    value={formData.expires_at}
+                                    onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
+                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:border-mivn-blue transition-all outline-none text-slate-800 dark:text-white font-bold text-xs uppercase tracking-widest"
+                                />
                             </div>
 
                             <div className="space-y-4">
@@ -278,68 +384,73 @@ export function AnnouncementManager() {
                                 </div>
                             </div>
 
+
                             <div className="pt-4 space-y-4">
                                 <button type="submit" className="w-full bg-mivn-blue text-white font-black uppercase tracking-[0.2em] text-xs py-5 rounded-[1.5rem] shadow-2xl shadow-mivn-blue/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4">
-                                    <SendHorizontal className="w-5 h-5" /> Publicar y Notificar
+                                    <SendHorizontal className="w-5 h-5" /> {editingId ? "Actualizar Anuncio" : "Publicar y Notificar"}
                                 </button>
-                                <button type="button" className="w-full text-slate-400 font-black uppercase tracking-widest text-[10px] py-2 hover:text-slate-600 transition-colors">
-                                    Guardar como Borrador
-                                </button>
+                                {!editingId && (
+                                    <button type="button" className="w-full text-slate-400 font-black uppercase tracking-widest text-[10px] py-2 hover:text-slate-600 transition-colors">
+                                        Guardar como Borrador
+                                    </button>
+                                )}
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
 
             {/* Mobile Preview Modal */}
-            {showPreview && (
-                <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-6 animate-in fade-in duration-300">
-                    <div className="relative max-w-sm w-full animate-in zoom-in duration-500">
-                        <button
-                            onClick={() => setShowPreview(false)}
-                            className="absolute -top-16 right-0 text-white flex items-center gap-2 text-sm font-black uppercase tracking-widest hover:text-rose-400 transition-colors"
-                        >
-                            <CloseIcon /> Cerrar
-                        </button>
-                        <div className="bg-slate-800 rounded-[4rem] p-4 border-8 border-slate-700 shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden aspect-[9/19]">
-                            <div className="bg-black w-full h-full rounded-[3rem] relative overflow-hidden flex flex-col items-center pt-14 px-5">
-                                <div className="absolute top-0 w-full px-10 py-5 flex justify-between items-center text-[11px] text-white/50 font-bold">
-                                    <span>9:41</span>
-                                    <div className="flex gap-1.5 items-center">
-                                        <div className="w-4 h-2.5 bg-white/20 rounded-sm"></div>
-                                        <div className="w-4 h-2.5 bg-white/20 rounded-sm"></div>
-                                        <div className="w-6 h-3 bg-white/40 rounded-md"></div>
+            {
+                showPreview && (
+                    <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-6 animate-in fade-in duration-300">
+                        <div className="relative max-w-sm w-full animate-in zoom-in duration-500">
+                            <button
+                                onClick={() => setShowPreview(false)}
+                                className="absolute -top-16 right-0 text-white flex items-center gap-2 text-sm font-black uppercase tracking-widest hover:text-rose-400 transition-colors"
+                            >
+                                <CloseIcon /> Cerrar
+                            </button>
+                            <div className="bg-slate-800 rounded-[4rem] p-4 border-8 border-slate-700 shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden aspect-[9/19]">
+                                <div className="bg-black w-full h-full rounded-[3rem] relative overflow-hidden flex flex-col items-center pt-14 px-5">
+                                    <div className="absolute top-0 w-full px-10 py-5 flex justify-between items-center text-[11px] text-white/50 font-bold">
+                                        <span>9:41</span>
+                                        <div className="flex gap-1.5 items-center">
+                                            <div className="w-4 h-2.5 bg-white/20 rounded-sm"></div>
+                                            <div className="w-4 h-2.5 bg-white/20 rounded-sm"></div>
+                                            <div className="w-6 h-3 bg-white/40 rounded-md"></div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Notification Card */}
-                                <div className="w-full bg-white/10 backdrop-blur-3xl rounded-[2rem] p-6 mt-10 border border-white/20 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-1000">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-6 h-6 bg-mivn-blue rounded-lg flex items-center justify-center text-[10px] text-white font-black shadow-lg">M</div>
-                                        <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.1em]">MIVN VIDA NUEVA</span>
-                                        <span className="text-[9px] text-white/40 font-bold ml-auto uppercase">Ahora</span>
+                                    {/* Notification Card */}
+                                    <div className="w-full bg-white/10 backdrop-blur-3xl rounded-[2rem] p-6 mt-10 border border-white/20 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-1000">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="w-6 h-6 bg-mivn-blue rounded-lg flex items-center justify-center text-[10px] text-white font-black shadow-lg">M</div>
+                                            <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.1em]">MIVN VIDA NUEVA</span>
+                                            <span className="text-[9px] text-white/40 font-bold ml-auto uppercase">Ahora</span>
+                                        </div>
+                                        <h4 className="text-white font-black text-sm uppercase tracking-tight">Anuncio Ministerio</h4>
+                                        <p className="text-white/80 text-xs mt-1.5 font-medium leading-relaxed italic line-clamp-4 leading-relaxed">
+                                            {formData.message || "Escribe un mensaje para ver la previsualización aquí..."}
+                                        </p>
                                     </div>
-                                    <h4 className="text-white font-black text-sm uppercase tracking-tight">Anuncio Ministerio</h4>
-                                    <p className="text-white/80 text-xs mt-1.5 font-medium leading-relaxed italic line-clamp-4 leading-relaxed">
-                                        {formData.message || "Escribe un mensaje para ver la previsualización aquí..."}
-                                    </p>
-                                </div>
 
-                                <div className="mt-auto mb-10 w-full flex justify-between px-6">
-                                    <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-2xl border border-white/10">
-                                        <History className="w-6 h-6" />
+                                    <div className="mt-auto mb-10 w-full flex justify-between px-6">
+                                        <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-2xl border border-white/10">
+                                            <History className="w-6 h-6" />
+                                        </div>
+                                        <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-2xl border border-white/10">
+                                            <CameraIcon />
+                                        </div>
                                     </div>
-                                    <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-2xl border border-white/10">
-                                        <CameraIcon />
-                                    </div>
+                                    <div className="absolute bottom-3 w-32 h-1.5 bg-white/20 rounded-full"></div>
                                 </div>
-                                <div className="absolute bottom-3 w-32 h-1.5 bg-white/20 rounded-full"></div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
 

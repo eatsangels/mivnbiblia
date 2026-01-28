@@ -6,6 +6,7 @@ export type Announcement = {
     message: string;
     target_audience: string; // 'Todos los miembros', etc.
     scheduled_for: string | null;
+    expires_at: string | null;
     is_pinned: boolean;
     is_notified: boolean;
     created_by: string;
@@ -34,6 +35,7 @@ export const getPinnedAnnouncements = cache(async (limit = 3) => {
             )
         `)
         .eq("is_pinned", true)
+        .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
         .order("created_at", { ascending: false })
         .limit(limit);
 
@@ -60,6 +62,7 @@ export const getActiveAnnouncements = cache(async () => {
                 role
             )
         `)
+        .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
         .order("created_at", { ascending: false });
 
     if (error) throw error;
