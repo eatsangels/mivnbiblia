@@ -26,10 +26,10 @@ export async function getAnalyticsSummary() {
         .from('spiritual_journey_steps')
         .select('id')
         .eq('name', 'Bautismo')
-        .single();
+        .single() as { data: { id: string } | null };
 
     let baptismsCount = 0;
-    if (baptismStep) {
+    if (baptismStep && baptismStep.id) { // Added check for baptismStep.id
         const { count } = await supabase
             .from('user_spiritual_journey')
             .select('*', { count: 'exact', head: true })
@@ -60,7 +60,7 @@ export async function getMinistryStats() {
     // Get all ministries
     const { data: ministries } = await supabase
         .from('ministries')
-        .select('id, name');
+        .select('id, name') as { data: Array<{ id: string; name: string }> | null };
 
     if (!ministries) return [];
 
@@ -91,8 +91,8 @@ export async function getSpiritualFunnel() {
     // Get all steps ordered
     const { data: steps } = await supabase
         .from('spiritual_journey_steps')
-        .select('*')
-        .order('order_index');
+        .select('id, name, order_index')
+        .order('order_index') as { data: Array<{ id: string; name: string; order_index: number }> | null };
 
     if (!steps) return [];
 
@@ -118,9 +118,9 @@ export async function getGroupHealthStats() {
     // Get active groups with their member count
     const { data: groups } = await supabase
         .from('small_groups')
-        .select('id, name, leader, members_count, category')
+        .select('id, name, leader:profiles(full_name), members_count, category')
         .eq('is_active', true)
-        .limit(5);
+        .limit(5) as { data: Array<{ id: string; name: string; leader: { full_name: string } | null; members_count: number; category: string }> | null };
 
     if (!groups) return [];
 
@@ -132,6 +132,6 @@ export async function getGroupHealthStats() {
         members: g.members_count,
         status: g.members_count > 10 ? 'Creciendo' : 'Estable', // Simplified logic
         health: g.members_count > 12 ? 3 : (g.members_count > 5 ? 2 : 1),
-        leader: g.leader
+        leader: g.leader?.full_name || 'Sin líder'
     }));
 }

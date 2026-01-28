@@ -87,6 +87,7 @@ export default async function DashboardPage() {
         { name: "Instituto", icon: School, href: "/instituto" },
         { name: "Mi Crecimiento", icon: TrendingUp, href: "/dashboard/growth" },
         { name: "Devocionales", icon: BookOpen, href: "/devocionales" },
+        { name: "Mis Testimonios", icon: MessageSquare, href: "/dashboard/testimonios" },
         { name: "Ministerios", icon: HandHeart, href: "/ministerios" },
         { name: "Templo", icon: Compass, href: "/dashboard/temple" },
         { name: "Mapas", icon: Map, href: "/dashboard/maps" },
@@ -370,6 +371,7 @@ export default async function DashboardPage() {
                                     { label: "Donaciones y Diezmos", icon: Heart, href: "/dashboard/donations" },
                                     { label: "Soporte Pastoral", icon: Users, href: "/soporte" },
                                     { label: "Recursos Digitales", icon: BookOpen, href: "/recursos" },
+                                    { label: "Mis Testimonios", icon: MessageSquare, href: "/dashboard/testimonios" },
                                     ...(isAdmin ? [{ label: "Panel Administrativo", icon: Shield, href: "/admin" }] : [])
                                 ].map((link, i) => (
                                     <li key={i}>

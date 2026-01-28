@@ -36,7 +36,7 @@ export async function getCourses() {
             const { data: enrollments } = await supabase
                 .from('course_enrollments')
                 .select('progress_percentage')
-                .eq('course_id', course.id);
+                .eq('course_id', course.id) as { data: Array<{ progress_percentage: number }> | null };
 
             const enrolled_count = enrollments?.length || 0;
             const avg_progress = enrolled_count > 0
@@ -78,7 +78,7 @@ export async function createCourse(courseData: Omit<Course, 'id' | 'created_at' 
 
     const { data, error } = await supabase
         .from('courses')
-        .insert([courseData])
+        .insert([courseData] as any)
         .select()
         .single();
 
@@ -99,7 +99,7 @@ export async function updateCourse(id: string, courseData: Partial<Course>) {
         .update({
             ...courseData,
             updated_at: new Date().toISOString()
-        })
+        } as any)
         .eq('id', id)
         .select()
         .single();
@@ -190,7 +190,7 @@ export async function markAsCertified(enrollmentId: string) {
 
     const { error } = await supabase
         .from('course_enrollments')
-        .update({ completed_at: new Date().toISOString() })
+        .update({ completed_at: new Date().toISOString() } as any)
         .eq('id', enrollmentId);
 
     if (error) throw error;
@@ -225,7 +225,7 @@ export async function createLesson(lessonData: Omit<CourseLesson, 'id' | 'create
 
     const { data, error } = await supabase
         .from('course_lessons')
-        .insert([lessonData])
+        .insert([lessonData] as any)
         .select()
         .single();
 
@@ -239,7 +239,7 @@ export async function createLesson(lessonData: Omit<CourseLesson, 'id' | 'create
 
     await supabase
         .from('courses')
-        .update({ total_lessons: lessons?.length || 0 })
+        .update({ total_lessons: lessons?.length || 0 } as any)
         .eq('id', lessonData.course_id);
 
     revalidatePath('/admin/courses');
@@ -254,7 +254,7 @@ export async function updateLesson(id: string, lessonData: Partial<CourseLesson>
 
     const { data, error } = await supabase
         .from('course_lessons')
-        .update(lessonData)
+        .update(lessonData as any)
         .eq('id', id)
         .select()
         .single();
@@ -286,7 +286,7 @@ export async function deleteLesson(id: string, courseId: string) {
 
     await supabase
         .from('courses')
-        .update({ total_lessons: lessons?.length || 0 })
+        .update({ total_lessons: lessons?.length || 0 } as any)
         .eq('id', courseId);
 
     revalidatePath('/admin/courses');
