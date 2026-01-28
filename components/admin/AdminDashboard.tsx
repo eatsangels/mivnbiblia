@@ -129,9 +129,9 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: 
                                 pendingTestimonies.map((item, i) => (
                                     <div key={i} className="p-6 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors flex gap-4">
                                         <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-500 font-bold uppercase overflow-hidden relative">
-                                            {item.avatar_url ? (
+                                            {(item.avatar_url || item.image) ? (
                                                 <Image
-                                                    src={item.avatar_url}
+                                                    src={item.avatar_url || item.image}
                                                     alt={item.full_name || "Avatar"}
                                                     fill
                                                     className="object-cover"

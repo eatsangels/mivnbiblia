@@ -19,7 +19,7 @@ interface Testimony {
     featured: boolean | null;
     is_approved: boolean | null;
     user_id: string | null;
-    image_url?: string | null; // Checking if this exists in DB or if it's avatar_url
+    image: string | null; // Matches DB column
 }
 
 interface TestimonialManagerProps {
@@ -120,8 +120,8 @@ export function TestimonialManager({ initialTestimonies = [] }: TestimonialManag
                     filteredTestimonies.map((testimony) => (
                         <div key={testimony.id} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all flex flex-col xl:flex-row">
                             <div className="w-full xl:w-72 shrink-0 relative overflow-hidden h-56 xl:h-auto bg-slate-100 dark:bg-slate-800">
-                                {testimony.avatar_url ? (
-                                    <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${testimony.avatar_url}')` }}></div>
+                                {(testimony.avatar_url || testimony.image) ? (
+                                    <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${testimony.avatar_url || testimony.image}')` }}></div>
                                 ) : (
                                     <div className="absolute inset-0 flex items-center justify-center text-slate-300">
                                         <div className="text-6xl font-black opacity-20">{testimony.full_name?.[0]}</div>
@@ -140,8 +140,8 @@ export function TestimonialManager({ initialTestimonies = [] }: TestimonialManag
                                     <div className="flex flex-wrap items-center justify-between gap-4">
                                         <div className="flex items-center gap-4">
                                             <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center border-2 border-white dark:border-slate-700 shadow-lg overflow-hidden">
-                                                {testimony.avatar_url ? (
-                                                    <img src={testimony.avatar_url} alt={testimony.full_name} className="w-full h-full object-cover" />
+                                                {(testimony.avatar_url || testimony.image) ? (
+                                                    <img src={testimony.avatar_url || testimony.image || undefined} alt={testimony.full_name} className="w-full h-full object-cover" />
                                                 ) : (
                                                     <span className="text-lg font-black text-slate-400">{testimony.full_name?.[0]}</span>
                                                 )}

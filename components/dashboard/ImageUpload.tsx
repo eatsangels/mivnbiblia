@@ -93,10 +93,32 @@ export function ImageUpload({ onImageSelected, currentImageUrl, onRemove }: Imag
     );
 
     const handleCropComplete = useCallback(async () => {
-        if (!imageElement || !completedCrop || !selectedFile) return;
+        if (!imageElement || !selectedFile) return;
+
+        // Fallback for completedCrop if it hasn't fired yet
+        let finalCrop = completedCrop;
+
+        if (!finalCrop && crop.width && crop.height) {
+            // Calculate pixel crop from percent crop
+            const width = imageElement.width;
+            const height = imageElement.height;
+
+            finalCrop = {
+                unit: 'px',
+                x: ((crop.x || 0) / 100) * width,
+                y: ((crop.y || 0) / 100) * height,
+                width: (crop.width / 100) * width,
+                height: (crop.height / 100) * height,
+            };
+        }
+
+        if (!finalCrop) {
+            console.error("No crop data available");
+            return;
+        }
 
         try {
-            const croppedBlob = await getCroppedImg(imageElement, completedCrop);
+            const croppedBlob = await getCroppedImg(imageElement, finalCrop);
             const croppedFile = new File([croppedBlob], selectedFile.name, {
                 type: "image/jpeg",
             });
@@ -107,7 +129,7 @@ export function ImageUpload({ onImageSelected, currentImageUrl, onRemove }: Imag
         } catch (error) {
             console.error("Error cropping image:", error);
         }
-    }, [imageElement, completedCrop, selectedFile, getCroppedImg, onImageSelected]);
+    }, [imageElement, completedCrop, crop, selectedFile, getCroppedImg, onImageSelected]);
 
     const handleRemove = () => {
         setPreview(null);
@@ -185,8 +207,8 @@ export function ImageUpload({ onImageSelected, currentImageUrl, onRemove }: Imag
         <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragActive
-                    ? "border-primary bg-primary/5"
-                    : "border-gray-300 dark:border-gray-600 hover:border-primary/50"
+                ? "border-primary bg-primary/5"
+                : "border-gray-300 dark:border-gray-600 hover:border-primary/50"
                 }`}
         >
             <input {...getInputProps()} />

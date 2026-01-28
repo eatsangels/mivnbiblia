@@ -30,7 +30,7 @@ export const getTestimonials = cache(async () => {
         name: t.full_name || t.author_name || "Anónimo",
         category: t.category || "General",
         text: t.content,
-        avatar_url: t.avatar_url,
+        avatar_url: t.avatar_url || t.image,
         type: (t.featured || t.is_featured) ? 'accent' : 'text',
         is_active: t.is_approved,
         created_at: t.created_at
