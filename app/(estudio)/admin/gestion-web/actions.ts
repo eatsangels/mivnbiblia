@@ -63,7 +63,7 @@ export async function updateWebSettings(settings: Partial<WebSettings>) {
 
     // Update each setting
     for (const [key, value] of Object.entries(settings)) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from("site_settings")
             .upsert({
                 key,
