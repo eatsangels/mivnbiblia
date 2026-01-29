@@ -19,7 +19,7 @@ export function MemberEditDialog({ member, isOpen, onClose }: MemberEditDialogPr
         full_name: member?.full_name || "",
         phone: member?.phone || "",
         role: member?.role || "member",
-        // ministry: member?.ministry || "", 
+        ministry: member?.ministry || "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -91,6 +91,27 @@ export function MemberEditDialog({ member, isOpen, onClose }: MemberEditDialogPr
                             <option value="leader">Líder</option>
                             <option value="pastor">Pastor</option>
                             <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label htmlFor="ministry" className="text-sm font-medium">
+                            Ministerio
+                        </label>
+                        <select
+                            id="ministry"
+                            name="ministry"
+                            value={formData.ministry}
+                            onChange={handleChange}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            <option value="">Sin Asignar</option>
+                            <option value="Ministerio Juvenil">Ministerio Juvenil</option>
+                            <option value="Alabanza">Alabanza</option>
+                            <option value="Niños">Niños</option>
+                            <option value="Intercesión">Intercesión</option>
+                            <option value="Diaconado">Diaconado</option>
+                            <option value="Evangelismo">Evangelismo</option>
                         </select>
                     </div>
 

@@ -143,8 +143,8 @@ export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-mivn-blue bg-opacity-10 text-mivn-blue`}>
-                                                    {member.ministry || 'General'}
+                                                <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${member.ministry ? 'bg-mivn-blue/10 text-mivn-blue' : 'bg-slate-100 text-slate-400'}`}>
+                                                    {member.ministry || 'Sin Asignar'}
                                                 </span>
                                             </td>
                                             <td className="px-8 py-6">

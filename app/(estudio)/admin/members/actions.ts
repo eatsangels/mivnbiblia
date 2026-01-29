@@ -24,7 +24,7 @@ export async function updateMember(userId: string, data: any) {
             full_name: data.full_name,
             phone: data.phone,
             role: data.role,
-            // ministry: data.ministry, // Uncomment if ministry column exists in profiles, otherwise handle relation
+            ministry: data.ministry,
             updated_at: new Date().toISOString(),
         })
         .eq("id", userId);
