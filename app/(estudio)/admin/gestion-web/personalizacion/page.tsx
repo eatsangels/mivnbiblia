@@ -19,7 +19,7 @@ export default async function PersonalizacionPage() {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         redirect('/dashboard');
     }
 

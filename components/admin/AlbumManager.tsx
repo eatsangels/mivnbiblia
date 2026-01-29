@@ -49,7 +49,7 @@ export function AlbumManager({ albumId }: { albumId: string }) {
     const fetchAlbumDetails = async () => {
         setLoading(true);
         // Fetch Album
-        const { data: albumData, error: albumError } = await supabase
+        const { data: albumData, error: albumError } = await (supabase as any)
             .from('gallery_albums')
             .select('*')
             .eq('id', albumId)
@@ -65,7 +65,7 @@ export function AlbumManager({ albumId }: { albumId: string }) {
         setEditForm({ title: albumData.title, description: albumData.description || "" });
 
         // Fetch Photos
-        const { data: photosData } = await supabase
+        const { data: photosData } = await (supabase as any)
             .from('gallery_photos')
             .select('*')
             .eq('album_id', albumId)
@@ -83,7 +83,7 @@ export function AlbumManager({ albumId }: { albumId: string }) {
 
         try {
             // 1. Save to Supabase
-            const { error: dbError } = await supabase
+            const { error: dbError } = await (supabase as any)
                 .from('gallery_photos')
                 .insert({
                     album_id: albumId,
@@ -96,7 +96,7 @@ export function AlbumManager({ albumId }: { albumId: string }) {
 
             // 2. Update Album Cover if needed
             if (photos.length === 0 && !album.cover_image_url) {
-                await supabase
+                await (supabase as any)
                     .from('gallery_albums')
                     .update({
                         cover_image_url: url,
@@ -128,7 +128,7 @@ export function AlbumManager({ albumId }: { albumId: string }) {
         }
 
         // 2. Delete from DB
-        await supabase.from('gallery_photos').delete().eq('id', id);
+        await (supabase as any).from('gallery_photos').delete().eq('id', id);
 
         // 3. Update local state
         setPhotos(photos.filter(p => p.id !== id));
@@ -148,15 +148,15 @@ export function AlbumManager({ albumId }: { albumId: string }) {
 
         // 2. Delete from DB
         // Cascade delete on `gallery_albums` would be better, but doing manual cleanup for now
-        await supabase.from('gallery_photos').delete().eq('album_id', albumId);
-        await supabase.from('gallery_albums').delete().eq('id', albumId);
+        await (supabase as any).from('gallery_photos').delete().eq('album_id', albumId);
+        await (supabase as any).from('gallery_albums').delete().eq('id', albumId);
 
         router.push('/admin/gallery');
     };
 
     const handleUpdateAlbum = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { error } = await supabase.from('gallery_albums').update({
+        const { error } = await (supabase as any).from('gallery_albums').update({
             title: editForm.title,
             description: editForm.description
         }).eq('id', albumId);

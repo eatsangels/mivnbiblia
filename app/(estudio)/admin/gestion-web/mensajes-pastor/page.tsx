@@ -15,7 +15,7 @@ export default async function PastorMessagesPage() {
     // though the actions perform checks and the layout hides links.
     // Ideally we should check here too to prevent manual URL access.
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin' && profile?.role !== 'editor') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin' && (profile as any)?.role !== 'editor') {
         redirect("/dashboard");
     }
 

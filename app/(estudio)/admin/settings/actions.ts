@@ -16,7 +16,7 @@ export type WeeklyActivity = Database['public']['Tables']['weekly_activities']['
 export async function getServiceSettings(): Promise<ServiceSettings | null> {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('service_settings')
         .select('*')
         .single();
@@ -45,12 +45,12 @@ export async function updateServiceSettings(settings: Partial<ServiceSettings>) 
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
     // Get the first (and only) settings record
-    const { data: existing } = await supabase
+    const { data: existing } = await (supabase as any)
         .from('service_settings')
         .select('id')
         .single();
@@ -59,7 +59,7 @@ export async function updateServiceSettings(settings: Partial<ServiceSettings>) 
         return { error: 'Configuración no encontrada' };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('service_settings')
         .update(settings)
         .eq('id', existing.id);
@@ -80,7 +80,7 @@ export async function updateServiceSettings(settings: Partial<ServiceSettings>) 
 export async function getWeeklyActivities(): Promise<WeeklyActivity[]> {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('weekly_activities')
         .select('*')
         .eq('is_active', true)
@@ -110,11 +110,11 @@ export async function createWeeklyActivity(activity: Omit<WeeklyActivity, 'id' |
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('weekly_activities')
         .insert(activity)
         .select()
@@ -147,11 +147,11 @@ export async function updateWeeklyActivity(id: string, activity: Partial<WeeklyA
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('weekly_activities')
         .update(activity)
         .eq('id', id);
@@ -183,11 +183,11 @@ export async function deleteWeeklyActivity(id: string) {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('weekly_activities')
         .delete()
         .eq('id', id);
@@ -219,13 +219,13 @@ export async function reorderWeeklyActivities(activities: { id: string; display_
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
     // Update each activity's display_order
     for (const activity of activities) {
-        await supabase
+        await (supabase as any)
             .from('weekly_activities')
             .update({ display_order: activity.display_order })
             .eq('id', activity.id);
@@ -251,7 +251,7 @@ export async function getRolesSummary() {
 
     const summary: Record<string, number> = {};
     data.forEach((profile) => {
-        const role = profile.role || 'member';
+        const role = (profile as any).role || 'member';
         summary[role] = (summary[role] || 0) + 1;
     });
 
@@ -261,7 +261,7 @@ export async function getRolesSummary() {
 // Get users by role
 export async function getUsersByRole(role: string = 'admin') {
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('profiles')
         .select('*')
         .eq('role', role)
@@ -288,12 +288,12 @@ export async function updateRolePermissions(roleId: string, permissions: any[]) 
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
         return { error: 'No autorizado' };
     }
 
     // We need to find the UUID for the role using the slug
-    const { data: roleData } = await supabase
+    const { data: roleData } = await (supabase as any)
         .from('app_roles')
         .select('id')
         .eq('slug', roleId)
@@ -307,7 +307,7 @@ export async function updateRolePermissions(roleId: string, permissions: any[]) 
 
     for (const perm of permissions) {
         // Check if a permission record already exists for this role and module
-        const { data: existingPerm } = await supabase
+        const { data: existingPerm } = await (supabase as any)
             .from('role_permissions')
             .select('id')
             .eq('role_id', roleData.id)
@@ -326,13 +326,13 @@ export async function updateRolePermissions(roleId: string, permissions: any[]) 
         };
 
         if (existingPerm) {
-            const { error: updateErr } = await supabase
+            const { error: updateErr } = await (supabase as any)
                 .from('role_permissions')
                 .update(payload)
                 .eq('id', existingPerm.id);
             if (updateErr) return { error: `Error actualizando: ${updateErr.message}` };
         } else {
-            const { error: insertErr } = await supabase
+            const { error: insertErr } = await (supabase as any)
                 .from('role_permissions')
                 .insert(payload);
             if (insertErr) return { error: `Error insertando: ${insertErr.message}` };
@@ -348,7 +348,7 @@ export async function getRolePermissions(roleSlug: string) {
     const supabase = await createClient();
 
     // Get role ID
-    const { data: roleData } = await supabase
+    const { data: roleData } = await (supabase as any)
         .from('app_roles')
         .select('id')
         .eq('slug', roleSlug)
@@ -356,7 +356,7 @@ export async function getRolePermissions(roleSlug: string) {
 
     if (!roleData) return [];
 
-    const { data } = await supabase
+    const { data } = await (supabase as any)
         .from('role_permissions')
         .select('*')
         .eq('role_id', roleData.id);

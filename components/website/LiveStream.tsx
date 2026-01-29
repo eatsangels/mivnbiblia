@@ -39,7 +39,7 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
                 },
                 async (payload) => {
                     // Fetch profile for the new message
-                    const { data: profile } = await supabase
+                    const { data: profile } = await (supabase as any)
                         .from('profiles')
                         .select('full_name, avatar_url')
                         .eq('id', payload.new.user_id)
@@ -67,7 +67,7 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
     }, [messages]);
 
     const fetchMessages = async () => {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
             .from('messages')
             .select('*, profiles(full_name, avatar_url)')
             .eq('channel', 'general')
@@ -93,7 +93,7 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
             return;
         }
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from('messages')
             .insert({
                 user_id: user.id,

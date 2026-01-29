@@ -26,11 +26,11 @@ export async function submitTestimony(data: TestimonySubmission) {
     if (!profile) return { error: 'Perfil no encontrado' };
 
     // Create testimony - using actual table schema
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('testimonies')
         .insert({
             user_id: user.id,
-            full_name: profile.full_name || 'Anónimo', // Mapped from author_name, handle null
+            full_name: (profile as any).full_name || 'Anónimo', // Mapped from author_name, handle null
             category: data.category || 'Miembro', // Mapped from author_role
             avatar_url: data.image || null, // Mapped from image
             content: data.content,
@@ -51,7 +51,7 @@ export async function getUserTestimonies() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('testimonies')
         .select('*')
         .eq('user_id', user.id)
@@ -72,7 +72,7 @@ export async function updateTestimony(id: string, data: TestimonySubmission) {
     if (!user) return { error: 'No autenticado' };
 
     // Only allow editing if testimony is not approved yet
-    const { data: existing } = await supabase
+    const { data: existing } = await (supabase as any)
         .from('testimonies')
         .select('is_approved, user_id')
         .eq('id', id)
@@ -92,7 +92,7 @@ export async function updateTestimony(id: string, data: TestimonySubmission) {
         updateData.avatar_url = data.image; // Mapped from image
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('testimonies')
         .update(updateData)
         .eq('id', id);
@@ -110,7 +110,7 @@ export async function deleteTestimony(id: string) {
     if (!user) return { error: 'No autenticado' };
 
     // Only allow deleting if testimony is not approved yet
-    const { data: existing } = await supabase
+    const { data: existing } = await (supabase as any)
         .from('testimonies')
         .select('is_approved, user_id')
         .eq('id', id)
@@ -120,7 +120,7 @@ export async function deleteTestimony(id: string) {
     if (existing.user_id !== user.id) return { error: 'No autorizado' };
     if (existing.is_approved) return { error: 'No puedes eliminar un testimonio ya aprobado' };
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('testimonies')
         .delete()
         .eq('id', id);

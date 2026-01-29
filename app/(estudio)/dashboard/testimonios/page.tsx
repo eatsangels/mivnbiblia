@@ -15,7 +15,7 @@ export default async function TestimoniosPage() {
         redirect('/login');
     }
 
-    const { data: profile } = await supabase
+    const { data: profile } = await (supabase as any)
         .from('profiles')
         .select('*')
         .eq('id', user.id)
@@ -92,7 +92,7 @@ export default async function TestimoniosPage() {
                         </div>
 
                         <div className="grid gap-4">
-                            {testimonies.map((testimony) => (
+                            {testimonies.map((testimony: any) => (
                                 <TestimonyCard key={testimony.id} testimony={testimony} />
                             ))}
                         </div>

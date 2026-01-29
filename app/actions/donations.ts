@@ -15,7 +15,7 @@ export async function getDonationHistory() {
 
     if (!user) return [];
 
-    const { data: donations } = await supabase
+    const { data: donations } = await (supabase as any)
         .from("donations")
         .select("*")
         .eq("user_id", user.id)
@@ -36,20 +36,20 @@ export async function getDonationStats(): Promise<DonationStats> {
         };
     }
 
-    const { data: donations } = await supabase
+    const { data: donations } = await (supabase as any)
         .from("donations")
         .select("amount, created_at")
         .eq("user_id", user.id)
         .eq("payment_status", "completed"); // Changed from status
 
-    const totalGiven = donations?.reduce((sum, d) => sum + Number(d.amount), 0) || 0;
+    const totalGiven = donations?.reduce((sum: any, d: any) => sum + Number(d.amount), 0) || 0;
 
     // Get last donation (including pending for visibility, or strictly completed? let's do all for history context)
     // For stats usually we want confirmed.
     const lastDonation = donations?.[0]; // Assuming defined/ordered storage or we re-sort
 
     // Re-fetch sorted for last donation specific detail if needed, or sort here
-    const sorted = donations?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    const sorted = donations?.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     const latest = sorted?.[0];
 
     return {
@@ -72,7 +72,7 @@ export async function createDonation(data: {
 
     // Using any cast temporarily because database.types might be out of sync with 'type' column
     // The user needs to run the migration to add 'type' column.
-    const { error } = await supabase.from("donations").insert({
+    const { error } = await (supabase as any).from("donations").insert({
         user_id: user.id,
         amount: data.amount,
         // We will add 'type' via migration 

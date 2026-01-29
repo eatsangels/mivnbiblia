@@ -95,8 +95,8 @@ export default async function DevotionalsAdminPage() {
                             <p className="text-sm text-slate-600 dark:text-slate-400">Este Mes</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {devotionals?.filter(d => {
-                                    if (!d.date) return false;
-                                    const date = new Date(d.date);
+                                    if (!d.publish_date) return false;
+                                    const date = new Date(d.publish_date);
                                     const now = new Date();
                                     return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
                                 }).length || 0}
@@ -144,12 +144,12 @@ export default async function DevotionalsAdminPage() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <p className="text-slate-900 dark:text-white">
-                                            {devotional.author}
+                                            {devotional.author_name}
                                         </p>
                                     </td>
                                     <td className="px-6 py-4">
                                         <p className="text-slate-900 dark:text-white">
-                                            {devotional.date ? new Date(devotional.date).toLocaleDateString('es-ES', {
+                                            {devotional.publish_date ? new Date(devotional.publish_date).toLocaleDateString('es-ES', {
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric'

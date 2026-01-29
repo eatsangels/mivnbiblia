@@ -45,7 +45,7 @@ export function GalleryManager() {
         setLoading(true);
         // We might want to join with photos to get count, but for now just fetch albums
         // A simple way to get count is a subquery or separate query, but let's just fetch albums first.
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
             .from('gallery_albums')
             .select(`
                 *,
@@ -74,7 +74,7 @@ export function GalleryManager() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
             .from('gallery_albums')
             .insert({
                 title: newAlbumTitle,

@@ -19,7 +19,8 @@ export async function createBulletin(formData: FormData) {
     const bulletinData: BulletinInsert = {
         title,
         content,
-        publish_date: publish_date || null,
+        slug: title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, ''),
+        publish_date: publish_date || new Date().toISOString().split('T')[0],
         pdf_url: file_url || null,
         is_published,
     };
@@ -47,7 +48,8 @@ export async function updateBulletin(id: string, formData: FormData) {
     const bulletinData = {
         title,
         content,
-        publish_date: publish_date || null,
+        slug: title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, ''),
+        publish_date: publish_date || new Date().toISOString().split('T')[0],
         pdf_url: file_url || null,
         is_published,
     };

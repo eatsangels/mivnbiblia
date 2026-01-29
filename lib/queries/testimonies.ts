@@ -19,7 +19,7 @@ export type Testimony = {
  */
 export const getTestimonies = cache(async (limit?: number) => {
     const supabase = await createClient();
-    let query = supabase
+    let query = (supabase as any)
         .from("testimonies")
         .select("*")
         .eq("is_approved", true)
@@ -34,7 +34,7 @@ export const getTestimonies = cache(async (limit?: number) => {
     if (error) throw error;
 
     // Map database rows to Testimony interface
-    return (data || []).map((row): Testimony => ({
+    return (data || []).map((row: any): Testimony => ({
         id: row.id,
         author_name: row.full_name,
         author_role: row.category, // testimonies table uses 'category' not 'role'
@@ -53,7 +53,7 @@ export const getTestimonies = cache(async (limit?: number) => {
  */
 export const getFeaturedTestimonies = cache(async (limit: number = 3) => {
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from("testimonies")
         .select("*")
         .eq("is_active", true)
@@ -62,7 +62,7 @@ export const getFeaturedTestimonies = cache(async (limit: number = 3) => {
     if (error) throw error;
 
     // Map database rows to Testimony interface
-    return (data || []).map((row): Testimony => ({
+    return (data || []).map((row: any): Testimony => ({
         id: row.id,
         author_name: row.full_name,
         author_role: row.category,

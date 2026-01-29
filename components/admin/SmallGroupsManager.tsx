@@ -62,7 +62,7 @@ export function SmallGroupsManager({ groups: initialGroups }: SmallGroupsManager
             category: group.category,
             leader: group.leader,
             description: group.description || '',
-            members_count: group.members_count,
+            members_count: group.members_count || 0,
             image_url: group.image_url || '',
             leader_image_url: group.leader_image_url || '',
             schedule: group.schedule || '',

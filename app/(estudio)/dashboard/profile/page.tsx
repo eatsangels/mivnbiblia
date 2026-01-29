@@ -24,7 +24,7 @@ export default async function ProfilePage() {
     if (!profile) {
         console.log("⚠️ Profile missing for user, attempting lazy creation...", user.id);
 
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
             .from('profiles')
             .insert({
                 id: user.id,

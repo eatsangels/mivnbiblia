@@ -13,7 +13,7 @@ export async function createResource(data: ResourceInsert) {
     // Ensure slug is generated if not provided
     const slug = data.slug || data.title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("resources")
         .insert({
             ...data,
@@ -32,7 +32,7 @@ export async function createResource(data: ResourceInsert) {
 export async function updateResource(id: string, data: ResourceUpdate) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("resources")
         .update({
             ...data,
@@ -52,7 +52,7 @@ export async function updateResource(id: string, data: ResourceUpdate) {
 export async function deleteResource(id: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("resources")
         .delete()
         .eq("id", id);

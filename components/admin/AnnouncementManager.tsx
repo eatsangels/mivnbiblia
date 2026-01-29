@@ -32,7 +32,7 @@ export function AnnouncementManager() {
     }, []);
 
     const fetchAnnouncements = async () => {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
             .from('announcements')
             .select('*, created_by_profile:profiles(full_name, avatar_url)')
             // Removed is_pinned sorting to strictly show newest first as requested
@@ -45,7 +45,7 @@ export function AnnouncementManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("¿Estás seguro de que quieres eliminar este anuncio?")) return;
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from('announcements')
             .delete()
             .eq('id', id);
@@ -110,8 +110,7 @@ export function AnnouncementManager() {
         try {
             if (editingId) {
                 // Update existing
-                // @ts-ignore
-                const { error } = await supabase.from('announcements')
+                const { error } = await (supabase as any).from('announcements')
                     .update({
                         message: formData.message,
                         target_audience: formData.target_audience,
@@ -129,8 +128,7 @@ export function AnnouncementManager() {
                 fetchAnnouncements();
             } else {
                 // Create new
-                // @ts-ignore
-                const { error } = await supabase.from('announcements').insert([{
+                const { error } = await (supabase as any).from('announcements').insert([{
                     message: formData.message,
                     target_audience: formData.target_audience,
                     scheduled_for: formData.scheduled_for || null,

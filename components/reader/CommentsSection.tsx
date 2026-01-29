@@ -28,7 +28,7 @@ export function CommentsSection({ book, chapter, verse }: CommentsSectionProps) 
     useEffect(() => {
         const fetchComments = async () => {
             setLoading(true);
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('comments')
                 .select('*')
                 .eq('content_id', `${book}-${chapter}-${verse}`)
@@ -69,7 +69,7 @@ export function CommentsSection({ book, chapter, verse }: CommentsSectionProps) 
             return;
         }
 
-        const { error } = await supabase.from('comments').insert({
+        const { error } = await (supabase as any).from('comments').insert({
             content_id: `${book}-${chapter}-${verse}`,
             content_type: 'bible_verse',
             comment: newComment,

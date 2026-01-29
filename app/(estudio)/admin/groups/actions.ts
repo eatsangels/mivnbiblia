@@ -12,7 +12,7 @@ export interface SmallGroup {
     category: string;
     leader: string;
     description: string | null;
-    members_count: number;
+    members_count: number | null;
     image_url: string | null;
     leader_image_url: string | null;
     schedule: string | null;
@@ -54,7 +54,12 @@ export async function getSmallGroups(): Promise<SmallGroup[]> {
         return [];
     }
 
-    return data || [];
+    return (data || []).map(group => ({
+        ...group,
+        is_active: group.is_active ?? true,
+        created_at: group.created_at ?? new Date().toISOString(),
+        updated_at: group.updated_at ?? new Date().toISOString()
+    })) as SmallGroup[];
 }
 
 // Create small group
@@ -85,9 +90,9 @@ export async function createSmallGroup(group: {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') return { error: 'No autorizado' };
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') return { error: 'No autorizado' };
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('small_groups')
         .insert(group)
         .select()
@@ -132,9 +137,9 @@ export async function updateSmallGroup(id: string, group: {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') return { error: 'No autorizado' };
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') return { error: 'No autorizado' };
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('small_groups')
         .update(group)
         .eq('id', id);
@@ -163,9 +168,9 @@ export async function deleteSmallGroup(id: string) {
         .eq('id', user.id)
         .single();
 
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin') return { error: 'No autorizado' };
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') return { error: 'No autorizado' };
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('small_groups')
         .delete()
         .eq('id', id);
@@ -189,7 +194,7 @@ export async function joinGroup(groupId: string) {
 
     if (!user) return { error: 'Debes iniciar sesión para unirte' };
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('group_members')
         .insert({
             user_id: user.id,
@@ -210,7 +215,7 @@ export async function joinGroup(groupId: string) {
 export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('group_members')
         .select(`
             *,
@@ -246,12 +251,12 @@ export async function updateMembershipStatus(
 
     const allowedRoles = ['admin', 'super_admin', 'pastor'];
 
-    if (!profile || !allowedRoles.includes(profile.role || '')) {
+    if (!profile || !allowedRoles.includes((profile as any).role || '')) {
         // Leaders can only update status (approve/reject), not assign other leaders
-        if (profile?.role === 'leader' && role) {
+        if ((profile as any)?.role === 'leader' && role) {
             return { error: 'Solo Pastores o Administradores pueden asignar líderes' };
         }
-        if (profile?.role !== 'leader') {
+        if ((profile as any)?.role !== 'leader') {
             return { error: 'No autorizado para gestionar miembros' };
         }
     }
@@ -261,13 +266,13 @@ export async function updateMembershipStatus(
     if (status) updates.status = status;
     if (role) {
         // Enforce the rule: only admins/pastors can promote
-        if (!allowedRoles.includes(profile?.role || '')) {
+        if (!allowedRoles.includes((profile as any)?.role || '')) {
             return { error: 'Solo Pastores o Administradores pueden asignar líderes' };
         }
         updates.role = role;
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('group_members')
         .update(updates)
         .eq('id', membershipId);
@@ -284,7 +289,7 @@ export async function getUserGroupStatus(groupId: string) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return null;
 
-    const { data } = await supabase
+    const { data } = await (supabase as any)
         .from('group_members')
         .select('status')
         .eq('group_id', groupId)
@@ -297,7 +302,7 @@ export async function getUserGroupStatus(groupId: string) {
 export async function getPublicMemberLocations(): Promise<any[]> {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('group_members')
         .select(`
             id,

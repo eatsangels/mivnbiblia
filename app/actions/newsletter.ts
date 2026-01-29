@@ -12,7 +12,7 @@ export async function subscribeToNewsletter(formData: FormData) {
 
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("newsletter_subscriptions")
         .insert({
             email,

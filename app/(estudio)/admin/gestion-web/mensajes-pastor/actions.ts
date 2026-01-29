@@ -29,11 +29,11 @@ export async function createSermon(sermon: Omit<Sermon, "id" | "created_at">) {
     if (!user) return { error: "No autenticado" };
 
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin' && profile?.role !== 'editor') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin' && (profile as any)?.role !== 'editor') {
         return { error: "No autorizado" };
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from("pastor_messages")
         .insert(sermon)
         .select()
@@ -53,11 +53,11 @@ export async function updateSermon(id: string, sermon: Partial<Sermon>) {
     if (!user) return { error: "No autenticado" };
 
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin' && profile?.role !== 'editor') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin' && (profile as any)?.role !== 'editor') {
         return { error: "No autorizado" };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("pastor_messages")
         .update(sermon)
         .eq("id", id);
@@ -76,11 +76,11 @@ export async function deleteSermon(id: string) {
     if (!user) return { error: "No autenticado" };
 
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-    if (profile?.role !== 'admin' && profile?.role !== 'super_admin' && profile?.role !== 'editor') {
+    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin' && (profile as any)?.role !== 'editor') {
         return { error: "No autorizado" };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("pastor_messages")
         .delete()
         .eq("id", id);

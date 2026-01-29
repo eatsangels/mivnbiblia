@@ -54,7 +54,7 @@ export async function joinPrayerRequest(requestId: string) {
         return { message: "Debes iniciar sesión para unirte en oración.", success: false };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("prayer_intersessions")
         .insert({
             prayer_request_id: requestId,
