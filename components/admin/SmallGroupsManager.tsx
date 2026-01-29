@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createSmallGroup, updateSmallGroup, deleteSmallGroup, type SmallGroup, getGroupMembers, updateMembershipStatus, type GroupMember } from "@/app/(estudio)/admin/groups/actions";
+import { createSmallGroup, updateSmallGroup, deleteSmallGroup, type SmallGroup, getGroupMembers, updateMembershipStatus, deleteMembership, type GroupMember } from "@/app/(estudio)/admin/groups/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -480,10 +480,23 @@ function GroupMembersList({ groupId }: { groupId: string }) {
         }
     };
 
+    const handleDeleteMembership = async (membershipId: string) => {
+        if (!confirm('¿Estás seguro de eliminar este registro? Esto permitirá que la persona pueda volver a solicitar unirse.')) return;
+
+        const result = await deleteMembership(membershipId);
+        if (result.error) {
+            toast.error(result.error);
+        } else {
+            toast.success('Registro eliminado');
+            setMembers(prev => prev.filter(m => m.id !== membershipId));
+        }
+    };
+
     if (isLoading) return <div className="text-center py-10">Cargando miembros...</div>;
 
     const pending = members.filter(m => m.status === 'pending');
     const approved = members.filter(m => m.status === 'approved');
+    const rejected = members.filter(m => m.status === 'rejected');
 
     return (
         <div className="space-y-8">
@@ -536,13 +549,40 @@ function GroupMembersList({ groupId }: { groupId: string }) {
                                     </div>
                                 </div>
                                 <Button onClick={() => handleStatusUpdate(m.id, 'rejected')} variant="ghost" className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full w-8 h-8 p-0">
-                                    <Trash2 className="w-3.5 h-3.5" />
+                                    <X className="w-3.5 h-3.5" />
                                 </Button>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
+            {rejected.length > 0 && (
+                <div className="space-y-4">
+                    <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-red-400">Solicitudes Rechazadas ({rejected.length})</h5>
+                    <div className="grid grid-cols-1 gap-3">
+                        {rejected.map(m => (
+                            <div key={m.id} className="flex items-center justify-between p-4 bg-red-50/30 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-2xl">
+                                <div className="flex items-center gap-3 opacity-60">
+                                    <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border-2 border-white relative">
+                                        {m.profile?.avatar_url && <Image src={m.profile.avatar_url} alt={m.profile.full_name || ''} fill className="object-cover" />}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-slate-900 dark:text-white">{m.profile?.full_name}</p>
+                                        <p className="text-[9px] font-black text-red-500 uppercase tracking-widest">Rechazado</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button onClick={() => handleStatusUpdate(m.id, 'approved')} variant="outline" className="text-emerald-500 border-emerald-100 hover:bg-emerald-50 rounded-xl h-8 text-[10px] font-bold">Reconsiderar</Button>
+                                    <Button onClick={() => handleDeleteMembership(m.id)} variant="ghost" className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full w-8 h-8 p-0">
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

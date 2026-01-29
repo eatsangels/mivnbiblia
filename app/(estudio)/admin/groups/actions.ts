@@ -284,6 +284,37 @@ export async function updateMembershipStatus(
     return { success: true };
 }
 
+export async function deleteMembership(membershipId: string) {
+    const supabase = await createClient();
+
+    // Check permissions
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: 'No autenticado' };
+
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    const currentUserRole = (profile as any)?.role || 'member';
+    const allowedRoles = ['admin', 'super_admin', 'pastor'];
+
+    if (!allowedRoles.includes(currentUserRole)) {
+        return { error: 'No tienes permiso para eliminar miembros' };
+    }
+
+    const { error } = await supabase
+        .from('group_members')
+        .delete()
+        .eq('id', membershipId);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/groups');
+    return { success: true };
+}
+
 export async function getUserGroupStatus(groupId: string) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
