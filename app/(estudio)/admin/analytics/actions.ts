@@ -162,7 +162,7 @@ export async function getGrowthAndAttendanceStats() {
     const { data: newProfiles } = await supabase
         .from('profiles')
         .select('created_at')
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDate.toISOString()) as { data: Array<{ created_at: string | null }> | null };
 
     if (newProfiles) {
         newProfiles.forEach(p => {
@@ -180,7 +180,7 @@ export async function getGrowthAndAttendanceStats() {
     const { data: attendance } = await supabase
         .from('group_attendance')
         .select('meeting_date, members_present_count, new_guests_count')
-        .gte('meeting_date', startDate.toISOString());
+        .gte('meeting_date', startDate.toISOString()) as { data: Array<{ meeting_date: string | null; members_present_count: number | null; new_guests_count: number | null }> | null };
 
     if (attendance) {
         attendance.forEach(a => {
