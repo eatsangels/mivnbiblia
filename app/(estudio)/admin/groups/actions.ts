@@ -215,7 +215,7 @@ export async function joinGroup(groupId: string) {
 export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
     const supabase = await createClient();
 
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
         .from('group_members')
         .select(`
             *,
@@ -225,7 +225,11 @@ export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
         .order('created_at', { ascending: false });
 
     if (error) {
-        console.error('Error fetching members:', error);
+        console.error('Error fetching members details:', error);
+        // Special case for missing relationship (PGRST200)
+        if (error.code === 'PGRST200') {
+            console.error('La relación entre group_members y profiles no está definida en la DB.');
+        }
         return [];
     }
 
@@ -249,30 +253,27 @@ export async function updateMembershipStatus(
         .eq('id', user.id)
         .single();
 
+    const currentUserRole = (profile as any)?.role || 'member';
     const allowedRoles = ['admin', 'super_admin', 'pastor'];
 
-    if (!profile || !allowedRoles.includes((profile as any).role || '')) {
-        // Leaders can only update status (approve/reject), not assign other leaders
-        if ((profile as any)?.role === 'leader' && role) {
-            return { error: 'Solo Pastores o Administradores pueden asignar líderes' };
+    // If not an admin/pastor, check if they are at least a leader
+    if (!allowedRoles.includes(currentUserRole)) {
+        if (currentUserRole !== 'leader') {
+            return { error: 'No tienes permiso para gestionar miembros' };
         }
-        if ((profile as any)?.role !== 'leader') {
-            return { error: 'No autorizado para gestionar miembros' };
+
+        // Leaders can only update status (approve/reject), NOT assign other leaders
+        if (role) {
+            return { error: 'Solo Pastores o Administradores pueden asignar nuevos líderes' };
         }
     }
 
     // Prepare updates
     const updates: any = {};
     if (status) updates.status = status;
-    if (role) {
-        // Enforce the rule: only admins/pastors can promote
-        if (!allowedRoles.includes((profile as any)?.role || '')) {
-            return { error: 'Solo Pastores o Administradores pueden asignar líderes' };
-        }
-        updates.role = role;
-    }
+    if (role) updates.role = role;
 
-    const { error } = await (supabase as any)
+    const { error } = await supabase
         .from('group_members')
         .update(updates)
         .eq('id', membershipId);
@@ -280,7 +281,6 @@ export async function updateMembershipStatus(
     if (error) return { error: error.message };
 
     revalidatePath('/admin/groups');
-    revalidatePath('/admin/analytics');
     return { success: true };
 }
 
