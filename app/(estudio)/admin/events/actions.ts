@@ -31,7 +31,7 @@ export async function createEvent(formData: FormData) {
         .replace(/[\s_-]+/g, '-')
         .replace(/^-+|-+$/g, '') + '-' + Date.now().toString().slice(-4);
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("events")
         .insert({
             title,
@@ -109,7 +109,7 @@ export async function updateEvent(formData: FormData) {
         updates.end_time = new Date(new Date(start_time).getTime() + 2 * 60 * 60 * 1000).toISOString();
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("events")
         .update(updates)
         .eq("id", id);
@@ -129,7 +129,7 @@ export async function deleteEvent(id: string) {
 
     if (!id) return { success: false, errorMsg: "ID de evento requerido" };
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from("events")
         .delete()
         .eq("id", id);
