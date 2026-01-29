@@ -3,16 +3,63 @@
 import { Heart, Lock, Receipt, Repeat, CreditCard, Wallet, Sparkles, Download, Star, HandHeart, History, CheckCircle2, User, Landmark, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
+import { createDonation } from "@/app/actions/donations";
+import { toast } from "sonner";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
-export const DonationsBanner = () => {
+interface DonationsBannerProps {
+    userProfile?: {
+        full_name: string | null;
+        avatar_url: string | null;
+        email: string | null;
+    } | null;
+    stats?: {
+        totalGiven: number;
+        lastDonationDate: string | null;
+        lastDonationAmount: number | null;
+    };
+    recentDonations?: any[];
+}
+
+export const DonationsBanner = ({ userProfile, stats, recentDonations = [] }: DonationsBannerProps) => {
     const [selectedAmount, setSelectedAmount] = useState("$50");
     const [customAmount, setCustomAmount] = useState("");
     const [frequency, setFrequency] = useState("Única vez");
+    const [paymentMethod, setPaymentMethod] = useState("card");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const amounts = ["$25", "$50", "$100", "$250", "$500", "Otro"];
     const frequencies = ["Única vez", "Semanal", "Mensual"];
 
-    const [paymentMethod, setPaymentMethod] = useState("card");
+    const handleDonation = async () => {
+        if (!userProfile) {
+            toast.error("Debes iniciar sesión para ofrendar.");
+            return;
+        }
+
+        const amountValue = selectedAmount === "Otro" ? parseFloat(customAmount) : parseFloat(selectedAmount.replace("$", ""));
+
+        if (!amountValue || amountValue <= 0) {
+            toast.error("Por favor selecciona un monto válido.");
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            await createDonation({
+                amount: amountValue,
+                type: "ofrenda", // Could be dynamic based on selection
+                method: paymentMethod as any,
+            });
+            toast.success("Ofrenda registrada correctamente. ¡Gracias por tu generosidad!");
+            // Reset form if needed
+        } catch (error) {
+            toast.error("Hubo un error al procesar tu ofrenda.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <section className="bg-background-light dark:bg-background-dark py-24 px-4 font-lexend">
@@ -145,14 +192,28 @@ export const DonationsBanner = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group">
-                                    <CheckCircle2 className="w-5 h-5" /> Confirmar Transferencia Zelle
+                                <button
+                                    onClick={handleDonation}
+                                    disabled={isSubmitting}
+                                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group disabled:opacity-50 disabled:cursor-not-allowed">
+                                    {isSubmitting ? "Procesando..." : (
+                                        <>
+                                            <CheckCircle2 className="w-5 h-5" /> Confirmar Transferencia Zelle
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         ) : (
                             <div className="space-y-6">
-                                <button className="w-full bg-mivn-blue text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group">
-                                    Realizar Ofrenda <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                                <button
+                                    onClick={handleDonation}
+                                    disabled={isSubmitting}
+                                    className="w-full bg-mivn-blue text-white py-8 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-xs shadow-2xl shadow-mivn-blue/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-5 group disabled:opacity-50 disabled:cursor-not-allowed">
+                                    {isSubmitting ? "Procesando..." : (
+                                        <>
+                                            Realizar Ofrenda <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                                        </>
+                                    )}
                                 </button>
                                 <div className="flex items-center justify-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                                     <ShieldCheck className="w-4 h-4 text-emerald-500" />
@@ -173,21 +234,25 @@ export const DonationsBanner = () => {
                             <div className="relative z-10 space-y-10">
                                 <div className="flex items-center gap-5">
                                     <div className="size-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl overflow-hidden p-1">
-                                        <Image src="/logo_mivn.png" alt="MIVN" width={48} height={48} className="object-contain brightness-0 invert" />
+                                        {userProfile?.avatar_url ? (
+                                            <Image src={userProfile.avatar_url} alt={userProfile.full_name || "Profile"} width={48} height={48} className="object-cover w-full h-full rounded-xl" />
+                                        ) : (
+                                            <User className="w-8 h-8 text-white" />
+                                        )}
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold">¡Bendiciones, Miembro!</h3>
-                                        <p className="text-mivn-gold text-[10px] font-black uppercase tracking-widest">Mayordomo Fiel</p>
+                                        <h3 className="text-xl font-bold truncate max-w-[200px]">{userProfile?.full_name || "¡Hola!"}</h3>
+                                        <p className="text-mivn-gold text-[10px] font-black uppercase tracking-widest">Colaborador del Reino</p>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
-                                        <p className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Total Aportado 2024</p>
-                                        <p className="text-3xl font-black">$1,450.00</p>
+                                        <p className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Total Aportado</p>
+                                        <p className="text-2xl font-black">${stats?.totalGiven?.toFixed(2) || "0.00"}</p>
                                     </div>
                                     <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
-                                        <p className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Próximo</p>
-                                        <p className="text-3xl font-black">Diezmo</p>
+                                        <p className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Última</p>
+                                        <p className="text-2xl font-black">{stats?.lastDonationAmount ? `$${stats.lastDonationAmount}` : "-"}</p>
                                     </div>
                                 </div>
                             </div>
@@ -202,22 +267,24 @@ export const DonationsBanner = () => {
                             </div>
 
                             <div className="space-y-8">
-                                {[
-                                    { icon: Receipt, color: "text-emerald-500", bg: "bg-emerald-500/10", label: "Ofrenda General", date: "12 Oct, 2024", amt: "$50.00" },
-                                    { icon: Star, color: "text-mivn-blue", bg: "bg-mivn-blue/10", label: "Diezmo Mensual", date: "01 Oct, 2024", amt: "$200.00" },
-                                    { icon: HandHeart, color: "text-mivn-gold", bg: "bg-mivn-gold/10", label: "Misiones MIVN", date: "15 Sep, 2024", amt: "$100.00" }
-                                ].map((item, i) => (
-                                    <div key={i} className="flex items-center gap-5 group cursor-default">
-                                        <div className={`w-14 h-14 rounded-2xl ${item.bg} flex items-center justify-center shrink-0 border border-white/5 group-hover:scale-110 transition-transform`}>
-                                            <item.icon className={`w-6 h-6 ${item.color}`} />
+                                {recentDonations && recentDonations.length > 0 ? (
+                                    recentDonations.slice(0, 3).map((item, i) => (
+                                        <div key={i} className="flex items-center gap-5 group cursor-default">
+                                            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-white/5 group-hover:scale-110 transition-transform">
+                                                <Receipt className="w-6 h-6 text-emerald-500" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="font-bold text-slate-800 dark:text-white capitalize">{item.type} ({item.status})</p>
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{format(new Date(item.created_at), 'dd MMM, yyyy', { locale: es })}</p>
+                                            </div>
+                                            <p className="text-xl font-black text-slate-900 dark:text-white">${item.amount}</p>
                                         </div>
-                                        <div className="flex-1">
-                                            <p className="font-bold text-slate-800 dark:text-white">{item.label}</p>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{item.date}</p>
-                                        </div>
-                                        <p className="text-xl font-black text-slate-900 dark:text-white">{item.amt}</p>
+                                    ))
+                                ) : (
+                                    <div className="text-center text-slate-400 text-sm py-8 italic">
+                                        No hay ofrendas recientes.
                                     </div>
-                                ))}
+                                )}
                             </div>
 
                             <button className="w-full mt-8 py-5 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl flex items-center justify-center gap-4 hover:border-mivn-blue hover:text-mivn-blue transition-all text-slate-400 font-bold text-xs uppercase tracking-widest group">
@@ -244,3 +311,4 @@ export const DonationsBanner = () => {
         </section>
     );
 };
+
