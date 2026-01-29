@@ -308,7 +308,7 @@ export type Database = {
                     updated_at?: string | null
                 }
                 Relationships: []
-            }
+            },
 
             prayer_requests: {
                 Row: {
@@ -2079,7 +2079,7 @@ export type Database = {
                     },
                 ]
             }
-        }
+        },
         Views: {
             user_details: {
                 Row: {

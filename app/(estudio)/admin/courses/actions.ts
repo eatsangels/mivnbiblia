@@ -76,7 +76,7 @@ export async function getCourseById(id: string) {
 export async function createCourse(courseData: Omit<Course, 'id' | 'created_at' | 'updated_at'>) {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('courses')
         .insert([courseData] as any)
         .select()
@@ -94,7 +94,7 @@ export async function createCourse(courseData: Omit<Course, 'id' | 'created_at' 
 export async function updateCourse(id: string, courseData: Partial<Course>) {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('courses')
         .update({
             ...courseData,
@@ -188,7 +188,7 @@ export async function getStudentsReadyForCertification() {
 export async function markAsCertified(enrollmentId: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
         .from('course_enrollments')
         .update({ completed_at: new Date().toISOString() } as any)
         .eq('id', enrollmentId);
@@ -237,7 +237,7 @@ export async function createLesson(lessonData: Omit<CourseLesson, 'id' | 'create
         .select('id')
         .eq('course_id', lessonData.course_id);
 
-    await supabase
+    await (supabase as any)
         .from('courses')
         .update({ total_lessons: lessons?.length || 0 } as any)
         .eq('id', lessonData.course_id);
@@ -252,7 +252,7 @@ export async function createLesson(lessonData: Omit<CourseLesson, 'id' | 'create
 export async function updateLesson(id: string, lessonData: Partial<CourseLesson>) {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('course_lessons')
         .update(lessonData as any)
         .eq('id', id)
@@ -284,7 +284,7 @@ export async function deleteLesson(id: string, courseId: string) {
         .select('id')
         .eq('course_id', courseId);
 
-    await supabase
+    await (supabase as any)
         .from('courses')
         .update({ total_lessons: lessons?.length || 0 } as any)
         .eq('id', courseId);
