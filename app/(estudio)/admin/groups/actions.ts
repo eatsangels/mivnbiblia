@@ -338,7 +338,7 @@ export async function getPublicMemberLocations(): Promise<any[]> {
         .select(`
             id,
             group_id,
-            profile:profiles(full_name, avatar_url)
+            profile:profiles(full_name, avatar_url, latitude, longitude, address)
         `)
         .eq('status', 'approved');
 

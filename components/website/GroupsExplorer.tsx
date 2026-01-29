@@ -196,38 +196,45 @@ export function GroupsExplorer({ initialGroups, memberLocations = [] }: GroupsEx
                                 );
                             })}
 
-                            {showMembers && memberLocations?.map((member) => (
-                                <Marker
-                                    key={member.id}
-                                    position={[member.latitude, member.longitude]}
-                                    icon={memberIcon}
-                                    eventHandlers={{
-                                        click: () => setSelectedGroup(member),
-                                    }}
-                                >
-                                    <Popup>
-                                        <div className="p-1 min-w-[150px]">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 shrink-0 border border-mivn-blue/20">
-                                                    <img
-                                                        src={member.avatar_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&q=80"}
-                                                        alt={member.full_name}
-                                                        className="w-full h-full object-cover"
-                                                    />
+                            {showMembers && memberLocations?.map((member) => {
+                                // Safety check for valid coordinates to avoid Leaflet crash
+                                const lat = member.profile?.latitude;
+                                const lng = member.profile?.longitude;
+                                if (!lat || !lng) return null;
+
+                                return (
+                                    <Marker
+                                        key={member.id}
+                                        position={[lat, lng]}
+                                        icon={memberIcon}
+                                        eventHandlers={{
+                                            click: () => setSelectedGroup(member),
+                                        }}
+                                    >
+                                        <Popup>
+                                            <div className="p-1 min-w-[150px]">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 shrink-0 border border-mivn-blue/20">
+                                                        <img
+                                                            src={member.profile?.avatar_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&q=80"}
+                                                            alt={member.profile?.full_name}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                    <h3 className="font-bold text-slate-900 m-0 text-sm">{member.profile?.full_name}</h3>
                                                 </div>
-                                                <h3 className="font-bold text-slate-900 m-0 text-sm">{member.full_name}</h3>
+                                                <p className="text-[10px] text-slate-500 m-0 flex items-center gap-1">
+                                                    <MapPin className="w-3 h-3" />
+                                                    Miembro de la Comunidad
+                                                </p>
+                                                {member.profile?.address && (
+                                                    <p className="text-[10px] text-slate-400 mt-1 italic">{member.profile?.address}</p>
+                                                )}
                                             </div>
-                                            <p className="text-[10px] text-slate-500 m-0 flex items-center gap-1">
-                                                <MapPin className="w-3 h-3" />
-                                                Miembro de la Comunidad
-                                            </p>
-                                            {member.address && (
-                                                <p className="text-[10px] text-slate-400 mt-1 italic">{member.address}</p>
-                                            )}
-                                        </div>
-                                    </Popup>
-                                </Marker>
-                            ))}
+                                        </Popup>
+                                    </Marker>
+                                );
+                            })}
                         </MapContainer>
                     )}
                 </div>
