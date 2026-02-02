@@ -192,7 +192,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
 
             {/* Top Bar inside Reader Area (Title) */}
             <div className="flex items-center justify-between mb-6 px-2 shrink-0">
-                <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
+                <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-3 truncate">
                     {currentChapter.book_name} {currentChapter.chapter}
                 </h2>
                 <div className="flex items-center gap-2">
@@ -236,7 +236,7 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                     <div className="bg-[#fcfaf7] text-gray-900 rounded-xl shadow-2xl overflow-hidden relative">
 
                                         {/* Main Content Padding */}
-                                        <div className="p-6 md:p-8">
+                                        <div className="p-5 md:p-8">
 
                                             {/* Verse Label */}
                                             <div className="text-sm font-bold text-[#6b7c93] mb-4 flex items-center gap-2">
@@ -267,11 +267,11 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                             </div>
 
                                             {/* Commentary Tabs */}
-                                            <div className="bg-[#f2f4f8] rounded-xl p-5 border border-gray-200/50">
-                                                <div className="flex gap-1 mb-4 border-b border-gray-200/50 pb-0">
-                                                    <button onClick={() => setActiveTab('exegesis')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors rounded-t-lg ${activeTab === 'exegesis' ? 'text-[#1a2b4b] bg-white shadow-sm' : 'text-gray-400 bg-transparent'}`}>Exegético</button>
-                                                    <button onClick={() => setActiveTab('theology')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors ${activeTab === 'theology' ? 'text-[#1a2b4b] bg-white shadow-sm rounded-t-lg' : 'text-gray-400'}`}>ESINP LCNT</button>
-                                                    <button onClick={() => setActiveTab('community')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors ${activeTab === 'community' ? 'text-[#1a2b4b] bg-white shadow-sm rounded-t-lg' : 'text-gray-400'}`}>Comunidad</button>
+                                            <div className="bg-[#f2f4f8] rounded-xl p-3 md:p-5 border border-gray-200/50 overflow-hidden">
+                                                <div className="flex gap-1 mb-4 border-b border-gray-200/50 pb-0 overflow-x-auto no-scrollbar">
+                                                    <button onClick={() => setActiveTab('exegesis')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors rounded-t-lg shrink-0 ${activeTab === 'exegesis' ? 'text-[#1a2b4b] bg-white shadow-sm' : 'text-gray-400 bg-transparent'}`}>Exegético</button>
+                                                    <button onClick={() => setActiveTab('theology')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors shrink-0 ${activeTab === 'theology' ? 'text-[#1a2b4b] bg-white shadow-sm rounded-t-lg' : 'text-gray-400'}`}>ESINP LCNT</button>
+                                                    <button onClick={() => setActiveTab('community')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors shrink-0 ${activeTab === 'community' ? 'text-[#1a2b4b] bg-white shadow-sm rounded-t-lg' : 'text-gray-400'}`}>Comunidad</button>
                                                 </div>
 
                                                 {activeTab === 'community' ? (
@@ -293,26 +293,26 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                         </div>
 
                                         {/* Bottom Toolbar (Dark, attached to card bottom like image) */}
-                                        <div className="bg-[#0f141f] py-4 px-6 flex items-center gap-6 text-gray-400 text-xs font-bold border-t border-gray-800 relative">
+                                        <div className="bg-[#0f141f] py-4 px-4 md:px-6 flex items-center gap-4 md:gap-6 text-gray-400 text-xs font-bold border-t border-gray-800 relative overflow-x-auto no-scrollbar">
                                             <button
                                                 onClick={() => toggleHighlight(verse.verse_number)}
-                                                className={`flex items-center gap-2 px-3 py-1.5 rounded transition-all ${highlights.includes(verse.verse_number) ? 'text-gold-400 bg-gold-500/20 shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'text-gray-400 hover:text-gold-400 hover:bg-gold-500/10'}`}
+                                                className={`flex items-center gap-2 px-3 py-1.5 rounded transition-all shrink-0 ${highlights.includes(verse.verse_number) ? 'text-gold-400 bg-gold-500/20 shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'text-gray-400 hover:text-gold-400 hover:bg-gold-500/10'}`}
                                             >
-                                                <Highlighter className="w-3.5 h-3.5" /> Subrayado
+                                                <Highlighter className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Subrayado</span>
                                             </button>
                                             <button
                                                 onClick={handleNotesClick}
-                                                className="flex items-center gap-2 hover:text-white transition-colors"
+                                                className="flex items-center gap-2 hover:text-white transition-colors shrink-0"
                                             >
-                                                <MessageSquarePlus className="w-3.5 h-3.5" /> Notas
+                                                <MessageSquarePlus className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Notas</span>
                                             </button>
 
-                                            <div className="flex items-center gap-2 relative">
+                                            <div className="flex items-center gap-2 relative shrink-0">
                                                 <button
                                                     onClick={() => toggleAudio(verse)}
                                                     className={`flex items-center gap-2 transition-colors ${isSpeaking === verse.verse_number ? 'text-blue-400 animate-pulse' : 'hover:text-white'}`}
                                                 >
-                                                    <Volume2 className="w-3.5 h-3.5" /> {isSpeaking === verse.verse_number ? 'Detener' : 'Audio Biblia'}
+                                                    <Volume2 className="w-3.5 h-3.5" /> <span className="hidden xs:inline">{isSpeaking === verse.verse_number ? 'Detener' : 'Audio Biblia'}</span>
                                                 </button>
 
                                                 <button
@@ -353,13 +353,13 @@ export function ScriptureReader({ verses }: { verses: Verse[] }) {
                                             </div>
 
                                             <button
-                                                className="flex items-center gap-2 text-gold-400 hover:text-gold-300 transition-colors ml-auto font-bold"
+                                                className="flex items-center gap-2 text-gold-400 hover:text-gold-300 transition-colors ml-auto font-bold shrink-0"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setShowAI(true);
                                                 }}
                                             >
-                                                <Sparkles className="w-3.5 h-3.5" /> Preguntar a IA
+                                                <Sparkles className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Preguntar a IA</span>
                                             </button>
                                         </div>
 

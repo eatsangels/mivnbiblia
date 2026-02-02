@@ -12,7 +12,7 @@ export default async function BoletinPage() {
             <section className="relative py-32 lg:py-48 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-slate-900">
                     <img
-                        src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=2000"
+                        src="/images/bulletin_hero.png"
                         alt="Bulletin Background"
                         className="w-full h-full object-cover opacity-30"
                     />

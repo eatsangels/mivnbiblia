@@ -14,7 +14,7 @@ export default async function EventosPage() {
             <section className="relative py-32 lg:py-48 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-slate-900">
                     <img
-                        src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=2000"
+                        src="/images/events_hero.png"
                         alt="Events Background"
                         className="w-full h-full object-cover opacity-30"
                     />

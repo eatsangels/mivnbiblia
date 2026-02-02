@@ -16,12 +16,12 @@ export function ReaderHeader({ book, chapter }: ReaderHeaderProps) {
     const [showSettings, setShowSettings] = useState(false);
 
     return (
-        <nav className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#0a0a0a]/80 backdrop-blur-xl shrink-0 z-20 relative">
-            <div className="flex items-center gap-4">
+        <nav className="h-14 border-b border-white/5 flex items-center justify-between px-4 md:px-6 bg-[#0a0a0a]/80 backdrop-blur-xl shrink-0 z-20 relative">
+            <div className="flex items-center gap-2 md:gap-4">
                 <Link href="/dashboard" className="p-2 hover:bg-white/5 rounded-full transition-colors">
                     <ArrowLeft className="w-5 h-5 text-gray-400" />
                 </Link>
-                <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-2">
                     <span className="text-gray-400 font-medium">Mi Biblia</span>
                     <span className="text-gray-600">/</span>
                     <span className="text-sm text-gray-300 font-medium">Estudio</span>

@@ -140,7 +140,7 @@ export const PrayerWall = ({ initialRequests = [], pagination }: PrayerWallProps
             <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-slate-900 group">
                     <img
-                        src="https://images.unsplash.com/photo-1507434965515-61970f2bd7c6?auto=format&fit=crop&q=80&w=2000"
+                        src="/images/prayer_hero.png"
                         alt="Prayer background"
                         className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000"
                     />

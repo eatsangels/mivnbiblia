@@ -198,17 +198,17 @@ export function BibleSelector({ currentBook, currentChapter }: BibleSelectorProp
                                                     'Explorar Biblia'}
                                     </h3>
 
-                                    <div className="relative group w-full max-w-[180px] md:max-w-[250px]">
+                                    <div className="relative group w-full max-w-[140px] xs:max-w-[180px] md:max-w-[250px]">
                                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
                                         <input
                                             type="text"
-                                            placeholder="Buscar libro..."
+                                            placeholder="Buscar..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                             className="w-full bg-[#0a0f18] border border-white/10 rounded-full py-1.5 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-gold-500/50 transition-all"
                                         />
                                     </div>
-                                    <button onClick={toggleOpen} className="p-1.5 hover:bg-white/5 rounded-full text-gray-400 hover:text-white">
+                                    <button onClick={toggleOpen} className="p-1.5 hover:bg-white/5 rounded-full text-gray-400 hover:text-white shrink-0">
                                         <X className="w-5 h-5" />
                                     </button>
                                 </div>

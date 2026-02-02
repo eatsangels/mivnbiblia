@@ -37,15 +37,30 @@ export default async function RecursosPage() {
     return (
         <main className="min-h-screen bg-white dark:bg-[#0A0F1D]">
             {/* Hero Section */}
-            <section className="relative py-24 px-4 bg-gradient-to-b from-mivn-blue/5 to-transparent dark:from-mivn-blue/10">
-                <div className="max-w-7xl mx-auto text-center">
-                    <h1 className="text-5xl md:text-6xl font-playfair font-bold text-slate-900 dark:text-white mb-6">
-                        Recursos para tu <span className="text-mivn-blue italic">Crecimiento</span>
-                    </h1>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-                        Encuentra herramientas espirituales, libros y manuales diseñados para fortalecer tu fe y liderazgo ministerial.
-                    </p>
+            <section className="relative py-32 lg:py-48 px-4 overflow-hidden">
+                <div className="absolute inset-0 bg-slate-900">
+                    <img
+                        src="/images/resources_hero.png"
+                        alt="Resources Background"
+                        className="w-full h-full object-cover opacity-30"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0A0F1D] via-transparent to-transparent opacity-80" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/40 to-transparent" />
                 </div>
+
+                <div className="max-w-7xl mx-auto relative z-10 text-center space-y-12">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-1000">
+                        <span className="text-mivn-gold font-black uppercase tracking-[0.5em] text-[10px]">Crecimiento Espiritual</span>
+                        <h1 className="text-5xl md:text-8xl font-playfair font-bold text-white leading-tight">
+                            Recursos para tu <span className="italic text-mivn-blue">Crecimiento</span>
+                        </h1>
+                        <p className="text-white/80 text-xl md:text-2xl font-light italic max-w-3xl mx-auto leading-relaxed">
+                            "Encuentra herramientas espirituales, libros y manuales diseñados para fortalecer tu fe y liderazgo ministerial."
+                        </p>
+                    </div>
+                </div>
+
+                <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white dark:from-[#0A0F1D] to-transparent" />
             </section>
 
             {/* Featured Resource */}
