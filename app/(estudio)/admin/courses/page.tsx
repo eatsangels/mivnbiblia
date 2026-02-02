@@ -1,5 +1,5 @@
 import { CourseManager } from "@/components/admin/CourseManager";
-import { getCourses, getCourseStats, getStudentsReadyForCertification } from "./actions";
+import { getCourses, getCourseStats, getStudentsReadyForCertification, getCategories } from "./actions";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -12,15 +12,17 @@ export default async function CoursesPage() {
     }
 
     // Fetch all data in parallel
-    const [courses, stats, studentsReady] = await Promise.all([
+    const [courses, stats, studentsReady, categories] = await Promise.all([
         getCourses(),
         getCourseStats(),
-        getStudentsReadyForCertification()
+        getStudentsReadyForCertification(),
+        getCategories()
     ]);
 
     return <CourseManager
         initialCourses={courses}
         initialStats={stats}
         initialStudentsReady={studentsReady}
+        categories={categories}
     />;
 }
