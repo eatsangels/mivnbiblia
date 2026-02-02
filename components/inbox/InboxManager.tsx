@@ -7,7 +7,7 @@ import { MessageList } from "./MessageList"
 import { MessageDetail } from "./MessageDetail"
 import { ComposeMessage } from "./ComposeMessage"
 import { Button } from "@/components/ui/button"
-import { Plus, Inbox, Send, ArrowLeft } from "lucide-react"
+import { Plus, Inbox, Send, ArrowLeft, Star, Trash2 } from "lucide-react"
 
 export default function InboxManager({ initialMessages, userId }: { initialMessages: any[], userId: string }) {
     const router = useRouter()
@@ -75,14 +75,28 @@ export default function InboxManager({ initialMessages, userId }: { initialMessa
                         onClick={() => router.push('?tab=inbox')}
                         className={`flex-1 rounded-lg text-xs font-bold uppercase tracking-wider ${currentTab === 'inbox' ? 'bg-slate-100 dark:bg-slate-800 text-mivn-blue shadow-sm' : 'text-slate-400'}`}
                     >
-                        <Inbox className="w-4 h-4 mr-2" /> Recibidos
+                        <Inbox className="w-4 h-4 mr-2" />
                     </Button>
                     <Button
                         variant="ghost"
                         onClick={() => router.push('?tab=sent')}
                         className={`flex-1 rounded-lg text-xs font-bold uppercase tracking-wider ${currentTab === 'sent' ? 'bg-slate-100 dark:bg-slate-800 text-mivn-blue shadow-sm' : 'text-slate-400'}`}
                     >
-                        <Send className="w-4 h-4 mr-2" /> Enviados
+                        <Send className="w-4 h-4 mr-2" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        onClick={() => router.push('?tab=starred')}
+                        className={`flex-1 rounded-lg text-xs font-bold uppercase tracking-wider ${currentTab === 'starred' ? 'bg-slate-100 dark:bg-slate-800 text-yellow-500 shadow-sm' : 'text-slate-400'}`}
+                    >
+                        <Star className="w-4 h-4 mr-2" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        onClick={() => router.push('?tab=trash')}
+                        className={`flex-1 rounded-lg text-xs font-bold uppercase tracking-wider ${currentTab === 'trash' ? 'bg-slate-100 dark:bg-slate-800 text-rose-500 shadow-sm' : 'text-slate-400'}`}
+                    >
+                        <Trash2 className="w-4 h-4 mr-2" />
                     </Button>
                 </div>
 
@@ -92,7 +106,8 @@ export default function InboxManager({ initialMessages, userId }: { initialMessa
                         messages={messages}
                         selectedId={selectedMessage?.id}
                         onSelect={handleSelectMessage}
-                        type={currentTab as 'inbox' | 'sent'}
+                        type={currentTab as 'inbox' | 'sent' | 'starred' | 'trash'}
+                        userId={userId}
                     />
                 </div>
             </div>
@@ -121,6 +136,14 @@ export default function InboxManager({ initialMessages, userId }: { initialMessa
                     <MessageDetail
                         message={selectedMessage}
                         onReply={handleReply}
+                        userId={userId}
+                        onUpdate={() => {
+                            // Remove message from local state immediately
+                            setMessages(prev => prev.filter(m => m.id !== selectedMessage.id))
+                            setSelectedMessage(null)
+                            // Then refresh to get updated data from server
+                            router.refresh()
+                        }}
                     />
                 ) : (
                     <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-700 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 border-dashed">

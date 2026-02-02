@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Youtube from '@tiptap/extension-youtube'
@@ -12,8 +13,12 @@ import {
     ListOrdered,
     Link as LinkIcon,
     Youtube as YoutubeIcon,
-    Quote
+    Quote,
+    Check,
+    X
 } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 interface RichTextEditorProps {
     content?: string
@@ -52,42 +57,40 @@ export function RichTextEditor({ content = "", onChange, placeholder = "Escribe 
         },
     })
 
+    const [linkUrl, setLinkUrl] = React.useState('')
+    const [youtubeUrl, setYoutubeUrl] = React.useState('')
+    const [isLinkOpen, setIsLinkOpen] = React.useState(false)
+    const [isYoutubeOpen, setIsYoutubeOpen] = React.useState(false)
+
     if (!editor) {
         return null
     }
 
-    const addYoutubeVideo = () => {
-        const url = prompt('Ingresa la URL del video de YouTube')
+    const setLink = () => {
+        if (!linkUrl) {
+            editor.chain().focus().extendMarkRange('link').unsetLink().run()
+        } else {
+            editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run()
+        }
+        setIsLinkOpen(false)
+        setLinkUrl('')
+    }
 
-        if (url) {
+    const addYoutubeVideo = () => {
+        if (youtubeUrl) {
             editor.commands.setYoutubeVideo({
-                src: url,
+                src: youtubeUrl,
                 width: 640,
                 height: 480,
             })
         }
+        setIsYoutubeOpen(false)
+        setYoutubeUrl('')
     }
-
-    const setLink = () => {
-        const previousUrl = editor.getAttributes('link').href
-        const url = window.prompt('URL', previousUrl)
-
-        if (url === null) {
-            return
-        }
-
-        if (url === '') {
-            editor.chain().focus().extendMarkRange('link').unsetLink().run()
-            return
-        }
-
-        editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-    }
-
 
     return (
         <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 focus-within:ring-2 focus-within:ring-mivn-blue/20 transition-all shadow-sm">
-            <div className="flex flex-wrap gap-1 p-2 bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex flex-wrap gap-1 p-2 bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-slate-800 items-center relative z-20">
                 <ToolButton
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     isActive={editor.isActive('bold')}
@@ -115,16 +118,72 @@ export function RichTextEditor({ content = "", onChange, placeholder = "Escribe 
                     icon={Quote}
                 />
                 <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-1 my-auto" />
-                <ToolButton
-                    onClick={setLink}
-                    isActive={editor.isActive('link')}
-                    icon={LinkIcon}
-                />
-                <ToolButton
-                    onClick={addYoutubeVideo}
-                    isActive={editor.isActive('youtube')}
-                    icon={YoutubeIcon}
-                />
+
+                {/* Link Tool */}
+                <div className="relative">
+                    <ToolButton
+                        onClick={() => {
+                            if (isLinkOpen) {
+                                setIsLinkOpen(false)
+                            } else {
+                                setIsLinkOpen(true)
+                                setIsYoutubeOpen(false)
+                                setLinkUrl(editor.getAttributes('link').href || '')
+                            }
+                        }}
+                        isActive={editor.isActive('link') || isLinkOpen}
+                        icon={LinkIcon}
+                    />
+                    {isLinkOpen && (
+                        <div className="absolute top-full left-0 mt-2 z-50 w-80 p-3 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800">
+                            <div className="flex gap-2">
+                                <Input
+                                    value={linkUrl}
+                                    onChange={(e) => setLinkUrl(e.target.value)}
+                                    placeholder="https://ejemplo.com"
+                                    className="h-9 text-xs"
+                                    autoFocus
+                                />
+                                <Button size="icon" className="h-9 w-9 shrink-0 bg-mivn-blue hover:bg-mivn-blue/90" onClick={setLink}>
+                                    <Check className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Youtube Tool */}
+                <div className="relative">
+                    <ToolButton
+                        onClick={() => {
+                            if (isYoutubeOpen) {
+                                setIsYoutubeOpen(false)
+                            } else {
+                                setIsYoutubeOpen(true)
+                                setIsLinkOpen(false)
+                            }
+                        }}
+                        isActive={editor.isActive('youtube') || isYoutubeOpen}
+                        icon={YoutubeIcon}
+                    />
+                    {isYoutubeOpen && (
+                        <div className="absolute top-full left-0 mt-2 z-50 w-80 p-3 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800">
+                            <div className="flex gap-2">
+                                <Input
+                                    value={youtubeUrl}
+                                    onChange={(e) => setYoutubeUrl(e.target.value)}
+                                    placeholder="https://youtube.com/..."
+                                    className="h-9 text-xs"
+                                    autoFocus
+                                />
+                                <Button size="icon" className="h-9 w-9 shrink-0 bg-red-600 hover:bg-red-700 text-white" onClick={addYoutubeVideo}>
+                                    <Check className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
             </div>
             <EditorContent editor={editor} className="cursor-text" />
 

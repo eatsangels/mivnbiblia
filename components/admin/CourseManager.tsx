@@ -431,6 +431,22 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
                                 />
                             </div>
 
+                            {/* Certificate Template Section */}
+                            <div className="space-y-4 pt-6 border-t border-slate-100 dark:border-white/5">
+                                <div className="flex items-center gap-3">
+                                    <Award className="w-5 h-5 text-mivn-gold" />
+                                    <div>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Plantilla de Diploma (Opcional)</label>
+                                        <p className="text-[9px] text-slate-400 mt-0.5">Sube una imagen de fondo personalizada para los diplomas de este curso.</p>
+                                    </div>
+                                </div>
+                                <ImageUploader
+                                    currentImage={editingCourse?.certificate_template_url || ''}
+                                    onUploadComplete={(url) => setEditingCourse(prev => ({ ...prev, certificate_template_url: url }))}
+                                    folder="certificates"
+                                />
+                            </div>
+
                             <div className="flex items-center justify-between pt-6">
                                 <div className="flex items-center gap-6">
                                     <label className="flex items-center gap-3 cursor-pointer group">

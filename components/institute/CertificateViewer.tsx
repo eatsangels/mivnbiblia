@@ -47,6 +47,19 @@ export const CertificateViewer = ({ certificate, studentName, onClose }: Certifi
                         <div className="absolute bottom-0 left-0 w-32 h-32 border-b-4 border-l-4 border-[#c5a358]/30"></div>
                         <div className="absolute bottom-0 right-0 w-32 h-32 border-b-4 border-r-4 border-[#c5a358]/30"></div>
 
+                        {/* Custom Background Image (if exists) */}
+                        {certificate.image_url && (
+                            <div className="absolute inset-0 z-0 pointer-events-none">
+                                <Image
+                                    src={certificate.image_url}
+                                    alt="Diploma Background"
+                                    fill
+                                    className="object-cover opacity-10"
+                                    priority
+                                />
+                            </div>
+                        )}
+
                         {/* Certificate Body */}
                         <div className="relative z-10 w-full flex flex-col items-center gap-6">
                             <div className="w-24 h-24 relative mb-4">

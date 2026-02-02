@@ -7,7 +7,7 @@ import { RichTextEditor } from "./RichTextEditor"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { X, Send, Loader2 } from "lucide-react"
+import { X, Send, Loader2, Users } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
@@ -22,7 +22,7 @@ interface ComposeMessageProps {
 }
 
 export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageProps) {
-    const [recipient, setRecipient] = React.useState<UserResult | null>(null)
+    const [recipients, setRecipients] = React.useState<UserResult[]>([])
     const [subject, setSubject] = React.useState(replyTo ? `Re: ${replyTo.subject}` : "")
     const [body, setBody] = React.useState("")
     const [sending, setSending] = React.useState(false)
@@ -32,18 +32,27 @@ export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageP
 
     React.useEffect(() => {
         if (replyTo) {
-            setRecipient({
+            setRecipients([{
                 id: replyTo.userId,
                 full_name: replyTo.userName,
-                avatar_url: null, // Opcional, ojalá se pasara si se tiene
+                avatar_url: null,
                 email: null
-            })
+            }])
         }
     }, [replyTo])
 
+    const handleAddRecipient = (user: UserResult) => {
+        if (recipients.some(r => r.id === user.id)) return
+        setRecipients(prev => [...prev, user])
+    }
+
+    const handleRemoveRecipient = (userId: string) => {
+        setRecipients(prev => prev.filter(r => r.id !== userId))
+    }
+
     const handleSend = async () => {
-        if (!recipient) {
-            toast.error("Debes seleccionar un destinatario")
+        if (recipients.length === 0) {
+            toast.error("Debes seleccionar al menos un destinatario")
             return
         }
         if (!subject) {
@@ -64,20 +73,28 @@ export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageP
                 return
             }
 
-            const { error } = await supabase.from("inbox_messages").insert({
+            // Prepare validation for all inserts
+            const inserts = recipients.map(recipient => ({
                 sender_id: user.id,
                 recipient_id: recipient.id,
                 subject,
                 body,
                 is_read: false
-            })
+            }))
+
+            const { error } = await supabase.from("inbox_messages").insert(inserts)
 
             if (error) throw error
 
-            toast.success("Mensaje enviado correctamente")
+            const recipientCount = recipients.length
+            toast.success(recipientCount > 1
+                ? `Mensaje enviado a ${recipientCount} destinatarios`
+                : "Mensaje enviado correctamente"
+            )
+
             if (onSuccess) onSuccess()
-            else if (onCancel) onCancel() // Si no hay onSuccess pero hay onCancel
-            else router.refresh() // Si no hay callbacks, refresh
+            else if (onCancel) onCancel()
+            else router.refresh()
 
             router.refresh()
 
@@ -104,31 +121,41 @@ export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageP
             </div>
 
             <div className="space-y-6">
-                {/* Destinatario */}
-                <div className="space-y-2">
-                    <Label className="uppercase text-[10px] font-black tracking-widest text-slate-500">Para</Label>
-                    {recipient ? (
-                        <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2">
-                            <div className="w-10 h-10 rounded-full bg-mivn-blue flex items-center justify-center text-white font-bold text-sm overflow-hidden shrink-0">
-                                {recipient.avatar_url ? (
-                                    <img src={recipient.avatar_url} alt="" className="w-full h-full object-cover" />
-                                ) : (
-                                    recipient.full_name?.[0] || "?"
-                                )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="font-bold text-slate-900 dark:text-white truncate">{recipient.full_name}</p>
-                                {recipient.email && <p className="text-xs text-slate-500 truncate">{recipient.email}</p>}
-                            </div>
-                            {!replyTo && (
-                                <button onClick={() => setRecipient(null)} className="p-2 text-slate-400 hover:text-rose-500 transition-colors">
-                                    <X className="w-4 h-4" />
-                                </button>
-                            )}
+                {/* Destinatarios */}
+                <div className="space-y-3">
+                    <Label className="uppercase text-[10px] font-black tracking-widest text-slate-500 flex items-center gap-2">
+                        Para <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full text-[9px]">{recipients.length}</span>
+                    </Label>
+
+                    {/* Lista de Chips */}
+                    {recipients.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-2 p-2 max-h-32 overflow-y-auto">
+                            {recipients.map(recipient => (
+                                <div key={recipient.id} className="flex items-center gap-2 pl-1 pr-2 py-1 bg-mivn-blue/5 text-mivn-blue rounded-full border border-mivn-blue/10 animate-in fade-in zoom-in-95">
+                                    <div className="w-6 h-6 rounded-full bg-mivn-blue flex items-center justify-center text-white font-bold text-[10px] overflow-hidden shrink-0">
+                                        {recipient.avatar_url ? (
+                                            <img src={recipient.avatar_url} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                            recipient.full_name?.[0] || "?"
+                                        )}
+                                    </div>
+                                    <span className="text-xs font-bold truncate max-w-[150px]">{recipient.full_name}</span>
+                                    <button
+                                        onClick={() => handleRemoveRecipient(recipient.id)}
+                                        className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-rose-100 hover:text-rose-500 transition-colors"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                </div>
+                            ))}
                         </div>
-                    ) : (
-                        <UserSearch onSelect={setRecipient} />
                     )}
+
+                    <UserSearch
+                        onSelect={handleAddRecipient}
+                        selectedIds={recipients.map(r => r.id)}
+                        label={recipients.length > 0 ? "Agregar otro destinatario..." : "Buscar destinatarios..."}
+                    />
                 </div>
 
                 {/* Asunto */}
@@ -164,8 +191,8 @@ export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageP
                     disabled={sending}
                     className="rounded-xl bg-mivn-blue hover:bg-mivn-blue/90 text-white px-8 h-12 font-bold uppercase tracking-widest text-xs flex items-center gap-2 shadow-lg shadow-mivn-blue/20"
                 >
-                    {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                    {replyTo ? 'Enviar Respuesta' : 'Enviar Mensaje'}
+                    {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : recipients.length > 1 ? <Users className="w-4 h-4" /> : <Send className="w-4 h-4" />}
+                    {sending ? 'Enviando...' : recipients.length > 1 ? `Enviar a ${recipients.length}` : (replyTo ? 'Enviar Respuesta' : 'Enviar Mensaje')}
                 </Button>
             </div>
         </div>

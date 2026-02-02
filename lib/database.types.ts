@@ -523,6 +523,7 @@ export type Database = {
       courses: {
         Row: {
           category_id: string | null
+          certificate_template_url: string | null
           created_at: string | null
           description: string | null
           id: string
@@ -537,6 +538,7 @@ export type Database = {
         }
         Insert: {
           category_id?: string | null
+          certificate_template_url?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -551,6 +553,7 @@ export type Database = {
         }
         Update: {
           category_id?: string | null
+          certificate_template_url?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -1019,8 +1022,14 @@ export type Database = {
           id: string
           is_read: boolean
           parent_id: string | null
+          recipient_deleted: boolean
           recipient_id: string
+          recipient_purged: boolean
+          recipient_starred: boolean
+          sender_deleted: boolean
           sender_id: string
+          sender_purged: boolean
+          sender_starred: boolean
           subject: string | null
           updated_at: string
         }
@@ -1031,8 +1040,14 @@ export type Database = {
           id?: string
           is_read?: boolean
           parent_id?: string | null
+          recipient_deleted?: boolean
           recipient_id: string
+          recipient_purged?: boolean
+          recipient_starred?: boolean
+          sender_deleted?: boolean
           sender_id: string
+          sender_purged?: boolean
+          sender_starred?: boolean
           subject?: string | null
           updated_at?: string
         }
@@ -1043,8 +1058,14 @@ export type Database = {
           id?: string
           is_read?: boolean
           parent_id?: string | null
+          recipient_deleted?: boolean
           recipient_id?: string
+          recipient_purged?: boolean
+          recipient_starred?: boolean
+          sender_deleted?: boolean
           sender_id?: string
+          sender_purged?: boolean
+          sender_starred?: boolean
           subject?: string | null
           updated_at?: string
         }
