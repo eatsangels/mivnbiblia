@@ -3,10 +3,12 @@
 import {
     Users, Heart, DollarSign, Calendar, TrendingUp, MoreVertical,
     Video, Radio, Settings, CheckCircle2, XCircle, Edit, Eye,
-    CalendarDays, History, Plus
+    CalendarDays, History, Plus, Loader2
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import { getPaginatedActivity } from "@/app/(estudio)/admin/actions";
 
 export interface AdminDashboardProps {
     stats: {
@@ -18,12 +20,41 @@ export interface AdminDashboardProps {
     agenda: any[];
     pendingTestimonies: any[];
     activity: {
-        newMembers: any[];
-        newTestimonies: any[];
-    };
+        id: string;
+        type: 'member' | 'testimony' | 'event' | 'donation' | 'group' | 'prayer';
+        user: string;
+        action: string;
+        date: string;
+    }[];
 }
 
-export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: AdminDashboardProps) {
+export function AdminDashboard({ stats, agenda, pendingTestimonies, activity: initialActivity }: AdminDashboardProps) {
+    const [activities, setActivities] = useState(initialActivity);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(initialActivity.length === 10);
+
+    const handleLoadMore = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        try {
+            const nextPage = page + 1;
+            const newActivities = await getPaginatedActivity(nextPage);
+
+            if (newActivities.length < 10) {
+                setHasMore(false);
+            }
+
+            setActivities(prev => [...prev, ...newActivities]);
+            setPage(nextPage);
+        } catch (error) {
+            console.error("Error loading more activities:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Header */}
@@ -207,32 +238,55 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity }: 
                         </div>
                         <div className="space-y-6 relative">
                             <div className="absolute left-[5px] top-2 bottom-2 w-px bg-slate-100 dark:bg-slate-800"></div>
-                            {activity.newMembers.map((member, i) => (
-                                <div key={i} className="flex gap-4 relative z-10">
-                                    <div className={`w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900`}></div>
-                                    <div>
-                                        <p className="text-xs text-slate-600 dark:text-slate-400">
-                                            <span className="font-bold text-slate-900 dark:text-white">{member.full_name}</span> se unió al ministerio.
-                                        </p>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
-                                            {new Date(member.created_at).toLocaleDateString()}
-                                        </span>
+                            {activities.map((item: any, i: number) => {
+                                let Icon = History;
+                                let color = "bg-slate-400";
+
+                                switch (item.type) {
+                                    case 'member': Icon = Users; color = "bg-emerald-500"; break;
+                                    case 'testimony': Icon = Heart; color = "bg-purple-500"; break;
+                                    case 'event': Icon = Calendar; color = "bg-rose-500"; break;
+                                    case 'donation': Icon = DollarSign; color = "bg-mivn-gold"; break;
+                                    case 'group': Icon = Users; color = "bg-mivn-blue"; break;
+                                    case 'prayer': Icon = Heart; color = "bg-indigo-500"; break;
+                                }
+
+                                return (
+                                    <div key={item.id + i} className="flex gap-4 relative z-10">
+                                        <div className={`w-2.5 h-2.5 rounded-full ${color} mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900 flex items-center justify-center`}>
+                                            {/* Icon is too small for 2.5px, but the color indicates type */}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-xs text-slate-600 dark:text-slate-400">
+                                                <span className="font-bold text-slate-900 dark:text-white">{item.user}</span> {item.action}.
+                                            </p>
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                                                {new Date(item.date).toLocaleDateString()}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                            {activity.newTestimonies.map((testimony, i) => (
-                                <div key={i + "t"} className="flex gap-4 relative z-10">
-                                    <div className={`w-2.5 h-2.5 rounded-full bg-mivn-blue mt-1.5 shrink-0 ring-4 ring-white dark:ring-slate-900`}></div>
-                                    <div>
-                                        <p className="text-xs text-slate-600 dark:text-slate-400">
-                                            <span className="font-bold text-slate-900 dark:text-white">{testimony.full_name || testimony.author_name || 'Anónimo'}</span> envió un testimonio.
-                                        </p>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
-                                            {new Date(testimony.created_at).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
+
+                            {hasMore && (
+                                <button
+                                    onClick={handleLoadMore}
+                                    disabled={loading}
+                                    className="w-full py-2 mt-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-mivn-blue transition-colors flex items-center justify-center gap-2 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="w-3 h-3 animate-spin" /> Cargando...
+                                        </>
+                                    ) : (
+                                        "Cargar más actividad"
+                                    )}
+                                </button>
+                            )}
+
+                            {activities.length === 0 && (
+                                <p className="text-center text-slate-400 italic py-4">No hay actividad reciente</p>
+                            )}
                         </div>
                     </section>
 

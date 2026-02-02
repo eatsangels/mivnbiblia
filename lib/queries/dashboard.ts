@@ -44,30 +44,80 @@ export async function getDashboardStats() {
 }
 
 /**
- * Get recent activity logs (from various tables)
+ * Get recent activity logs (from various tables) with pagination
  */
-export async function getRecentActivity() {
+export async function getRecentActivity(page: number = 1, limit: number = 10) {
     const supabase = await createClient();
+    const offset = (page - 1) * limit;
 
-    // This is a simplified version, ideally you'd have an activity_log table
-    // For now, let's just get the latest entries from profiles, events, and testimonies
+    // Fetch latest entries from multiple tables in parallel
+    // We fetch 'limit' from each to ensure we have enough even after merging and sorting
+    const [
+        { data: members },
+        { data: testimonies },
+        { data: registrations },
+        { data: donations },
+        { data: groupJoins },
+        { data: prayers }
+    ] = await Promise.all([
+        supabase.from("profiles").select("id, full_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("testimonies").select("id, author_name, full_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("event_registrations").select("id, full_name, created_at, events(title)").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("donations").select("id, donor_name, amount, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("group_members").select("id, created_at, profiles(full_name), small_groups(name)").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("prayer_requests").select("id, requester_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1)
+    ]);
 
-    const { data: newMembers } = await supabase
-        .from("profiles")
-        .select("full_name, created_at")
-        .order("created_at", { ascending: false })
-        .limit(3);
+    // Normalize and combine
+    const activities: any[] = [
+        ...(members || []).map(m => ({
+            id: m.id,
+            type: 'member',
+            user: m.full_name || 'Nuevo Miembro',
+            action: 'se unió al ministerio',
+            date: m.created_at
+        })),
+        ...(testimonies || []).map(t => ({
+            id: t.id,
+            type: 'testimony',
+            user: t.full_name || t.author_name || 'Anónimo',
+            action: 'envió un testimonio',
+            date: t.created_at
+        })),
+        ...(registrations || []).map((r: any) => ({
+            id: r.id,
+            type: 'event',
+            user: r.full_name,
+            action: `se registró en ${r.events?.title || 'un evento'}`,
+            date: r.created_at
+        })),
+        ...(donations || []).map(d => ({
+            id: d.id,
+            type: 'donation',
+            user: d.donor_name || 'Anónimo',
+            action: `realizó una donación de $${d.amount}`,
+            date: d.created_at
+        })),
+        ...(groupJoins || []).map((g: any) => ({
+            id: g.id,
+            type: 'group',
+            user: g.profiles?.full_name || 'Usuario',
+            action: `solicitó unirse a ${g.small_groups?.name || 'un grupo'}`,
+            date: g.created_at
+        })),
+        ...(prayers || []).map(p => ({
+            id: p.id,
+            type: 'prayer',
+            user: p.requester_name || 'Anónimo',
+            action: 'envió una petición de oración',
+            date: p.created_at
+        }))
+    ];
 
-    const { data: newTestimonies } = await supabase
-        .from("testimonies")
-        .select("full_name, created_at")
-        .order("created_at", { ascending: false })
-        .limit(3);
-
-    return {
-        newMembers: newMembers || [],
-        newTestimonies: newTestimonies || []
-    };
+    // Sort by date descending and take top 'limit'
+    return activities
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, limit);
 }
 
 /**
