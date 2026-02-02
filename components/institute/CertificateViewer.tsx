@@ -5,10 +5,11 @@ import Image from "next/image";
 
 interface CertificateViewerProps {
     certificate: any;
+    studentName?: string;
     onClose: () => void;
 }
 
-export const CertificateViewer = ({ certificate, onClose }: CertificateViewerProps) => {
+export const CertificateViewer = ({ certificate, studentName, onClose }: CertificateViewerProps) => {
     const handlePrint = () => {
         window.print();
     };
@@ -60,7 +61,7 @@ export const CertificateViewer = ({ certificate, onClose }: CertificateViewerPro
                             <p className="font-serif italic text-lg text-slate-500 mt-4">Este documento certifica que</p>
 
                             <h3 className="text-4xl md:text-5xl font-black text-slate-800 uppercase tracking-tight my-4 font-lexend underline decoration-[#c5a358]/20 underline-offset-8">
-                                Usuario MIVN
+                                {studentName || 'Usuario MIVN'}
                             </h3>
 
                             <p className="font-serif italic text-lg text-slate-500">Ha completado satisfactoriamente el curso</p>

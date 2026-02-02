@@ -11,6 +11,7 @@ import { createCourse, updateCourse, deleteCourse, markAsCertified } from "@/app
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { CourseLessonsManager } from "./CourseLessonsManager";
 import { CourseStudentsViewer } from "./CourseStudentsViewer";
+import { ManualCertifier } from "./ManualCertifier";
 
 interface CourseManagerProps {
     initialCourses: CourseWithStats[];
@@ -322,6 +323,10 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="mt-12">
+                    <ManualCertifier />
                 </div>
             </div>
 

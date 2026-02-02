@@ -1011,6 +1011,67 @@ export type Database = {
           },
         ]
       }
+      inbox_messages: {
+        Row: {
+          attachments: Json | null
+          body: string
+          created_at: string
+          id: string
+          is_read: boolean
+          parent_id: string | null
+          recipient_id: string
+          sender_id: string
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          attachments?: Json | null
+          body: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          parent_id?: string | null
+          recipient_id: string
+          sender_id: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attachments?: Json | null
+          body?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          parent_id?: string | null
+          recipient_id?: string
+          sender_id?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbox_messages_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "inbox_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inbox_messages_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inbox_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed: boolean | null

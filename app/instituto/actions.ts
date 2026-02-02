@@ -239,6 +239,7 @@ export async function completeLesson(lessonId: string, courseId: string) {
 
     revalidatePath(`/instituto/clase/${courseId}`);
     revalidatePath('/instituto');
+    revalidatePath('/admin/courses');
 
     return { success: true, progressPercentage };
 }

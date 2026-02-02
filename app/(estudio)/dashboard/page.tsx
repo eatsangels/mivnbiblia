@@ -31,7 +31,8 @@ import {
     Settings,
     Compass,
     Map,
-    Camera
+    Camera,
+    Mail
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
@@ -79,6 +80,13 @@ export default async function DashboardPage() {
         .eq('is_active', true)
         .order('date', { ascending: false })
         .limit(2);
+
+    // Fetch unread messages count
+    const { count: unreadMessagesCount } = await supabase
+        .from('inbox_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('recipient_id', user.id)
+        .eq('is_read', false);
 
     const sidebarLinks: any[] = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", active: true },
@@ -138,6 +146,13 @@ export default async function DashboardPage() {
                     <div className="flex items-center gap-6">
                         <Link href="/dashboard/profile" className="p-2 text-slate-400 hover:text-mivn-blue transition-colors group relative">
                             <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform duration-700" />
+                        </Link>
+
+                        <Link href="/dashboard/mensajes" className="relative p-2 text-slate-400 hover:text-mivn-blue transition-colors">
+                            <Mail className="w-5 h-5" />
+                            {(unreadMessagesCount || 0) > 0 && (
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-mivn-blue rounded-full border-2 border-white dark:border-slate-900" />
+                            )}
                         </Link>
 
                         <Link href="/dashboard/profile" className="relative p-2 text-slate-400 hover:text-mivn-blue transition-colors">
@@ -368,6 +383,7 @@ export default async function DashboardPage() {
                             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-10">Enlaces Rápidos</h3>
                             <ul className="space-y-6">
                                 {[
+                                    { label: "Mensajería Privada", icon: Mail, href: "/dashboard/mensajes" },
                                     { label: "Ofrendas y Diezmos", icon: Heart, href: "/dashboard/ofrendas" },
                                     { label: "Templo", icon: Compass, href: "/dashboard/temple" },
                                     { label: "Mapas", icon: Map, href: "/dashboard/maps" },
@@ -411,6 +427,7 @@ export default async function DashboardPage() {
             <div className="lg:hidden fixed bottom-6 left-6 right-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 px-8 py-5 rounded-[2.5rem] flex justify-between items-center z-50 shadow-2xl">
                 <Link href="/dashboard" className="text-mivn-blue"><LayoutDashboard className="w-6 h-6" /></Link>
                 <Link href="/read" className="text-slate-400"><BookOpen className="w-6 h-6" /></Link>
+                <Link href="/dashboard/mensajes" className={`${(unreadMessagesCount || 0) > 0 ? 'text-mivn-blue' : 'text-slate-400'}`}><Mail className="w-6 h-6" /></Link>
                 <Link href="/en-vivo" className="text-slate-400"><MessageSquare className="w-6 h-6" /></Link>
                 <Link href="/grupos" className="text-slate-400"><Users className="w-6 h-6" /></Link>
                 <Link href="/dashboard/profile" className="text-slate-400"><User className="w-6 h-6" /></Link>

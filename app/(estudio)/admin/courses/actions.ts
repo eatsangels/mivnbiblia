@@ -383,3 +383,101 @@ export async function getCourseStudents(courseId: string) {
     if (error) throw error;
     return data;
 }
+
+/**
+ * Search students to certify
+ */
+export async function searchStudentsToCertify(query: string) {
+    if (!query || query.length < 3) return [];
+
+    const supabase = await createClient();
+
+    // 1. Find users matching query
+    const { data: users, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, email, avatar_url')
+        .or(`full_name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`)
+        .limit(10);
+
+    if (error) throw error;
+    if (!users.length) return [];
+
+    // 2. Get their enrolled courses to simplify selection
+    const userIds = users.map(u => u.id);
+    const { data: enrollments } = await supabase
+        .from('course_enrollments')
+        .select(`
+            user_id,
+            course_id,
+            progress_percentage,
+            completed_at,
+            courses (id, title)
+        `)
+        .in('user_id', userIds);
+
+    // 3. Merge data
+    return users.map(user => {
+        const userEnrollments = enrollments?.filter(e => e.user_id === user.id) || [];
+        return {
+            ...user,
+            enrollments: userEnrollments.map(e => ({
+                courseId: e.courses?.id,
+                courseTitle: e.courses?.title,
+                progress: e.progress_percentage,
+                completedAt: e.completed_at
+            }))
+        };
+    });
+}
+
+/**
+ * Issue a manual certificate (Admin override)
+ */
+export async function issueManualCertificate(userId: string, courseId: string) {
+    const supabase = await createClient();
+
+    // 1. Check if enrollment exists
+    const { data: enrollment } = await supabase
+        .from('course_enrollments')
+        .select('id, user_id, course_id, courses(title)')
+        .eq('user_id', userId)
+        .eq('course_id', courseId)
+        .single();
+
+    if (!enrollment) {
+        // If not enrolled, enroll them first? Or error?
+        // Let's error for now to keep it safe, admin should enroll them first if needed.
+        throw new Error("El usuario no está inscrito en este curso.");
+    }
+
+    // 2. Mark as completed (force 100% and date)
+    const { error: updateError } = await (supabase as any)
+        .from('course_enrollments')
+        .update({
+            progress_percentage: 100,
+            completed_at: new Date().toISOString()
+        } as any)
+        .eq('id', enrollment.id);
+
+    if (updateError) throw updateError;
+
+    // 3. Generate certificate record
+    const { error: certError } = await supabase
+        .from('user_certificates')
+        .insert({
+            user_id: userId,
+            title: (enrollment.courses as any).title || 'Certificado MIVN',
+            type: 'Diploma',
+            issued_at: new Date().toISOString()
+        });
+
+    if (certError) {
+        // Safe to ignore duplicate error if already certified? 
+        // Best to just let it fail or log.
+        console.error("Certificate creation error", certError);
+    }
+
+    revalidatePath('/admin/courses');
+    return { success: true };
+}
+
