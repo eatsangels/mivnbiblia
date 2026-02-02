@@ -19,11 +19,25 @@ export interface MemberManagerProps {
 export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
     const [selectedMember, setSelectedMember] = useState<any>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [activeMinistry, setActiveMinistry] = useState("Todos los Ministerios");
 
     const handleEditClick = (member: any) => {
         setSelectedMember(member);
         setIsEditOpen(true);
     };
+
+    const filteredMembers = initialMembers.filter(member => {
+        const matchesSearch =
+            member.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            member.email?.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesMinistry =
+            activeMinistry === "Todos los Ministerios" ||
+            member.ministry === activeMinistry;
+
+        return matchesSearch && matchesMinistry;
+    });
 
     return (
         <>
@@ -48,8 +62,10 @@ export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
                         <div className="relative flex-1 lg:w-64">
                             <Search className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
                             <input
-                                className="w-full pl-10 bg-slate-100 dark:bg-white/5 border-none rounded-2xl py-3 text-sm font-medium focus:ring-2 focus:ring-mivn-blue/20 transition-all placeholder:text-slate-400"
+                                className="w-full pl-10 bg-slate-100 dark:bg-white/5 border-none rounded-2xl py-3 text-sm font-medium focus:ring-2 focus:ring-mivn-blue/20 transition-all placeholder:text-slate-400 text-slate-900 dark:text-white"
                                 placeholder="Buscar por nombre, email..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
                         <button className="flex items-center gap-2 px-6 py-3 bg-mivn-gold text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-mivn-gold/20 hover:scale-105 transition-all">
@@ -98,10 +114,13 @@ export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
                     </div>
                 </div>
 
-                {/* Filters */}
                 <div className="flex flex-wrap gap-3">
-                    {['Todos los Ministerios', 'Ministerio Juvenil', 'Alabanza', 'Niños', 'Intercesión'].map((filter, i) => (
-                        <button key={i} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${i === 0 ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-transparent shadow-lg' : 'bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:border-mivn-blue hover:text-mivn-blue'}`}>
+                    {['Todos los Ministerios', 'Ministerio Juvenil', 'Alabanza', 'Niños', 'Intercesión', 'Diaconado', 'Evangelismo'].map((filter, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setActiveMinistry(filter)}
+                            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${activeMinistry === filter ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-transparent shadow-lg' : 'bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:border-mivn-blue hover:text-mivn-blue'}`}
+                        >
                             {filter}
                         </button>
                     ))}
@@ -121,9 +140,9 @@ export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                                {initialMembers.length > 0 ? (
-                                    initialMembers.map((member, i) => (
-                                        <tr key={i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
+                                {filteredMembers.length > 0 ? (
+                                    filteredMembers.map((member, i) => (
+                                        <tr key={member.id || i} className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-bold text-slate-500 text-sm uppercase">
@@ -177,10 +196,9 @@ export function MemberManager({ initialMembers, stats }: MemberManagerProps) {
                         </table>
                     </div>
 
-                    {/* Pagination */}
                     <div className="px-8 py-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Mostrando <span className="text-slate-900 dark:text-white">1-{initialMembers.length}</span> de <span className="text-slate-900 dark:text-white">{stats.total}</span>
+                            Mostrando <span className="text-slate-900 dark:text-white">1-{filteredMembers.length}</span> de <span className="text-slate-900 dark:text-white">{stats.total}</span>
                         </p>
                         <div className="flex gap-2">
                             <button className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 transition-colors disabled:opacity-50" disabled>

@@ -56,6 +56,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
         latitude: profile.latitude || 0,
         longitude: profile.longitude || 0,
         is_location_public: profile.is_location_public || false,
+        ministry: profile.ministry || '',
         notifications_email: true,
         notifications_push: false,
     });
@@ -157,7 +158,8 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                 address: formData.address || null,
                 latitude: formData.latitude || null,
                 longitude: formData.longitude || null,
-                is_location_public: formData.is_location_public
+                is_location_public: formData.is_location_public,
+                ministry: formData.ministry || null
             })
             .eq('id', profile.id);
 
@@ -366,6 +368,22 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                     </div>
                                 </div>
                                 <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Ministerio Principal</label>
+                                    <select
+                                        value={formData.ministry}
+                                        onChange={(e) => setFormData({ ...formData, ministry: e.target.value })}
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none font-medium"
+                                    >
+                                        <option value="">Sin Asignar</option>
+                                        <option value="Ministerio Juvenil">Ministerio Juvenil</option>
+                                        <option value="Alabanza">Alabanza</option>
+                                        <option value="Niños">Niños</option>
+                                        <option value="Intercesión">Intercesión</option>
+                                        <option value="Diaconado">Diaconado</option>
+                                        <option value="Evangelismo">Evangelismo</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Latitud</label>
                                     <input
                                         type="number"
@@ -415,9 +433,9 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                             </div>
                             <div className="p-10 md:p-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
                                 {[
-                                    { label: "Grupo Pequeño", val: profile.small_group || "Roca Firme", icon: Home },
-                                    { label: "Ministerio", val: profile.ministry || "Worship Team", icon: Star, featured: true },
-                                    { label: "Bautismo", val: profile.baptism_date || "12 Oct, 2018", icon: Calendar }
+                                    { label: "Grupo Pequeño", val: profile.small_group || "Sin Asignar", icon: Home },
+                                    { label: "Ministerio", val: formData.ministry || "Sin Asignar", icon: Star, featured: true },
+                                    { label: "Bautismo", val: profile.baptism_date || "No registrado", icon: Calendar }
                                 ].map((stat, i) => (
                                     <div key={i} className="bg-slate-50 dark:bg-white/5 p-8 rounded-3xl border border-slate-100 dark:border-white/10 space-y-3 group/stat hover:border-mivn-blue/30 transition-all">
                                         <div className="flex justify-between items-start">

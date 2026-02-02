@@ -44,11 +44,23 @@ export async function getMemberStats() {
         .from("profiles")
         .select("*", { count: 'exact', head: true });
 
-    // For now, these are placeholder counts until we have more refined data
+    const { count: leaders } = await supabase
+        .from("profiles")
+        .select("*", { count: 'exact', head: true })
+        .eq("role", "leader");
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const { count: newConverted } = await supabase
+        .from("profiles")
+        .select("*", { count: 'exact', head: true })
+        .gte("created_at", thirtyDaysAgo.toISOString());
+
     return {
         total: total || 0,
-        leaders: Math.floor((total || 0) * 0.1), // Example logic
-        newConverted: Math.floor((total || 0) * 0.05)
+        leaders: leaders || 0,
+        newConverted: newConverted || 0
     };
 }
 

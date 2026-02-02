@@ -6,7 +6,17 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
-export const ContactInfo = () => {
+interface ContactInfoProps {
+    settings: Record<string, string>;
+}
+
+export const ContactInfo = ({ settings }: ContactInfoProps) => {
+    const address = settings.address || "100 Hurricane Shoals Rd NW, Suite F, Lawrenceville, GA 30043";
+    const phone = settings.contact_phone || "+1 (770) 524-8414";
+    const email = settings.contact_email || "eatsangelsgaming@gmail.com";
+    const sundayTime = settings.service_time_sunday || "8AM | 10AM | 6PM";
+    const wednesdayTime = settings.service_time_wednesday || "7:30 PM";
+
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const [formData, setFormData] = useState({
         name: "",
@@ -73,11 +83,11 @@ export const ContactInfo = () => {
                     <div className="flex flex-wrap justify-center gap-6">
                         <div className="flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-white">
                             <Phone className="w-4 h-4 text-mivn-gold" />
-                            <span className="text-xs font-bold uppercase tracking-widest">+1 (800) MIVN-FE</span>
+                            <span className="text-xs font-bold uppercase tracking-widest">{phone}</span>
                         </div>
                         <div className="flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-white">
                             <Mail className="w-4 h-4 text-mivn-gold" />
-                            <span className="text-xs font-bold uppercase tracking-widest">info@mivn.org</span>
+                            <span className="text-xs font-bold uppercase tracking-widest">{email}</span>
                         </div>
                     </div>
                 </div>
@@ -181,8 +191,7 @@ export const ContactInfo = () => {
                                     <div className="space-y-2">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Dirección MIVN</h4>
                                         <p className="text-xl text-slate-700 dark:text-slate-300 font-light leading-relaxed">
-                                            Av. Principal 123, Sector Las Lomas. <br />
-                                            Ciudad de México, CP 01234
+                                            {address}
                                         </p>
                                     </div>
                                 </div>
@@ -196,11 +205,11 @@ export const ContactInfo = () => {
                                         <div className="text-xl text-slate-700 dark:text-slate-300 font-light leading-relaxed">
                                             <p className="flex justify-between items-center gap-4">
                                                 <span>Domingos</span>
-                                                <span className="font-bold text-sm text-mivn-blue">8AM | 10AM | 6PM</span>
+                                                <span className="font-bold text-sm text-mivn-blue">{sundayTime}</span>
                                             </p>
                                             <p className="flex justify-between items-center gap-4 mt-2">
                                                 <span>Miércoles</span>
-                                                <span className="font-bold text-sm text-mivn-blue">7:30 PM</span>
+                                                <span className="font-bold text-sm text-mivn-blue">{wednesdayTime}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -208,7 +217,7 @@ export const ContactInfo = () => {
                             </div>
 
                             <a
-                                href="https://maps.google.com"
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
                                 target="_blank"
                                 className="w-full flex items-center justify-center gap-4 py-8 bg-slate-50 dark:bg-white/5 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-mivn-blue hover:text-mivn-blue transition-all group"
                             >
@@ -222,11 +231,11 @@ export const ContactInfo = () => {
 
                             <h3 className="text-2xl font-playfair font-bold text-center">Canales de Atención</h3>
                             <div className="grid grid-cols-2 gap-6 relative z-10">
-                                <a href="https://wa.me/321123456" className="flex flex-col items-center gap-4 p-8 bg-white/5 backdrop-blur-md rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all text-center group">
+                                <a href={`https://wa.me/${phone.replace(/\D/g, '')}`} className="flex flex-col items-center gap-4 p-8 bg-white/5 backdrop-blur-md rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all text-center group">
                                     <MessageCircle className="w-8 h-8 text-emerald-400" />
                                     <span className="text-[9px] font-black uppercase tracking-widest">WhatsApp Directo</span>
                                 </a>
-                                <a href="mailto:info@mivn.org" className="flex flex-col items-center gap-4 p-8 bg-white/5 backdrop-blur-md rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all text-center group">
+                                <a href={`mailto:${email}`} className="flex flex-col items-center gap-4 p-8 bg-white/5 backdrop-blur-md rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all text-center group">
                                     <Mail className="w-8 h-8 text-mivn-gold" />
                                     <span className="text-[9px] font-black uppercase tracking-widest">Email Pastoral</span>
                                 </a>
