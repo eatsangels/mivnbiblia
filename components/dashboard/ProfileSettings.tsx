@@ -240,7 +240,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                 key={item.id}
                                 onClick={() => {
                                     if (item.id === 'donations') {
-                                        router.push('/dashboard/donations');
+                                        router.push('/dashboard/ofrendas');
                                     } else {
                                         setActiveSection(item.id);
                                     }

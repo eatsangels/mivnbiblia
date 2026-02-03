@@ -57,7 +57,7 @@ export default async function GrowthDashboardPage() {
             <div className="lg:hidden fixed bottom-6 left-6 right-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800 px-8 py-5 rounded-[2.5rem] flex justify-between items-center z-50 shadow-2xl">
                 <Link href="/dashboard" className="text-slate-400"><LayoutDashboard className="w-6 h-6" /></Link>
                 <Link href="/dashboard/growth" className="text-mivn-blue"><TrendingUp className="w-6 h-6" /></Link>
-                <Link href="/dashboard/donations" className="text-slate-400"><Heart className="w-6 h-6" /></Link>
+                <Link href="/dashboard/ofrendas" className="text-slate-400"><Heart className="w-6 h-6" /></Link>
                 <Link href="/dashboard/profile" className="text-slate-400"><User className="w-6 h-6" /></Link>
             </div>
         </div>

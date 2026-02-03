@@ -4,6 +4,7 @@ import { DonationsManagement } from "@/components/dashboard/DonationsManagement"
 import { Home, Bell, LayoutDashboard, Heart, Users, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getDonationHistory, getDonationStats } from "@/app/actions/donations";
 
 export default async function DonationsDashboardPage() {
     const supabase = await createClient();
@@ -14,11 +15,13 @@ export default async function DonationsDashboardPage() {
         redirect('/login');
     }
 
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single() as any;
+    const [profileResponse, history, stats] = await Promise.all([
+        supabase.from('profiles').select('*').eq('id', user.id).single(),
+        getDonationHistory(),
+        getDonationStats()
+    ]);
+
+    const profile = profileResponse.data as any;
 
     if (!profile) {
         return <div className="min-h-screen bg-[#05070a] flex items-center justify-center text-white">Error loading profile.</div>;
@@ -72,7 +75,11 @@ export default async function DonationsDashboardPage() {
             </header>
 
             <main className="max-w-7xl mx-auto px-6 py-16 w-full">
-                <DonationsManagement profile={profile} />
+                <DonationsManagement
+                    profile={profile}
+                    history={history}
+                    stats={stats}
+                />
             </main>
 
             {/* Mobile Bottom Navigation */}

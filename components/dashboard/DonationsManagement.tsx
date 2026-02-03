@@ -11,38 +11,28 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export const DonationsManagement = ({ profile }: { profile: any }) => {
+export const DonationsManagement = ({
+    profile,
+    history: initialHistory = [],
+    stats
+}: {
+    profile: any,
+    history: any[],
+    stats: any
+}) => {
     const [selectedAmount, setSelectedAmount] = useState("$100");
     const [frequency, setFrequency] = useState("Mensual");
     const [paymentMethod, setPaymentMethod] = useState("card");
 
     const amounts = ["$50", "$100", "$200"];
-    const activeDonations = [
-        {
-            id: 1,
-            title: "Diezmo Mensual",
-            amount: "$300.00",
-            freq: "Mensual",
-            next: "01 Oct",
-            status: "Activo",
-            img: "https://images.unsplash.com/photo-1544427928-c49cddee6eaa?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-            id: 2,
-            title: "Fondo Pro-Templo",
-            amount: "$150.00",
-            freq: "Quincenal",
-            next: "15 Sep",
-            status: "Activo",
-            img: "https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&q=80&w=400"
-        }
-    ];
+    const activeDonations: any[] = []; // Por ahora no hay tabla de recurrentes
 
-    const history = [
-        { date: "01 Sep 2023", desc: "Diezmo Mensual", amt: "$300.00", status: "Completado" },
-        { date: "15 Ago 2023", desc: "Fondo Pro-Templo", amt: "$150.00", status: "Completado" },
-        { date: "01 Ago 2023", desc: "Diezmo Mensual", amt: "$300.00", status: "Completado" }
-    ];
+    const history = initialHistory.map(d => ({
+        date: new Date(d.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }),
+        desc: d.type ? d.type.charAt(0).toUpperCase() + d.type.slice(1) : "Ofrenda",
+        amt: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(d.amount),
+        status: d.status === 'completed' ? 'Completado' : 'Pendiente'
+    }));
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -74,8 +64,10 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                         <Repeat className="w-6 h-6" />
                     </div>
                     <div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Compromiso Mensual</p>
-                        <p className="text-3xl font-black text-slate-900 dark:text-white">$450.00</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Última Ofrenda</p>
+                        <p className="text-3xl font-black text-slate-900 dark:text-white">
+                            {stats.lastDonationAmount ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(stats.lastDonationAmount) : "$0.00"}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-xl space-y-4 group hover:border-mivn-gold/30 transition-all">
@@ -83,8 +75,10 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                         <Landmark className="w-6 h-6" />
                     </div>
                     <div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Aportado 2026</p>
-                        <p className="text-3xl font-black text-slate-900 dark:text-white">$3,200.00</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Aportado {new Date().getFullYear()}</p>
+                        <p className="text-3xl font-black text-slate-900 dark:text-white">
+                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(stats.totalGiven)}
+                        </p>
                     </div>
                 </div>
                 <div className="lg:col-span-2 bg-gradient-to-br from-mivn-blue to-[#1e2d4d] p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
@@ -121,29 +115,21 @@ export const DonationsManagement = ({ profile }: { profile: any }) => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {activeDonations.map((don) => (
+                            {activeDonations.length > 0 ? activeDonations.map((don) => (
                                 <div key={don.id} className="group bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 overflow-hidden shadow-2xl hover:border-mivn-blue/30 transition-all">
-                                    <div className="aspect-[21/9] relative">
-                                        <img src={don.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt={don.title} />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                        <div className="absolute bottom-4 left-6">
-                                            <span className="bg-emerald-500 text-white text-[8px] font-black px-2.5 py-1 rounded-lg uppercase tracking-widest">{don.status}</span>
-                                        </div>
+                                    {/* ... content ... */}
+                                </div>
+                            )) : (
+                                <div className="col-span-2 bg-slate-50 dark:bg-white/5 rounded-[3rem] p-12 border border-dashed border-slate-200 dark:border-white/10 text-center space-y-4">
+                                    <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-mivn-blue shadow-lg">
+                                        <Heart className="w-8 h-8" />
                                     </div>
-                                    <div className="p-8 space-y-6">
-                                        <div className="space-y-1">
-                                            <h4 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">{don.title}</h4>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400 italic">{don.amount} • {don.freq} • Próximo: {don.next}</p>
-                                        </div>
-                                        <div className="flex items-center justify-between pt-6 border-t border-slate-50 dark:border-white/5">
-                                            <button className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 hover:text-mivn-blue transition-colors">
-                                                <Edit3 className="w-4 h-4" /> Editar
-                                            </button>
-                                            <button className="text-[10px] font-black text-rose-500/50 uppercase tracking-widest hover:text-rose-500 transition-colors">Pausar</button>
-                                        </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xl font-bold dark:text-white uppercase tracking-tight">Sin compromisos activos</p>
+                                        <p className="text-sm text-slate-500 italic">No tienes ofrendas recurrentes programadas actualmente.</p>
                                     </div>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </section>
 

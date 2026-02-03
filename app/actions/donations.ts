@@ -48,7 +48,6 @@ export async function getDonationStats(): Promise<DonationStats> {
     // For stats usually we want confirmed.
     const lastDonation = donations?.[0]; // Assuming defined/ordered storage or we re-sort
 
-    // Re-fetch sorted for last donation specific detail if needed, or sort here
     const sorted = donations?.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     const latest = sorted?.[0];
 
