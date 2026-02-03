@@ -4,6 +4,7 @@ import { Star, Play, ArrowRight, Quote, Heart, Shield, Sparkles } from "lucide-r
 import Image from "next/image";
 import { useState } from "react";
 import { Testimonial } from "@/lib/queries/testimonials";
+import { Modal } from "@/components/ui/modal";
 
 interface TestimonialsProps {
     initialTestimonials: Testimonial[];
@@ -12,6 +13,7 @@ interface TestimonialsProps {
 export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
     const [activeCategory, setActiveCategory] = useState("Todos");
     const [stories, setStories] = useState<Testimonial[]>(initialTestimonials);
+    const [selectedStory, setSelectedStory] = useState<Testimonial | null>(null);
 
     const categories = ["Todos", ...Array.from(new Set(initialTestimonials.map(s => s.category).filter(Boolean)))];
 
@@ -99,7 +101,9 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
                                 )}
                             </div>
 
-                            <button className={`mt-10 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest transition-all
+                            <button
+                                onClick={() => setSelectedStory(story)}
+                                className={`mt-10 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest transition-all
                                 ${story.type === 'accent' ? 'text-white group-hover:gap-5' : 'text-mivn-blue group-hover:text-mivn-gold group-hover:gap-5'}`}>
                                 {story.type === 'video' ? 'Ver Video' : 'Leer más'} <ArrowRight className="w-4 h-4" />
                             </button>
@@ -114,6 +118,35 @@ export const Testimonials = ({ initialTestimonials }: TestimonialsProps) => {
                         <ArrowRight className="w-4 h-4 group-hover:rotate-90 transition-transform" />
                     </button>
                 </div>
+
+                {/* Testimonial Modal */}
+                <Modal
+                    isOpen={!!selectedStory}
+                    onClose={() => setSelectedStory(null)}
+                    title={`Testimonio de ${selectedStory?.name || ''}`}
+                >
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+                            <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-xl">
+                                {selectedStory?.avatar_url && (
+                                    <Image src={selectedStory.avatar_url} alt={selectedStory?.name || ''} fill className="object-cover" />
+                                )}
+                            </div>
+                            <div>
+                                <h4 className="text-xl font-bold text-white">{selectedStory?.name}</h4>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-mivn-gold">
+                                    {selectedStory?.category}
+                                </span>
+                            </div>
+                        </div>
+                        <div className="relative">
+                            <Quote className="absolute -top-4 -left-4 w-10 h-10 opacity-5 text-mivn-blue" />
+                            <p className="text-lg text-slate-300 font-light leading-relaxed italic whitespace-pre-wrap pl-4">
+                                "{selectedStory?.text}"
+                            </p>
+                        </div>
+                    </div>
+                </Modal>
 
             </div>
         </section>
