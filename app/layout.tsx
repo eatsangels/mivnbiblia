@@ -60,7 +60,16 @@ export default function RootLayout({
           <TopBanner />
           {children}
           <CookieBanner />
-          <Toaster richColors position="top-right" />
+          <Toaster
+            richColors
+            position="top-right"
+            toastOptions={{
+              className: "border border-white/10 dark:bg-[#0a0f1d]/80 backdrop-blur-xl shadow-2xl rounded-2xl",
+              style: {
+                fontFamily: "var(--font-lexend)",
+              },
+            }}
+          />
         </CookieProvider>
       </body>
     </html>

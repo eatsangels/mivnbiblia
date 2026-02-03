@@ -14,6 +14,7 @@ export const Navbar = ({ user }: NavbarProps) => {
 
     const navLinks = [
         { name: "Inicio", href: "/" },
+        { name: "Soporte", href: "/soporte" },
         { name: "Estudio", href: "/read" },
         { name: "Ofrendar", href: "/ofrendas" },
         { name: "En Vivo", href: "/en-vivo" },
@@ -41,12 +42,12 @@ export const Navbar = ({ user }: NavbarProps) => {
                 </Link>
 
                 {/* Desktop Nav */}
-                <div className="hidden md:flex items-center space-x-8">
+                <div className="hidden md:flex items-center space-x-4">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-slate-600 dark:text-slate-300 hover:text-mivn-blue transition-colors font-medium"
+                            className="text-slate-600 dark:text-slate-300 hover:text-mivn-blue transition-colors font-medium text-sm whitespace-nowrap"
                         >
                             {link.name}
                         </Link>

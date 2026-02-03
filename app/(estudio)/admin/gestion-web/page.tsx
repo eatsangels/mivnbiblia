@@ -84,6 +84,7 @@ export default async function GestionWebPage() {
                     { title: 'Peticiones de Oración', href: '/admin/gestion-web/oracion', icon: '🙏', description: 'Gestionar peticiones de oración' },
                     { title: 'Navegación', href: '/admin/gestion-web/navegacion', icon: '🧭', description: 'Editar menús del sitio' },
                     { title: 'Páginas', href: '/admin/gestion-web/paginas', icon: '📄', description: 'Gestionar páginas dinámicas' },
+                    { title: 'Preguntas Frecuentes', href: '/admin/gestion-web/faqs', icon: '❓', description: 'Gestionar el centro de ayuda y FAQs' },
                     { title: 'Configuración', href: '/admin/gestion-web/configuracion', icon: '⚙️', description: 'Configuración general del sitio' },
                 ].map((section) => (
                     <a

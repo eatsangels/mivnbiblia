@@ -96,8 +96,8 @@ export function DashboardPrayerSection({ initialRequests, userName }: DashboardP
                 <h3 className="text-2xl font-playfair font-bold text-slate-800 dark:text-white">Peticiones de Oración</h3>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-[3.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden">
-                <div className="p-10 border-b border-slate-50 dark:border-white/5">
+            <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3.5rem] border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden">
+                <div className="p-6 md:p-10 border-b border-slate-50 dark:border-white/5">
                     <form id="dash-prayer-form" action={handleSubmit} className="space-y-6">
                         <textarea
                             name="request"
@@ -131,7 +131,7 @@ export function DashboardPrayerSection({ initialRequests, userName }: DashboardP
                             <p className="p-10 text-center text-slate-400 italic text-sm">No hay peticiones públicas recientes.</p>
                         ) : (
                             requests.map((p) => (
-                                <div key={p.id} className="p-10 flex gap-8 items-start hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                                <div key={p.id} className="p-6 md:p-10 flex gap-4 md:gap-8 items-start hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
                                     <div className={`w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center font-bold text-lg bg-mivn-blue/10 text-mivn-blue border border-current shadow-sm`}>
                                         {p.is_anonymous ? "?" : getInitials(p.requester_name)}
                                     </div>

@@ -113,8 +113,9 @@ export default function LoginPage() {
             }
             setIsLoading(false)
         } else {
-            toast.success("¡Bienvenido Hermano!", {
-                description: "Has iniciado sesión correctamente."
+            toast.success("¡Bienvenido al Santuario!", {
+                description: "Sesión iniciada correctamente. Preparando tu espacio de crecimiento espiritual...",
+                duration: 4000,
             })
             router.push('/dashboard')
             router.refresh()

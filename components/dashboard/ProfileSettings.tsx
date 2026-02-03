@@ -183,11 +183,11 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
     ];
 
     return (
-        <div className="flex flex-col lg:flex-row gap-12 font-lexend">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 font-lexend">
 
             {/* 1. Sidebar Navigation */}
-            <aside className="w-full lg:w-80 flex flex-col gap-8">
-                <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-[3rem] shadow-2xl space-y-8">
+            <aside className="w-full lg:w-80 flex flex-col gap-6 lg:gap-8">
+                <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl space-y-6 md:space-y-8">
 
                     {/* User Mini Profile */}
                     <div className="flex flex-col items-center text-center space-y-4">
@@ -270,7 +270,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
             <div className="flex-1 space-y-8">
 
                 {/* Header Profile */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-10 md:p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden group">
+                <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:rotate-12 transition-transform">
                         <UserCheck className="w-48 h-48 text-mivn-blue" />
                     </div>
@@ -287,7 +287,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
 
                     {/* Information Section */}
                     {activeSection === "personal" && (
-                        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3.5rem] overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="px-10 py-8 bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/5 flex items-center gap-4">
                                 <div className="w-10 h-10 bg-mivn-blue/10 rounded-xl flex items-center justify-center text-mivn-blue">
                                     <BookOpen className="w-5 h-5" />
@@ -295,7 +295,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Información Personal</h3>
                             </div>
 
-                            <div className="p-10 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div className="p-6 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nombre(s)</label>
                                     <input
@@ -472,7 +472,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Privacidad y Notificaciones</h3>
                             </div>
-                            <div className="p-10 md:p-12 space-y-10">
+                            <div className="p-6 md:p-12 space-y-8 md:space-y-10">
                                 {[
                                     { title: "Alertas por Correo", desc: "Recibe noticias sobre sermones y devocionales directamente en tu inbox.", checked: formData.notifications_email },
                                     { title: "Notificaciones Push", desc: "Alertas inmediatas de eventos especiales y peticiones de oración urgentes.", checked: formData.notifications_push }
@@ -498,7 +498,7 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">Contraseña</h3>
                             </div>
-                            <div className="p-10 md:p-12 space-y-6">
+                            <div className="p-6 md:p-12 space-y-6">
 
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nueva Contraseña</label>

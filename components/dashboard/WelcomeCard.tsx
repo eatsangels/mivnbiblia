@@ -104,7 +104,7 @@ export function WelcomeCard({ profileName, initialVerse }: WelcomeCardProps) {
     };
 
     return (
-        <section className="relative overflow-hidden rounded-[3.5rem] bg-mivn-blue p-10 md:p-16 text-white shadow-2xl shadow-mivn-blue/20 group">
+        <section className="relative overflow-hidden rounded-[2.5rem] md:rounded-[3.5rem] bg-mivn-blue p-8 md:p-16 text-white shadow-2xl shadow-mivn-blue/20 group">
             {/* Background Icon */}
             <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:rotate-12 transition-transform duration-1000">
                 <BookOpen className="w-64 h-64 text-white" />
@@ -112,10 +112,10 @@ export function WelcomeCard({ profileName, initialVerse }: WelcomeCardProps) {
 
             <div className="relative z-10 max-w-2xl space-y-8">
                 <div className="space-y-4">
-                    <h2 className="text-4xl md:text-6xl font-playfair font-bold tracking-tight">
+                    <h2 className="text-3xl md:text-6xl font-playfair font-bold tracking-tight leading-tight">
                         ¡Hola, {profileName}!
                     </h2>
-                    <p className="text-xl md:text-2xl text-white/80 font-light italic leading-relaxed">
+                    <p className="text-lg md:text-2xl text-white/80 font-light italic leading-relaxed">
                         "{verse?.content || 'Lámpara es a mis pies tu palabra, y lumbrera a mi camino.'}"
                     </p>
                     <p className="text-[10px] uppercase font-black tracking-widest text-white/60">
@@ -124,7 +124,7 @@ export function WelcomeCard({ profileName, initialVerse }: WelcomeCardProps) {
                 </div>
 
                 <div className="flex flex-wrap gap-4 pt-4">
-                    <Link href="/read" className="bg-white text-mivn-blue px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
+                    <Link href="/read" className="bg-white text-mivn-blue px-8 md:px-10 py-4 md:py-5 rounded-[2rem] font-black uppercase tracking-widest text-[9px] md:text-[10px] shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
                         Continuar Lectura <ChevronRight className="w-4 h-4" />
                     </Link>
 

@@ -64,6 +64,7 @@ export async function Footer() {
                         <ul className="flex flex-col gap-4 text-sm">
                             {[
                                 { name: "Inicio", href: "/" },
+                                { name: "Soporte / FAQs", href: "/soporte" },
                                 { name: "Devocionales", href: "/devocionales" },
                                 { name: "Comunidad", href: "/grupos" },
                                 { name: "Ministerios", href: "/ministerios" },
@@ -157,7 +158,7 @@ export async function Footer() {
                     <div className="flex items-center gap-3">
                         <Church className="w-5 h-5 text-mivn-gold" />
                         <p>
-                            © {currentYear} <span className="font-bold text-white">{settings.site_name || 'MIVN'}</span>. Todos los derechos reservados.
+                            © {currentYear} <span className="font-bold text-white">{settings.site_name || 'MIVN'}</span>. Diseñado por <a href="https://etrinidad.netlify.app/" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:text-mivn-gold transition-colors underline decoration-mivn-gold/30 underline-offset-4">Edward Trinidad</a>. Todos los derechos reservados.
                         </p>
                     </div>
                     <div className="flex gap-8 text-xs">
