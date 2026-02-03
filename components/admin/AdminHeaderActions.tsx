@@ -1,12 +1,15 @@
 "use client";
 
-import { Bell, Settings } from "lucide-react";
+import { Bell, Settings, Home } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
 export function AdminHeaderActions() {
     return (
         <div className="flex items-center gap-3">
+            <Link href="/" className="flex size-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-mivn-blue transition-colors outline-none" title="Ver sitio público">
+                <Home className="w-5 h-5" />
+            </Link>
             <Link href="/admin/settings" className="flex size-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-mivn-blue transition-colors outline-none">
                 <Settings className="w-5 h-5" />
             </Link>

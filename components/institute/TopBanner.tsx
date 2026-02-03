@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calendar } from "lucide-react";
+import { Calendar, Home } from "lucide-react";
 import { getSiteSettings } from "@/lib/queries/settings";
 
 export const TopBanner = async () => {
@@ -18,6 +18,10 @@ export const TopBanner = async () => {
         <div className="bg-[#111111] text-white py-2 px-6 text-xs font-lexend border-b border-white/5 relative z-[60]">
             <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
                 <div className="flex items-center gap-4">
+                    <Link href="/" className="text-white hover:text-mivn-gold transition-colors p-1" title="Inicio">
+                        <Home className="w-4 h-4" />
+                    </Link>
+                    <span className="w-[1px] h-4 bg-white/10 mx-1"></span>
                     <span className="text-slate-300">{bannerText}</span>
                     <Link href={buttonUrl} className="border border-mivn-gold text-mivn-gold px-3 py-0.5 rounded-full hover:bg-mivn-gold hover:text-white transition-colors text-[10px] font-bold uppercase tracking-wider">
                         {buttonText}
