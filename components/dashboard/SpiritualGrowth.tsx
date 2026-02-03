@@ -30,23 +30,55 @@ export const SpiritualGrowth = ({
     activity,
     prayerRequests
 }: SpiritualGrowthProps) => {
-    // Merge base milestones with user data
-    const baseMilestones = [
-        { slug: "primera-visita", title: "Primera Visita", date: "Completado" },
-        { slug: "bautismo", title: "Bautismo", date: profile.baptism_date || "Pendiente" },
-        { slug: "membresia", title: "Membresía", date: "Pendiente" },
-        { slug: "liderazgo-101", title: "Liderazgo 101", date: "En Curso" },
-        { slug: "lider-de-grupo", title: "Líder de Grupo", date: "Pendiente" }
-    ];
-
-    const displayMilestones = baseMilestones.map(bm => {
-        const userMs = milestones.find(m => m.milestone_slug === bm.slug);
-        return {
-            ...bm,
-            completed: userMs?.is_completed || false,
-            date: userMs?.completed_at ? new Date(userMs.completed_at).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }) : bm.date,
-            inProgress: bm.slug === 'liderazgo-101' && !userMs?.is_completed // Mock progress for education
-        };
+    // Dynamic logic for milestones
+    const displayMilestones = [
+        {
+            slug: "primera-visita",
+            title: "Primera Visita",
+            completed: true,
+            date: "Completado",
+            icon: Flag
+        },
+        {
+            slug: "bautismo",
+            title: "Bautismo",
+            completed: !!profile.baptism_date,
+            date: profile.baptism_date ? new Date(profile.baptism_date).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }) : "Pendiente",
+            icon: Waves
+        },
+        {
+            slug: "membresia",
+            title: "Membresía",
+            completed: profile.role === 'member' || profile.role === 'admin' || profile.role === 'super_admin',
+            date: (profile.role === 'member' || profile.role === 'admin' || profile.role === 'super_admin') ? "Activo" : "Pendiente",
+            icon: User
+        },
+        {
+            slug: "liderazgo-101",
+            title: "Liderazgo 101",
+            completed: certificates.some(c => c.title.toLowerCase().includes('liderazgo')),
+            date: certificates.some(c => c.title.toLowerCase().includes('liderazgo')) ? "Certificado" : "Pendiente",
+            inProgress: !certificates.some(c => c.title.toLowerCase().includes('liderazgo')) && profile.role === 'member',
+            icon: GraduationCap
+        },
+        {
+            slug: "lider-de-grupo",
+            title: "Líder de Grupo",
+            completed: !!profile.small_group && (profile.role === 'admin' || profile.role === 'super_admin'), // O según lógica de group_members si se pasa
+            date: "Pendiente",
+            icon: Users
+        }
+    ].map(m => {
+        // Priority from manual user_milestones table if exists
+        const userMs = milestones.find(ums => ums.milestone_slug === m.slug);
+        if (userMs) {
+            return {
+                ...m,
+                completed: userMs.is_completed,
+                date: userMs.completed_at ? new Date(userMs.completed_at).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }) : m.date
+            };
+        }
+        return m;
     });
 
     const displayCertificates = certificates.length > 0 ? certificates.map(c => ({
@@ -103,7 +135,7 @@ export const SpiritualGrowth = ({
                                     ? "bg-white dark:bg-slate-800 border-2 border-mivn-gold text-mivn-gold animate-pulse"
                                     : "bg-slate-50 dark:bg-slate-800 text-slate-300"
                                 }`}>
-                                {ms.completed ? <CheckCircle2 className="w-6 h-6 fill-current" /> : ms.inProgress ? <Hourglass className="w-6 h-6" /> : <Flag className="w-6 h-6" />}
+                                {ms.completed ? <CheckCircle2 className="w-6 h-6 fill-current" /> : ms.inProgress ? <Hourglass className="w-6 h-6" /> : <ms.icon className="w-6 h-6" />}
                             </div>
                             <div className="space-y-1">
                                 <p className={`text-sm font-black uppercase tracking-tight ${ms.completed ? "text-slate-900 dark:text-white" : "text-slate-400"}`}>{ms.title}</p>

@@ -28,6 +28,9 @@ export async function updateMember(userId: string, data: any) {
             first_name: firstName,
             last_name: lastName,
             phone: data.phone,
+            role: data.role,
+            ministry: data.ministry,
+            baptism_date: data.baptism_date || null,
             updated_at: new Date().toISOString(),
         })
         .eq("id", userId);

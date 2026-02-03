@@ -20,6 +20,7 @@ export function MemberEditDialog({ member, isOpen, onClose }: MemberEditDialogPr
         phone: member?.phone || "",
         role: member?.role || "member",
         ministry: member?.ministry || "",
+        baptism_date: member?.baptism_date || "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -113,6 +114,21 @@ export function MemberEditDialog({ member, isOpen, onClose }: MemberEditDialogPr
                             <option value="Diaconado">Diaconado</option>
                             <option value="Evangelismo">Evangelismo</option>
                         </select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label htmlFor="baptism_date" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                            Fecha de Bautismo
+                        </label>
+                        <input
+                            id="baptism_date"
+                            name="baptism_date"
+                            type="date"
+                            value={formData.baptism_date}
+                            onChange={handleChange}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        />
+                        <p className="text-[10px] text-slate-400 italic">Dejar vacío para desactivar el hito de bautismo.</p>
                     </div>
 
                     <DialogFooter>
