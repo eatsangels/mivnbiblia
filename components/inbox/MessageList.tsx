@@ -20,8 +20,8 @@ export interface Message {
     recipient_deleted: boolean
     sender_purged: boolean
     recipient_purged: boolean
-    sender?: { full_name: string | null, avatar_url: string | null } | null
-    recipient?: { full_name: string | null, avatar_url: string | null } | null
+    sender?: { first_name: string | null, last_name: string | null, avatar_url: string | null } | null
+    recipient?: { first_name: string | null, last_name: string | null, avatar_url: string | null } | null
 }
 
 interface MessageListProps {
@@ -71,7 +71,9 @@ export function MessageList({ messages, selectedId, onSelect, type, userId }: Me
                                     <div className="w-2 h-2 rounded-full bg-mivn-blue shrink-0 animate-pulse" />
                                 )}
                                 <span className={cn("text-sm font-bold truncate", !isRead && type === 'inbox' ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400")}>
-                                    {otherUser?.full_name || 'Desconocido'}
+                                    {otherUser?.first_name || otherUser?.last_name
+                                        ? `${otherUser.first_name || ''} ${otherUser.last_name || ''}`.trim()
+                                        : 'Desconocido'}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2 shrink-0 ml-2">

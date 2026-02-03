@@ -217,11 +217,15 @@ export function GroupsExplorer({ initialGroups, memberLocations = [] }: GroupsEx
                                                     <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 shrink-0 border border-mivn-blue/20">
                                                         <img
                                                             src={member.profile?.avatar_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&q=80"}
-                                                            alt={member.profile?.full_name}
+                                                            alt={`${member.profile?.first_name || ''} ${member.profile?.last_name || ''}`.trim()}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     </div>
-                                                    <h3 className="font-bold text-slate-900 m-0 text-sm">{member.profile?.full_name}</h3>
+                                                    <h3 className="font-bold text-slate-900 m-0 text-sm">
+                                                        {member.profile?.first_name || member.profile?.last_name
+                                                            ? `${member.profile.first_name || ''} ${member.profile.last_name || ''}`.trim()
+                                                            : 'Usuario'}
+                                                    </h3>
                                                 </div>
                                                 <p className="text-[10px] text-slate-500 m-0 flex items-center gap-1">
                                                     <MapPin className="w-3 h-3" />

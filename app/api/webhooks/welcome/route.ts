@@ -20,13 +20,13 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "Ignored event" }, { status: 200 });
         }
 
-        const { email, full_name } = record;
+        const { email, first_name, last_name } = record;
 
         if (!email) {
             return NextResponse.json({ error: "No email found in record" }, { status: 400 });
         }
 
-        const name = full_name || "Miembro";
+        const name = first_name ? `${first_name} ${last_name || ""}`.trim() : "Miembro";
 
         console.log(`Sending welcome email to ${email}`);
 

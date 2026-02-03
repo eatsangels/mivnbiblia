@@ -198,9 +198,8 @@ export default async function DashboardPage() {
                     {/* Left Side: Main Dashboard */}
                     <div className="lg:col-span-8 space-y-12">
 
-                        {/* 1. Welcome Hero Section */}
                         <WelcomeCard
-                            profileName={profile?.full_name?.split(' ')[0] || 'Hermano'}
+                            profileName={profile?.first_name || 'Hermano'}
                             initialVerse={verseOfTheDay}
                         />
 

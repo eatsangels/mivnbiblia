@@ -10,7 +10,8 @@ import { es } from "date-fns/locale";
 
 interface DonationsBannerProps {
     userProfile?: {
-        full_name: string | null;
+        first_name: string | null;
+        last_name: string | null;
         avatar_url: string | null;
         email: string | null;
     } | null;
@@ -235,13 +236,15 @@ export const DonationsBanner = ({ userProfile, stats, recentDonations = [] }: Do
                                 <div className="flex items-center gap-5">
                                     <div className="size-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl overflow-hidden p-1">
                                         {userProfile?.avatar_url ? (
-                                            <Image src={userProfile.avatar_url} alt={userProfile.full_name || "Profile"} width={48} height={48} className="object-cover w-full h-full rounded-xl" />
+                                            <Image src={userProfile.avatar_url} alt={userProfile.first_name || "Profile"} width={48} height={48} className="object-cover w-full h-full rounded-xl" />
                                         ) : (
                                             <User className="w-8 h-8 text-white" />
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold truncate max-w-[200px]">{userProfile?.full_name || "¡Hola!"}</h3>
+                                        <h3 className="text-xl font-bold truncate max-w-[200px]">
+                                            {userProfile ? `${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim() || "¡Hola!" : "¡Hola!"}
+                                        </h3>
                                         <p className="text-mivn-gold text-[10px] font-black uppercase tracking-widest">Colaborador del Reino</p>
                                     </div>
                                 </div>

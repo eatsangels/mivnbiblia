@@ -120,8 +120,8 @@ export async function getUsersByRole(role: string) {
     const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("role", role)
-        .order("full_name", { ascending: true });
+        .contains("roles", [role])
+        .order("first_name", { ascending: true });
 
     if (error) throw error;
     return data || [];
@@ -140,8 +140,10 @@ export async function getRolesSummary() {
 
     const counts: Record<string, number> = {};
     (data as any[])?.forEach(p => {
-        const r = p.role || 'member';
-        counts[r] = (counts[r] || 0) + 1;
+        const roles = p.roles || ['member'];
+        roles.forEach((r: string) => {
+            counts[r] = (counts[r] || 0) + 1;
+        });
     });
 
     return counts;
@@ -152,9 +154,9 @@ export async function getRolesSummary() {
  */
 export async function updateMemberRole(userId: string, role: string) {
     const supabase = await createClient();
-    const { error } = await (supabase as any)
+    const { error } = await supabase
         .from("profiles")
-        .update({ role, updated_at: new Date().toISOString() })
+        .update({ roles: [role], updated_at: new Date().toISOString() })
         .eq("id", userId);
 
     if (error) throw error;
@@ -169,7 +171,7 @@ export async function searchMembers(query: string) {
     const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .or(`full_name.ilike.%${query}%,username.ilike.%${query}%`)
+        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,username.ilike.%${query}%`)
         .limit(10);
 
     if (error) throw error;

@@ -44,7 +44,7 @@ export async function getAnalyticsSummary() {
     const { count: activeLeaders } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true })
-        .in('role', ['leader', 'admin', 'super_admin']);
+        .overlaps('roles', ['leader', 'admin', 'super_admin']);
 
     return {
         totalMembers: totalMembers || 0,
@@ -125,9 +125,9 @@ export async function getGroupHealthStats() {
     // Get active groups with their member count
     const { data: groups } = await supabase
         .from('small_groups')
-        .select('id, name, leader:profiles(full_name), members_count, category')
+        .select('id, name, leader:profiles(first_name, last_name), members_count, category')
         .eq('is_active', true)
-        .limit(5) as { data: Array<{ id: string; name: string; leader: { full_name: string } | null; members_count: number; category: string }> | null };
+        .limit(5) as { data: Array<{ id: string; name: string; leader: { first_name: string; last_name: string } | null; members_count: number; category: string }> | null };
 
     if (!groups) return [];
 
@@ -139,7 +139,7 @@ export async function getGroupHealthStats() {
         members: g.members_count,
         status: g.members_count > 10 ? 'Creciendo' : 'Estable', // Simplified logic
         health: g.members_count > 12 ? 3 : (g.members_count > 5 ? 2 : 1),
-        leader: g.leader?.full_name || 'Sin líder'
+        leader: g.leader ? `${g.leader.first_name || ''} ${g.leader.last_name || ''}`.trim() : 'Sin líder'
     }));
 }
 

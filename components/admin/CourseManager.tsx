@@ -12,6 +12,8 @@ import { ImageUploader } from "@/components/admin/ImageUploader";
 import { CourseLessonsManager } from "./CourseLessonsManager";
 import { CourseStudentsViewer } from "./CourseStudentsViewer";
 import { ManualCertifier } from "./ManualCertifier";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CourseManagerProps {
     initialCourses: CourseWithStats[];
@@ -30,10 +32,12 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
     const [studentsReady, setStudentsReady] = useState(initialStudentsReady);
     const [viewingLessonsFor, setViewingLessonsFor] = useState<string | null>(null);
     const [viewingStudentsFor, setViewingStudentsFor] = useState<string | null>(null);
+    const router = useRouter();
 
     // Dialog states
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingCourse, setEditingCourse] = useState<Partial<CourseWithStats> | null>(null);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isApproving, setIsApproving] = useState<string | null>(null);
 
@@ -103,6 +107,43 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
             setCourses(prev => prev.filter(c => c.id !== id));
         } catch (error) {
             console.error("Error deleting course:", error);
+        }
+    };
+
+    const handleGenerateDiplomas = async () => {
+        if (studentsReady.length === 0) {
+            toast.error("No hay estudiantes listos para certificar");
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (const student of studentsReady) {
+                try {
+                    await markAsCertified(student.id);
+                    successCount++;
+                } catch (error) {
+                    console.error(`Error certificando ${student.id}:`, error);
+                    errorCount++;
+                }
+            }
+
+            if (successCount > 0) {
+                toast.success(`✅ ${successCount} diploma(s) generado(s)`);
+            }
+            if (errorCount > 0) {
+                toast.error(`⚠️ ${errorCount} error(es) al generar diplomas`);
+            }
+
+            router.refresh();
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al generar diplomas");
+        } finally {
+            setIsGenerating(false);
         }
     };
     return (
@@ -260,8 +301,13 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
                         <h2 className="text-2xl font-playfair font-black text-slate-900 dark:text-white">Módulo de Certificación</h2>
                         <p className="text-sm text-slate-500 font-medium mt-1">Listado de alumnos listos para graduación.</p>
                     </div>
-                    <button className="flex items-center gap-3 bg-mivn-gold text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-mivn-gold/20 hover:scale-105 transition-all">
-                        <Award className="w-5 h-5" /> Generar Diplomas
+                    <button
+                        onClick={handleGenerateDiplomas}
+                        disabled={studentsReady.length === 0 || isGenerating}
+                        className="flex items-center gap-3 bg-mivn-gold text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-mivn-gold/20 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <Award className="w-5 h-5" />
+                        {isGenerating ? 'Generando...' : 'Generar Diplomas'}
                     </button>
                 </div>
                 <div className="overflow-x-auto">
@@ -444,7 +490,155 @@ export function CourseManager({ initialCourses, initialStats, initialStudentsRea
                                     currentImage={editingCourse?.certificate_template_url || ''}
                                     onUploadComplete={(url) => setEditingCourse(prev => ({ ...prev, certificate_template_url: url }))}
                                     folder="certificates"
+                                    noCrop={true}
                                 />
+                            </div>
+
+                            {/* Diploma Configuration - Complete */}
+                            <div className="space-y-4 pt-6 border-t border-slate-100 dark:border-white/5">
+                                <div className="flex items-center gap-3">
+                                    <GraduationCap className="w-5 h-5 text-mivn-blue" />
+                                    <div>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Configuración Completa del Diploma</label>
+                                        <p className="text-[9px] text-slate-400 mt-0.5">Personaliza todos los aspectos del diploma profesional.</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    {/* Título del Diploma */}
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Título del Diploma</label>
+                                        <input
+                                            type="text"
+                                            value={editingCourse?.diploma_title_text || 'CERTIFICADO DE ESTUDIOS'}
+                                            onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_title_text: e.target.value }))}
+                                            placeholder="CERTIFICADO DE ESTUDIOS"
+                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                        />
+                                    </div>
+
+                                    {/* Texto Introductorio */}
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Texto Introductorio</label>
+                                        <input
+                                            type="text"
+                                            value={editingCourse?.diploma_intro_text || 'El presente documento reconoce que'}
+                                            onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_intro_text: e.target.value }))}
+                                            placeholder="El presente documento reconoce que"
+                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                        />
+                                    </div>
+
+                                    {/* Texto de Membresía */}
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Texto de Membresía</label>
+                                        <input
+                                            type="text"
+                                            value={editingCourse?.diploma_member_text || 'es un miembro del programa académico'}
+                                            onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_member_text: e.target.value }))}
+                                            placeholder="es un miembro del programa académico"
+                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                        />
+                                    </div>
+
+                                    {/* Nombre del Programa */}
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Nombre del Programa (mayúsculas)</label>
+                                        <input
+                                            type="text"
+                                            value={editingCourse?.diploma_program_name || ''}
+                                            onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_program_name: e.target.value }))}
+                                            placeholder="EL TRASFONDO HEBRAICO DE LA BIBLIA"
+                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium uppercase"
+                                        />
+                                    </div>
+
+                                    {/* Texto de Completación */}
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Texto "que incluye los cursos:"</label>
+                                        <input
+                                            type="text"
+                                            value={editingCourse?.diploma_completion_text || 'que incluye los cursos:'}
+                                            onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_completion_text: e.target.value }))}
+                                            placeholder="que incluye los cursos:"
+                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                        />
+                                    </div>
+
+                                    {/* Sello del Diploma */}
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Sello del Diploma (Opcional)</label>
+                                        <ImageUploader
+                                            currentImage={editingCourse?.diploma_seal_url || ''}
+                                            onUploadComplete={(url, _publicId) => setEditingCourse(prev => ({ ...prev, diploma_seal_url: url }))}
+                                            folder="diplomas/seals"
+                                            circularCrop={true}
+                                            noCrop={false}
+                                            aspectRatio={1}
+                                        />
+                                    </div>
+
+                                    {/* Firmante 1 */}
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Firmante 1 - Nombre</label>
+                                            <input
+                                                type="text"
+                                                value={editingCourse?.diploma_signer1_name || ''}
+                                                onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_signer1_name: e.target.value }))}
+                                                placeholder="Sr. Yerry Bimun"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Firmante 1 - Cargo</label>
+                                            <input
+                                                type="text"
+                                                value={editingCourse?.diploma_signer1_title || ''}
+                                                onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_signer1_title: e.target.value }))}
+                                                placeholder="Co-fundador Grupo Traductor"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Firmante 2 */}
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Firmante 2 - Nombre</label>
+                                            <input
+                                                type="text"
+                                                value={editingCourse?.diploma_signer2_name || ''}
+                                                onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_signer2_name: e.target.value }))}
+                                                placeholder="Dr. Jonathan Lipñick"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Firmante 2 - Cargo</label>
+                                            <input
+                                                type="text"
+                                                value={editingCourse?.diploma_signer2_title || ''}
+                                                onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_signer2_title: e.target.value }))}
+                                                placeholder="Directora Académica"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm focus:border-mivn-blue outline-none transition-all font-medium"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Mostrar Lecciones */}
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={editingCourse?.diploma_show_lessons !== false}
+                                            onChange={(e) => setEditingCourse(prev => ({ ...prev, diploma_show_lessons: e.target.checked }))}
+                                            className="w-5 h-5 rounded border-2 border-slate-300 text-mivn-blue focus:ring-mivn-blue"
+                                        />
+                                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-mivn-blue transition-colors">
+                                            Mostrar lista de lecciones en el diploma
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
 
                             <div className="flex items-center justify-between pt-6">

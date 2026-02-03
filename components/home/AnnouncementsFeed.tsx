@@ -62,14 +62,15 @@ export function AnnouncementsFeed({ announcements }: AnnouncementsFeedProps) {
                                     <div className="relative size-12 flex-shrink-0">
                                         <img
                                             src={announcement.profiles.avatar_url}
-                                            alt={announcement.profiles.full_name || "Author"}
+                                            alt={`${announcement.profiles.first_name || ''} ${announcement.profiles.last_name || ''}`.trim() || "Author"}
                                             className="size-12 rounded-xl object-cover"
                                         />
                                     </div>
                                 ) : (
                                     <div className="size-12 rounded-xl bg-mivn-blue/10 flex items-center justify-center text-mivn-blue flex-shrink-0">
                                         <span className="font-bold text-lg">
-                                            {announcement.profiles?.full_name ? announcement.profiles.full_name[0].toUpperCase() : "M"}
+                                            {announcement.profiles?.first_name ? announcement.profiles.first_name[0].toUpperCase() :
+                                                announcement.profiles?.last_name ? announcement.profiles.last_name[0].toUpperCase() : "M"}
                                         </span>
                                     </div>
                                 )}
@@ -77,10 +78,12 @@ export function AnnouncementsFeed({ announcements }: AnnouncementsFeedProps) {
                                     <div>
                                         <div className="flex items-center gap-2 mb-1">
                                             <h3 className="font-bold text-slate-900 dark:text-white">
-                                                {announcement.profiles?.full_name || "Ministerio"}
+                                                {announcement.profiles?.first_name || announcement.profiles?.last_name
+                                                    ? `${announcement.profiles.first_name || ''} ${announcement.profiles.last_name || ''}`.trim()
+                                                    : "Ministerio"}
                                             </h3>
                                             <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded">
-                                                {getRoleLabel(announcement.profiles?.role || null)}
+                                                {getRoleLabel(announcement.profiles?.roles?.[0] || null)}
                                             </span>
                                         </div>
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">

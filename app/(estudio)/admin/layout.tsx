@@ -66,7 +66,7 @@ export default async function AdminLayout({
                         <div className="flex items-center gap-4">
                             <div className="text-right hidden sm:block">
                                 <p className="text-xs font-bold text-slate-900 dark:text-white leading-none">
-                                    {profile?.full_name?.split(' ')[0] || 'Admin'}
+                                    {profile?.first_name || 'Admin'}
                                 </p>
                                 <p className="text-[9px] text-mivn-gold mt-1 uppercase font-black tracking-widest">Súper Admin</p>
                             </div>
@@ -74,7 +74,7 @@ export default async function AdminLayout({
                                 {profile?.avatar_url ? (
                                     <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (
-                                    <span className="font-bold text-mivn-blue">{profile?.full_name?.[0] || 'A'}</span>
+                                    <span className="font-bold text-mivn-blue">{profile?.first_name?.[0] || 'A'}</span>
                                 )}
                             </div>
                         </div>

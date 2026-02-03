@@ -34,7 +34,8 @@ export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageP
         if (replyTo) {
             setRecipients([{
                 id: replyTo.userId,
-                full_name: replyTo.userName,
+                first_name: replyTo.userName,
+                last_name: null,
                 avatar_url: null,
                 email: null
             }])
@@ -136,10 +137,14 @@ export function ComposeMessage({ onCancel, onSuccess, replyTo }: ComposeMessageP
                                         {recipient.avatar_url ? (
                                             <img src={recipient.avatar_url} alt="" className="w-full h-full object-cover" />
                                         ) : (
-                                            recipient.full_name?.[0] || "?"
+                                            recipient.first_name?.[0] || recipient.last_name?.[0] || "?"
                                         )}
                                     </div>
-                                    <span className="text-xs font-bold truncate max-w-[150px]">{recipient.full_name}</span>
+                                    <span className="text-xs font-bold truncate max-w-[150px]">
+                                        {recipient.first_name || recipient.last_name
+                                            ? `${recipient.first_name || ''} ${recipient.last_name || ''}`.trim()
+                                            : 'Usuario'}
+                                    </span>
                                     <button
                                         onClick={() => handleRemoveRecipient(recipient.id)}
                                         className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-rose-100 hover:text-rose-500 transition-colors"

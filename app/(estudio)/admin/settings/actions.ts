@@ -5,11 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { Database } from "@/lib/database.types";
 
-export type ServiceSettings = Database['public']['Tables']['service_settings']['Row'] & {
-    next_service_image_url: string | null;
-    next_service_image_public_id: string | null;
-    next_service_tags: string[] | null;
-};
+export type ServiceSettings = Database['public']['Tables']['service_settings']['Row'];
 export type WeeklyActivity = Database['public']['Tables']['weekly_activities']['Row'];
 
 // Get service settings
@@ -41,11 +37,12 @@ export async function updateServiceSettings(settings: Partial<ServiceSettings>) 
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
+    const userRoles = (profile as any)?.roles || [];
+    if (!userRoles.includes('admin') && !userRoles.includes('super_admin')) {
         return { error: 'No autorizado' };
     }
 
@@ -106,11 +103,12 @@ export async function createWeeklyActivity(activity: Omit<WeeklyActivity, 'id' |
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
+    const userRoles = (profile as any)?.roles || [];
+    if (!userRoles.includes('admin') && !userRoles.includes('super_admin')) {
         return { error: 'No autorizado' };
     }
 
@@ -143,11 +141,12 @@ export async function updateWeeklyActivity(id: string, activity: Partial<WeeklyA
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
+    const userRoles = (profile as any)?.roles || [];
+    if (!userRoles.includes('admin') && !userRoles.includes('super_admin')) {
         return { error: 'No autorizado' };
     }
 
@@ -179,11 +178,12 @@ export async function deleteWeeklyActivity(id: string) {
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
+    const userRoles = (profile as any)?.roles || [];
+    if (!userRoles.includes('admin') && !userRoles.includes('super_admin')) {
         return { error: 'No autorizado' };
     }
 
@@ -215,11 +215,12 @@ export async function reorderWeeklyActivities(activities: { id: string; display_
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
+    const userRoles = (profile as any)?.roles || [];
+    if (!userRoles.includes('admin') && !userRoles.includes('super_admin')) {
         return { error: 'No autorizado' };
     }
 
@@ -251,8 +252,10 @@ export async function getRolesSummary() {
 
     const summary: Record<string, number> = {};
     data.forEach((profile) => {
-        const role = (profile as any).role || 'member';
-        summary[role] = (summary[role] || 0) + 1;
+        const userRoles = (profile as any).roles || ['member'];
+        userRoles.forEach((role: string) => {
+            summary[role] = (summary[role] || 0) + 1;
+        });
     });
 
     return summary;
@@ -264,8 +267,8 @@ export async function getUsersByRole(role: string = 'admin') {
     const { data, error } = await (supabase as any)
         .from('profiles')
         .select('*')
-        .eq('role', role)
-        .order('full_name', { ascending: true });
+        .contains('roles', [role])
+        .order('first_name', { ascending: true });
 
     if (error) {
         console.error('Error fetching users by role:', error);
@@ -284,11 +287,12 @@ export async function updateRolePermissions(roleId: string, permissions: any[]) 
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') {
+    const userRoles = (profile as any)?.roles || [];
+    if (!userRoles.includes('admin') && !userRoles.includes('super_admin')) {
         return { error: 'No autorizado' };
     }
 

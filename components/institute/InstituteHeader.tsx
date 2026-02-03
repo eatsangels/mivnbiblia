@@ -37,13 +37,15 @@ export const InstituteHeader = ({ userProfile }: InstituteHeaderProps) => {
                         <div className="flex items-center gap-3">
                             <div className="text-right hidden sm:block">
                                 <p className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-tight">
-                                    {userProfile?.full_name || 'Invitado'}
+                                    {userProfile?.first_name || userProfile?.last_name
+                                        ? `${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim()
+                                        : 'Invitado'}
                                 </p>
                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Estudiante</p>
                             </div>
                             <div className="h-10 w-10 rounded-full border-2 border-mivn-blue overflow-hidden bg-slate-200 dark:bg-slate-800 flex items-center justify-center relative">
                                 {userProfile?.avatar_url ? (
-                                    <Image src={userProfile.avatar_url} alt={userProfile.full_name || 'User'} fill className="object-cover" />
+                                    <Image src={userProfile.avatar_url} alt={`${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim() || 'User'} fill className="object-cover" />
                                 ) : (
                                     <User className="w-6 h-6 text-slate-400" />
                                 )}

@@ -8,7 +8,8 @@ import { Database } from "@/lib/database.types";
 export default async function ComentariosAdminPage() {
     type CommentWithProfile = Database['public']['Tables']['comments']['Row'] & {
         profiles: {
-            full_name: string | null;
+            first_name: string | null;
+            last_name: string | null;
         } | null;
     };
 
@@ -21,7 +22,7 @@ export default async function ComentariosAdminPage() {
 
     const { data: commentsRaw } = await supabase
         .from("comments")
-        .select("*, profiles(full_name)")
+        .select("*, profiles(first_name, last_name)")
         .order("created_at", { ascending: false });
 
     const comments = (commentsRaw || []) as unknown as CommentWithProfile[];
@@ -100,7 +101,9 @@ export default async function ComentariosAdminPage() {
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
-                                            {comment.profiles?.full_name || 'Usuario Anónimo'}
+                                            {comment.profiles
+                                                ? `${comment.profiles.first_name || ''} ${comment.profiles.last_name || ''}`.trim() || 'Usuario MIVN'
+                                                : 'Usuario Anónimo'}
                                             <span className="text-sm text-slate-500 dark:text-slate-400">
                                                 {comment.created_at ? new Date(comment.created_at).toLocaleDateString('es-ES') : ''}
                                             </span>
@@ -145,7 +148,9 @@ export default async function ComentariosAdminPage() {
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-2">
                                                 <p className="font-bold text-slate-900 dark:text-white">
-                                                    {comment.profiles?.full_name || 'Usuario Anónimo'}
+                                                    {comment.profiles
+                                                        ? `${comment.profiles.first_name || ''} ${comment.profiles.last_name || ''}`.trim() || 'Usuario MIVN'
+                                                        : 'Usuario Anónimo'}
                                                 </p>
                                                 <span className="text-sm text-slate-500 dark:text-slate-400">
                                                     {comment.created_at ? new Date(comment.created_at).toLocaleDateString('es-ES') : ''}

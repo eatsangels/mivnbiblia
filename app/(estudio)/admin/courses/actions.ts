@@ -215,7 +215,7 @@ export async function getStudentsReadyForCertification() {
             user_id,
             course_id,
             completed_at,
-            profiles!inner(full_name, email),
+            profiles!inner(first_name, last_name, email),
             courses!inner(title)
         `)
         .eq('progress_percentage', 100)
@@ -233,27 +233,66 @@ export async function getStudentsReadyForCertification() {
 export async function markAsCertified(enrollmentId: string) {
     const supabase = await createClient();
 
-    // 1. Get enrollment data with course title
+    // 1. Get enrollment data with course title, template, and student name
     const { data: enrollment, error: enrollError } = await supabase
         .from('course_enrollments')
         .select(`
             user_id, 
             course_id,
-            courses!inner(title)
+            courses!inner(
+                title, 
+                certificate_template_url,
+                diploma_intro_text,
+                diploma_completion_text,
+                diploma_signature_title,
+                diploma_program_name,
+                diploma_member_text,
+                diploma_seal_url,
+                diploma_signer1_name,
+                diploma_signer1_title,
+                diploma_signer2_name,
+                diploma_signer2_title,
+                diploma_show_lessons,
+                diploma_title_text,
+                diploma_lessons_list
+            ),
+            profiles!inner(first_name, last_name)
         `)
         .eq('id', enrollmentId)
         .single();
 
     if (enrollError || !enrollment) throw new Error("Enrollment not found");
 
-    // 2. Create certificate record
+    const courseData = enrollment.courses as any;
+    const profileData = enrollment.profiles as any;
+
+    // 2. Create certificate record with complete data
     const { error: certError } = await supabase
         .from('user_certificates')
         .insert({
             user_id: enrollment.user_id as string,
-            title: (enrollment.courses as any).title || 'Certificado MIVN',
+            student_name: `${profileData.first_name || ''} ${profileData.last_name || ''}`.trim() || 'Estudiante',
+            course_id: enrollment.course_id,
+            course_template_url: courseData.certificate_template_url,
+            intro_text: courseData.diploma_intro_text || 'Este documento certifica que',
+            completion_text: courseData.diploma_completion_text || 'Ha completado satisfactoriamente el curso',
+            signature_title: courseData.diploma_signature_title || 'Director MIVN',
+            // Campos avanzados
+            program_name: courseData.diploma_program_name || courseData.title,
+            member_text: courseData.diploma_member_text,
+            seal_url: courseData.diploma_seal_url,
+            signer1_name: courseData.diploma_signer1_name,
+            signer1_title: courseData.diploma_signer1_title,
+            signer2_name: courseData.diploma_signer2_name,
+            signer2_title: courseData.diploma_signer2_title,
+            show_lessons: courseData.diploma_show_lessons,
+            title_text: courseData.diploma_title_text || 'CERTIFICADO DE ESTUDIOS',
+            lessons_completed: courseData.diploma_lessons_list || [],
+            // Campos base
+            title: courseData.title || 'Certificado MIVN',
             type: 'Diploma',
-            issued_at: new Date().toISOString()
+            issued_at: new Date().toISOString(),
+            completion_date: new Date().toISOString()
         });
 
     if (certError) throw certError;
@@ -375,7 +414,7 @@ export async function getCourseStudents(courseId: string) {
         .from('course_enrollments')
         .select(`
             *,
-            profiles!inner(full_name, email, avatar_url)
+            profiles!inner(first_name, last_name, email, avatar_url)
         `)
         .eq('course_id', courseId)
         .order('enrolled_at', { ascending: false });
@@ -395,8 +434,8 @@ export async function searchStudentsToCertify(query: string) {
     // 1. Find users matching query
     const { data: users, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email, avatar_url')
-        .or(`full_name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`)
+        .select('id, first_name, last_name, email, avatar_url')
+        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`)
         .limit(10);
 
     if (error) throw error;
@@ -420,6 +459,7 @@ export async function searchStudentsToCertify(query: string) {
         const userEnrollments = enrollments?.filter(e => e.user_id === user.id) || [];
         return {
             ...user,
+            full_name: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
             enrollments: userEnrollments.map(e => ({
                 courseId: e.courses?.id,
                 courseTitle: e.courses?.title,

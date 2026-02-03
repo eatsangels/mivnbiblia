@@ -55,9 +55,10 @@ export async function getUserProfile() {
                 .insert({
                     id: user.id,
                     email: user.email,
-                    full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+                    first_name: user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0],
+                    last_name: user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
                     avatar_url: user.user_metadata?.avatar_url,
-                    role: 'student'
+                    roles: ['student']
                 })
                 .select()
                 .single();

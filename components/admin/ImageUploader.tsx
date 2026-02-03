@@ -13,6 +13,7 @@ interface ImageUploaderProps {
     folder?: string;
     aspectRatio?: number;
     circularCrop?: boolean;
+    noCrop?: boolean; // Si es true, sube directamente sin recortar
 }
 
 export function ImageUploader({
@@ -20,7 +21,8 @@ export function ImageUploader({
     currentImage,
     folder = "uploads",
     aspectRatio = 16 / 9,
-    circularCrop = false
+    circularCrop = false,
+    noCrop = false
 }: ImageUploaderProps) {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState<string | null>(currentImage || null);
@@ -87,6 +89,12 @@ export function ImageUploader({
 
         if (file.size > 5 * 1024 * 1024) {
             setError('La imagen no puede ser mayor a 5MB');
+            return;
+        }
+
+        // Si noCrop es true, subir directamente
+        if (noCrop) {
+            await handleUploadToCloudinary(file);
             return;
         }
 

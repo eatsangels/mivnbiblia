@@ -29,10 +29,11 @@ export default async function ProfilePage() {
             .insert({
                 id: user.id,
                 email: user.email,
-                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario Nuevo',
+                first_name: user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'Usuario',
+                last_name: user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || 'Nuevo',
                 username: user.user_metadata?.username || user.email?.split('@')[0] || `user_${user.id.substring(0, 8)}`,
                 avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture, // Fix: Google uses 'picture'
-                role: 'member'
+                roles: ['member']
             });
 
         if (insertError) {
@@ -63,7 +64,8 @@ export default async function ProfilePage() {
             profile = {
                 id: user.id,
                 email: user.email,
-                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario Nuevo',
+                first_name: user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'Usuario',
+                last_name: user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || 'Nuevo',
                 username: user.user_metadata?.username || user.email?.split('@')[0] || `user_${user.id.substring(0, 8)}`,
                 avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture,
                 role: 'member'
@@ -112,7 +114,7 @@ export default async function ProfilePage() {
                                 {profile.avatar_url ? (
                                     <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (
-                                    <span className="font-bold text-mivn-blue">{profile.full_name?.[0] || 'P'}</span>
+                                    <span className="font-bold text-mivn-blue">{profile.first_name?.[0] || 'P'}</span>
                                 )}
                             </div>
                         </div>

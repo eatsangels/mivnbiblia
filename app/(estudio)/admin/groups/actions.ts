@@ -33,7 +33,9 @@ export interface GroupMember {
     role: 'member' | 'leader';
     joined_at: string;
     profile?: {
-        full_name: string | null;
+        first_name: string | null;
+        last_name: string | null;
+        full_name?: string | null;
         avatar_url: string | null;
         email?: string;
     };
@@ -86,11 +88,12 @@ export async function createSmallGroup(group: {
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') return { error: 'No autorizado' };
+    const roles = (profile as any)?.roles || [];
+    if (!roles.includes('admin') && !roles.includes('super_admin')) return { error: 'No autorizado' };
 
     const { data, error } = await (supabase as any)
         .from('small_groups')
@@ -133,11 +136,12 @@ export async function updateSmallGroup(id: string, group: {
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') return { error: 'No autorizado' };
+    const roles = (profile as any)?.roles || [];
+    if (!roles.includes('admin') && !roles.includes('super_admin')) return { error: 'No autorizado' };
 
     const { error } = await (supabase as any)
         .from('small_groups')
@@ -164,11 +168,12 @@ export async function deleteSmallGroup(id: string) {
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    if ((profile as any)?.role !== 'admin' && (profile as any)?.role !== 'super_admin') return { error: 'No autorizado' };
+    const roles = (profile as any)?.roles || [];
+    if (!roles.includes('admin') && !roles.includes('super_admin')) return { error: 'No autorizado' };
 
     const { error } = await (supabase as any)
         .from('small_groups')
@@ -219,7 +224,7 @@ export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
         .from('group_members')
         .select(`
             *,
-            profile:profiles(full_name, avatar_url)
+            profile:profiles(first_name, last_name, avatar_url)
         `)
         .eq('group_id', groupId)
         .order('created_at', { ascending: false });
@@ -233,7 +238,13 @@ export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
         return [];
     }
 
-    return data as any[] || [];
+    return (data as any[] || []).map((member: any) => ({
+        ...member,
+        profile: member.profile ? {
+            ...member.profile,
+            full_name: `${member.profile.first_name || ''} ${member.profile.last_name || ''}`.trim()
+        } : null
+    }));
 }
 
 export async function updateMembershipStatus(
@@ -249,16 +260,17 @@ export async function updateMembershipStatus(
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    const currentUserRole = (profile as any)?.role || 'member';
+    const userRoles = (profile as any)?.roles || ['member'];
     const allowedRoles = ['admin', 'super_admin', 'pastor'];
 
     // If not an admin/pastor, check if they are at least a leader
-    if (!allowedRoles.includes(currentUserRole)) {
-        if (currentUserRole !== 'leader') {
+    const isPowerful = userRoles.some((r: string) => allowedRoles.includes(r));
+    if (!isPowerful) {
+        if (!userRoles.includes('leader')) {
             return { error: 'No tienes permiso para gestionar miembros' };
         }
 
@@ -293,14 +305,15 @@ export async function deleteMembership(membershipId: string) {
 
     const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('roles')
         .eq('id', user.id)
         .single();
 
-    const currentUserRole = (profile as any)?.role || 'member';
+    const userRoles = (profile as any)?.roles || ['member'];
     const allowedRoles = ['admin', 'super_admin', 'pastor'];
 
-    if (!allowedRoles.includes(currentUserRole)) {
+    const isPowerful = userRoles.some((r: string) => allowedRoles.includes(r));
+    if (!isPowerful) {
         return { error: 'No tienes permiso para eliminar miembros' };
     }
 
@@ -338,7 +351,7 @@ export async function getPublicMemberLocations(): Promise<any[]> {
         .select(`
             id,
             group_id,
-            profile:profiles(full_name, avatar_url, latitude, longitude, address)
+            profile:profiles(first_name, last_name, avatar_url, latitude, longitude, address)
         `)
         .eq('status', 'approved');
 
@@ -347,5 +360,11 @@ export async function getPublicMemberLocations(): Promise<any[]> {
         return [];
     }
 
-    return data || [];
+    return (data || []).map((member: any) => ({
+        ...member,
+        profile: member.profile ? {
+            ...member.profile,
+            full_name: `${member.profile.first_name || ''} ${member.profile.last_name || ''}`.trim()
+        } : null
+    }));
 }

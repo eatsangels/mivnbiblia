@@ -112,11 +112,15 @@ export function MessageDetail({ message, onReply, userId, onUpdate }: MessageDet
                             {message.sender?.avatar_url ? (
                                 <img src={message.sender.avatar_url} className="w-full h-full object-cover" alt="" />
                             ) : (
-                                <span className="font-bold text-lg uppercase">{message.sender?.full_name?.[0] || '?'}</span>
+                                <span className="font-bold text-lg uppercase">{message.sender?.first_name?.[0] || message.sender?.last_name?.[0] || '?'}</span>
                             )}
                         </div>
                         <div>
-                            <p className="font-bold text-slate-900 dark:text-white text-lg">{message.sender?.full_name || 'Desconocido'}</p>
+                            <p className="font-bold text-slate-900 dark:text-white text-lg">
+                                {message.sender?.first_name || message.sender?.last_name
+                                    ? `${message.sender.first_name || ''} ${message.sender.last_name || ''}`.trim()
+                                    : 'Desconocido'}
+                            </p>
                             <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">
                                 {format(new Date(message.created_at), "PPP 'a las' p", { locale: es })}
                             </p>

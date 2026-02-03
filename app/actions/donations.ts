@@ -40,7 +40,7 @@ export async function getDonationStats(): Promise<DonationStats> {
         .from("donations")
         .select("amount, created_at")
         .eq("user_id", user.id)
-        .eq("payment_status", "completed"); // Changed from status
+        .eq("status", "completed");
 
     const totalGiven = donations?.reduce((sum: any, d: any) => sum + Number(d.amount), 0) || 0;
 
@@ -75,11 +75,10 @@ export async function createDonation(data: {
     const { error } = await (supabase as any).from("donations").insert({
         user_id: user.id,
         amount: data.amount,
-        // We will add 'type' via migration 
-        // type: data.type, 
-        payment_method: data.method, // Changed from method
-        payment_status: "pending", // Changed from status
-        transaction_id: data.reference_id, // Changed from reference_id
+        type: data.type,
+        payment_method: data.method,
+        status: "pending",
+        payment_id: data.reference_id,
         currency: "USD"
     } as any);
 

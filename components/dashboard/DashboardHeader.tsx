@@ -24,7 +24,7 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
                         <span className="text-xs font-bold text-gold-500/60 uppercase tracking-[0.3em]">Panel de Control</span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                        Hola, <Link href="/dashboard/profile" className="text-premium-gold drop-shadow-sm hover:underline decoration-gold-500/30 underline-offset-4 transition-all">{profile?.full_name?.split(' ')[0] || 'Peregrino'}</Link>
+                        Hola, <Link href="/dashboard/profile" className="text-premium-gold drop-shadow-sm hover:underline decoration-gold-500/30 underline-offset-4 transition-all">{profile?.first_name || 'Peregrino'}</Link>
                     </h1>
                     <p className="text-gray-400 mt-3 text-lg font-light">
                         {new Date().getHours() < 12 ? 'Buenos días' : new Date().getHours() < 18 ? 'Buenas tardes' : 'Buenas noches'}. Tu santuario personal te espera.

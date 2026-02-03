@@ -13,9 +13,10 @@ export type Announcement = {
     created_at: string;
     views_count: number;
     profiles?: {
-        full_name: string | null;
+        first_name: string | null;
+        last_name: string | null;
         avatar_url: string | null;
-        role: string | null;
+        roles: string[] | null;
     } | null;
 };
 
@@ -29,9 +30,10 @@ export const getPinnedAnnouncements = cache(async (limit = 3) => {
         .select(`
             *,
             profiles:created_by (
-                full_name,
+                first_name,
+                last_name,
                 avatar_url,
-                role
+                roles
             )
         `)
         .eq("is_pinned", true)
@@ -57,9 +59,10 @@ export const getActiveAnnouncements = cache(async () => {
         .select(`
             *,
             profiles:created_by (
-                full_name,
+                first_name,
+                last_name,
                 avatar_url,
-                role
+                roles
             )
         `)
         .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)

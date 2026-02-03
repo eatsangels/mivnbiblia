@@ -60,11 +60,11 @@ export async function getRecentActivity(page: number = 1, limit: number = 10) {
         { data: groupJoins },
         { data: prayers }
     ] = await Promise.all([
-        supabase.from("profiles").select("id, full_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("profiles").select("id, first_name, last_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
         supabase.from("testimonies").select("id, author_name, full_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
         supabase.from("event_registrations").select("id, full_name, created_at, events(title)").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
         supabase.from("donations").select("id, donor_name, amount, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
-        supabase.from("group_members").select("id, created_at, profiles(full_name), small_groups(name)").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
+        supabase.from("group_members").select("id, created_at, profiles(first_name, last_name), small_groups(name)").order("created_at", { ascending: false }).range(offset, offset + limit - 1),
         supabase.from("prayer_requests").select("id, requester_name, created_at").order("created_at", { ascending: false }).range(offset, offset + limit - 1)
     ]);
 
@@ -73,7 +73,7 @@ export async function getRecentActivity(page: number = 1, limit: number = 10) {
         ...(members || []).map(m => ({
             id: m.id,
             type: 'member',
-            user: m.full_name || 'Nuevo Miembro',
+            user: `${m.first_name || ''} ${m.last_name || ''}`.trim() || 'Nuevo Miembro',
             action: 'se unió al ministerio',
             date: m.created_at
         })),
@@ -101,7 +101,7 @@ export async function getRecentActivity(page: number = 1, limit: number = 10) {
         ...(groupJoins || []).map((g: any) => ({
             id: g.id,
             type: 'group',
-            user: g.profiles?.full_name || 'Usuario',
+            user: g.profiles ? `${g.profiles.first_name || ''} ${g.profiles.last_name || ''}`.trim() : 'Usuario',
             action: `solicitó unirse a ${g.small_groups?.name || 'un grupo'}`,
             date: g.created_at
         })),

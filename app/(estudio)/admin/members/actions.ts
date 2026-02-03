@@ -18,13 +18,16 @@ export async function updateMember(userId: string, data: any) {
     //     throw new Error("No autorizado");
     // }
 
-    const { error } = await (supabase as any)
+    const nameParts = (data.full_name || "").split(" ");
+    const firstName = nameParts[0] || "";
+    const lastName = nameParts.slice(1).join(" ") || "";
+
+    const { error } = await supabase
         .from("profiles")
         .update({
-            full_name: data.full_name,
+            first_name: firstName,
+            last_name: lastName,
             phone: data.phone,
-            role: data.role,
-            ministry: data.ministry,
             updated_at: new Date().toISOString(),
         })
         .eq("id", userId);

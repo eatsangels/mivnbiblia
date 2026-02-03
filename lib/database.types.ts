@@ -7,34 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  __InternalSupabase: {
-    PostgrestVersion: "14.1"
-  }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       about_us_content: {
@@ -44,19 +16,19 @@ export type Database = {
           hero_image_public_id: string | null
           hero_image_url: string | null
           hero_subtitle: string | null
-          hero_title: string
-          history_content: string | null
-          history_image_public_id: string | null
-          history_image_url: string | null
-          history_since: string | null
-          history_title: string | null
+          hero_title: string | null
           id: string
           mission_content: string | null
+          mission_image_public_id: string | null
+          mission_image_url: string | null
           mission_title: string | null
           updated_at: string | null
-          updated_by: string | null
-          values_json: Json | null
+          values_content: string | null
+          values_list: Json | null
+          values_title: string | null
           vision_content: string | null
+          vision_image_public_id: string | null
+          vision_image_url: string | null
           vision_title: string | null
         }
         Insert: {
@@ -65,19 +37,19 @@ export type Database = {
           hero_image_public_id?: string | null
           hero_image_url?: string | null
           hero_subtitle?: string | null
-          hero_title: string
-          history_content?: string | null
-          history_image_public_id?: string | null
-          history_image_url?: string | null
-          history_since?: string | null
-          history_title?: string | null
+          hero_title?: string | null
           id?: string
           mission_content?: string | null
+          mission_image_public_id?: string | null
+          mission_image_url?: string | null
           mission_title?: string | null
           updated_at?: string | null
-          updated_by?: string | null
-          values_json?: Json | null
+          values_content?: string | null
+          values_list?: Json | null
+          values_title?: string | null
           vision_content?: string | null
+          vision_image_public_id?: string | null
+          vision_image_url?: string | null
           vision_title?: string | null
         }
         Update: {
@@ -86,378 +58,359 @@ export type Database = {
           hero_image_public_id?: string | null
           hero_image_url?: string | null
           hero_subtitle?: string | null
-          hero_title?: string
-          history_content?: string | null
-          history_image_public_id?: string | null
-          history_image_url?: string | null
-          history_since?: string | null
-          history_title?: string | null
+          hero_title?: string | null
           id?: string
           mission_content?: string | null
+          mission_image_public_id?: string | null
+          mission_image_url?: string | null
           mission_title?: string | null
           updated_at?: string | null
-          updated_by?: string | null
-          values_json?: Json | null
+          values_content?: string | null
+          values_list?: Json | null
+          values_title?: string | null
           vision_content?: string | null
+          vision_image_public_id?: string | null
+          vision_image_url?: string | null
           vision_title?: string | null
         }
         Relationships: []
       }
       analytics_daily_metrics: {
         Row: {
-          created_at: string | null
-          date: string
           id: string
-          metadata: Json | null
+          date: string
           metric_type: string
           value: number
+          metadata: Json | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          date?: string
           id?: string
-          metadata?: Json | null
+          date?: string
           metric_type: string
           value: number
+          metadata?: Json | null
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          date?: string
           id?: string
-          metadata?: Json | null
+          date?: string
           metric_type?: string
           value?: number
+          metadata?: Json | null
+          created_at?: string | null
         }
         Relationships: []
       }
       announcements: {
         Row: {
-          created_at: string | null
-          created_by: string | null
-          expires_at: string | null
           id: string
-          is_notified: boolean | null
-          is_pinned: boolean | null
+          created_at: string | null
           message: string
-          scheduled_for: string | null
           target_audience: string | null
+          scheduled_for: string | null
+          is_pinned: boolean | null
+          is_notified: boolean | null
+          created_by: string | null
           views_count: number | null
+          expires_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          expires_at?: string | null
           id?: string
-          is_notified?: boolean | null
-          is_pinned?: boolean | null
+          created_at?: string | null
           message: string
-          scheduled_for?: string | null
           target_audience?: string | null
+          scheduled_for?: string | null
+          is_pinned?: boolean | null
+          is_notified?: boolean | null
+          created_by?: string | null
           views_count?: number | null
+          expires_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          created_by?: string | null
-          expires_at?: string | null
           id?: string
-          is_notified?: boolean | null
-          is_pinned?: boolean | null
+          created_at?: string | null
           message?: string
-          scheduled_for?: string | null
           target_audience?: string | null
+          scheduled_for?: string | null
+          is_pinned?: boolean | null
+          is_notified?: boolean | null
+          created_by?: string | null
           views_count?: number | null
+          expires_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "announcements_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       app_roles: {
         Row: {
-          color: string | null
-          created_at: string | null
-          description: string | null
           id: string
-          is_system: boolean | null
-          name: string
           slug: string
+          name: string
+          description: string | null
+          color: string | null
+          is_system: boolean | null
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          color?: string | null
-          created_at?: string | null
-          description?: string | null
           id?: string
-          is_system?: boolean | null
-          name: string
           slug: string
+          name: string
+          description?: string | null
+          color?: string | null
+          is_system?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          color?: string | null
-          created_at?: string | null
-          description?: string | null
           id?: string
-          is_system?: boolean | null
-          name?: string
           slug?: string
+          name?: string
+          description?: string | null
+          color?: string | null
+          is_system?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       book_metadata: {
         Row: {
-          author: string | null
-          book_slug: string
-          context: string | null
-          created_at: string
-          date_written: string | null
           id: string
-          image_path: string | null
-          intro: string | null
-          themes: string[] | null
+          book_slug: string
           title: string
+          author: string | null
+          date_written: string | null
+          context: string | null
+          themes: string[] | null
+          intro: string | null
+          image_path: string | null
+          created_at: string
         }
         Insert: {
-          author?: string | null
-          book_slug: string
-          context?: string | null
-          created_at?: string
-          date_written?: string | null
           id?: string
-          image_path?: string | null
-          intro?: string | null
-          themes?: string[] | null
+          book_slug: string
           title: string
+          author?: string | null
+          date_written?: string | null
+          context?: string | null
+          themes?: string[] | null
+          intro?: string | null
+          image_path?: string | null
+          created_at?: string
         }
         Update: {
-          author?: string | null
-          book_slug?: string
-          context?: string | null
-          created_at?: string
-          date_written?: string | null
           id?: string
-          image_path?: string | null
-          intro?: string | null
-          themes?: string[] | null
+          book_slug?: string
           title?: string
+          author?: string | null
+          date_written?: string | null
+          context?: string | null
+          themes?: string[] | null
+          intro?: string | null
+          image_path?: string | null
+          created_at?: string
         }
         Relationships: []
       }
       books: {
         Row: {
-          chapters: number
-          display_order: number | null
           id: number
           name: string
+          chapters: number
           testament: string | null
+          display_order: number | null
         }
         Insert: {
-          chapters: number
-          display_order?: number | null
           id?: number
           name: string
+          chapters: number
           testament?: string | null
+          display_order?: number | null
         }
         Update: {
-          chapters?: number
-          display_order?: number | null
           id?: number
           name?: string
+          chapters?: number
           testament?: string | null
+          display_order?: number | null
         }
         Relationships: []
       }
       bulletins: {
         Row: {
-          content: string
-          created_at: string | null
           id: string
-          is_published: boolean | null
+          title: string
+          slug: string
+          content: string
           pdf_url: string | null
           publish_date: string
-          slug: string
-          title: string
+          is_published: boolean | null
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          content: string
-          created_at?: string | null
           id?: string
-          is_published?: boolean | null
+          title: string
+          slug: string
+          content: string
           pdf_url?: string | null
           publish_date: string
-          slug: string
-          title: string
+          is_published?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          content?: string
-          created_at?: string | null
           id?: string
-          is_published?: boolean | null
+          title?: string
+          slug?: string
+          content?: string
           pdf_url?: string | null
           publish_date?: string
-          slug?: string
-          title?: string
+          is_published?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       commentaries: {
         Row: {
-          author_name: string | null
-          book_name: string
-          chapter: number
-          content: string
-          created_at: string
           id: string
-          type: string
-          verse_number: number
+          book_slug: string
+          chapter: number
+          verse: number | null
+          content: string
+          author: string | null
+          created_at: string
         }
         Insert: {
-          author_name?: string | null
-          book_name: string
-          chapter: number
-          content: string
-          created_at?: string
           id?: string
-          type: string
-          verse_number: number
+          book_slug: string
+          chapter: number
+          verse?: number | null
+          content: string
+          author?: string | null
+          created_at?: string
         }
         Update: {
-          author_name?: string | null
-          book_name?: string
-          chapter?: number
-          content?: string
-          created_at?: string
           id?: string
-          type?: string
-          verse_number?: number
+          book_slug?: string
+          chapter?: number
+          verse?: number | null
+          content?: string
+          author?: string | null
+          created_at?: string
         }
         Relationships: []
       }
       comments: {
         Row: {
-          author_name: string | null
-          book: string
-          chapter: number
-          comment: string | null
-          content: string
-          content_id: string | null
-          content_type: string | null
-          created_at: string | null
-          display_name: string | null
           id: string
+          user_id: string | null
+          book: string | null
+          chapter: number | null
+          verse: number | null
+          content: string | null
+          author_name: string | null
+          display_name: string | null
+          comment: string | null
           is_approved: boolean | null
+          content_type: string | null
+          content_id: string | null
           parent_id: string | null
+          created_at: string | null
           updated_at: string | null
-          user_id: string
-          verse: number
         }
         Insert: {
-          author_name?: string | null
-          book: string
-          chapter: number
-          comment?: string | null
-          content: string
-          content_id?: string | null
-          content_type?: string | null
-          created_at?: string | null
-          display_name?: string | null
           id?: string
+          user_id?: string | null
+          book?: string | null
+          chapter?: number | null
+          verse?: number | null
+          content?: string | null
+          author_name?: string | null
+          display_name?: string | null
+          comment?: string | null
           is_approved?: boolean | null
+          content_type?: string | null
+          content_id?: string | null
           parent_id?: string | null
+          created_at?: string | null
           updated_at?: string | null
-          user_id: string
-          verse: number
         }
         Update: {
-          author_name?: string | null
-          book?: string
-          chapter?: number
-          comment?: string | null
-          content?: string
-          content_id?: string | null
-          content_type?: string | null
-          created_at?: string | null
-          display_name?: string | null
           id?: string
+          user_id?: string | null
+          book?: string | null
+          chapter?: number | null
+          verse?: number | null
+          content?: string | null
+          author_name?: string | null
+          display_name?: string | null
+          comment?: string | null
           is_approved?: boolean | null
+          content_type?: string | null
+          content_id?: string | null
           parent_id?: string | null
+          created_at?: string | null
           updated_at?: string | null
-          user_id?: string
-          verse?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "comments"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       course_categories: {
         Row: {
-          created_at: string | null
-          description: string | null
-          icon_name: string | null
           id: string
           name: string
           slug: string
+          description: string | null
+          icon_name: string | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          description?: string | null
-          icon_name?: string | null
           id?: string
           name: string
           slug: string
-        }
-        Update: {
-          created_at?: string | null
           description?: string | null
           icon_name?: string | null
+          created_at?: string | null
+        }
+        Update: {
           id?: string
           name?: string
           slug?: string
+          description?: string | null
+          icon_name?: string | null
+          created_at?: string | null
         }
         Relationships: []
       }
       course_enrollments: {
         Row: {
-          completed_at: string | null
+          id: string
+          user_id: string | null
           course_id: string | null
           enrolled_at: string | null
-          id: string
-          last_accessed_at: string | null
+          completed_at: string | null
           progress_percentage: number | null
-          user_id: string | null
+          last_accessed_at: string | null
         }
         Insert: {
-          completed_at?: string | null
+          id?: string
+          user_id?: string | null
           course_id?: string | null
           enrolled_at?: string | null
-          id?: string
-          last_accessed_at?: string | null
+          completed_at?: string | null
           progress_percentage?: number | null
-          user_id?: string | null
+          last_accessed_at?: string | null
         }
         Update: {
-          completed_at?: string | null
+          id?: string
+          user_id?: string | null
           course_id?: string | null
           enrolled_at?: string | null
-          id?: string
-          last_accessed_at?: string | null
+          completed_at?: string | null
           progress_percentage?: number | null
-          user_id?: string | null
+          last_accessed_at?: string | null
         }
         Relationships: [
           {
@@ -473,42 +426,42 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       course_lessons: {
         Row: {
-          content: string | null
-          course_id: string | null
-          created_at: string | null
-          description: string | null
-          duration_minutes: number | null
           id: string
-          order_index: number | null
+          course_id: string | null
           title: string
+          description: string | null
           video_url: string | null
+          duration_minutes: number | null
+          order_index: number | null
+          content: string | null
+          created_at: string | null
         }
         Insert: {
-          content?: string | null
-          course_id?: string | null
-          created_at?: string | null
-          description?: string | null
-          duration_minutes?: number | null
           id?: string
-          order_index?: number | null
+          course_id?: string | null
           title: string
+          description?: string | null
           video_url?: string | null
+          duration_minutes?: number | null
+          order_index?: number | null
+          content?: string | null
+          created_at?: string | null
         }
         Update: {
-          content?: string | null
-          course_id?: string | null
-          created_at?: string | null
-          description?: string | null
-          duration_minutes?: number | null
           id?: string
-          order_index?: number | null
+          course_id?: string | null
           title?: string
+          description?: string | null
           video_url?: string | null
+          duration_minutes?: number | null
+          order_index?: number | null
+          content?: string | null
+          created_at?: string | null
         }
         Relationships: [
           {
@@ -517,53 +470,92 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       courses: {
         Row: {
-          category_id: string | null
-          certificate_template_url: string | null
-          created_at: string | null
-          description: string | null
           id: string
-          instructor_name: string | null
-          is_active: boolean | null
-          is_published: boolean | null
+          title: string
+          description: string | null
           level: string | null
           thumbnail_url: string | null
-          title: string
           total_lessons: number | null
+          is_active: boolean | null
+          is_published: boolean | null
+          category_id: string | null
+          instructor_name: string | null
+          certificate_template_url: string | null
+          diploma_intro_text: string | null
+          diploma_completion_text: string | null
+          diploma_signature_title: string | null
+          diploma_program_name: string | null
+          diploma_member_text: string | null
+          diploma_seal_url: string | null
+          diploma_signer1_name: string | null
+          diploma_signer1_title: string | null
+          diploma_signer2_name: string | null
+          diploma_signer2_title: string | null
+          diploma_show_lessons: boolean | null
+          diploma_title_text: string | null
+          diploma_lessons_list: string[] | null
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          category_id?: string | null
-          certificate_template_url?: string | null
-          created_at?: string | null
-          description?: string | null
           id?: string
-          instructor_name?: string | null
-          is_active?: boolean | null
-          is_published?: boolean | null
+          title: string
+          description?: string | null
           level?: string | null
           thumbnail_url?: string | null
-          title: string
           total_lessons?: number | null
+          is_active?: boolean | null
+          is_published?: boolean | null
+          category_id?: string | null
+          instructor_name?: string | null
+          certificate_template_url?: string | null
+          diploma_intro_text?: string | null
+          diploma_completion_text?: string | null
+          diploma_signature_title?: string | null
+          diploma_program_name?: string | null
+          diploma_member_text?: string | null
+          diploma_seal_url?: string | null
+          diploma_signer1_name?: string | null
+          diploma_signer1_title?: string | null
+          diploma_signer2_name?: string | null
+          diploma_signer2_title?: string | null
+          diploma_show_lessons?: boolean | null
+          diploma_title_text?: string | null
+          diploma_lessons_list?: string[] | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          category_id?: string | null
-          certificate_template_url?: string | null
-          created_at?: string | null
-          description?: string | null
           id?: string
-          instructor_name?: string | null
-          is_active?: boolean | null
-          is_published?: boolean | null
+          title?: string
+          description?: string | null
           level?: string | null
           thumbnail_url?: string | null
-          title?: string
           total_lessons?: number | null
+          is_active?: boolean | null
+          is_published?: boolean | null
+          category_id?: string | null
+          instructor_name?: string | null
+          certificate_template_url?: string | null
+          diploma_intro_text?: string | null
+          diploma_completion_text?: string | null
+          diploma_signature_title?: string | null
+          diploma_program_name?: string | null
+          diploma_member_text?: string | null
+          diploma_seal_url?: string | null
+          diploma_signer1_name?: string | null
+          diploma_signer1_title?: string | null
+          diploma_signer2_name?: string | null
+          diploma_signer2_title?: string | null
+          diploma_show_lessons?: boolean | null
+          diploma_title_text?: string | null
+          diploma_lessons_list?: string[] | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: [
@@ -573,501 +565,420 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "course_categories"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       devotionals: {
         Row: {
-          author_name: string | null
-          content: string
-          created_at: string | null
           id: string
+          title: string
+          slug: string
+          content: string
+          scripture_reference: string
+          author_name: string | null
+          publish_date: string
           image: string | null
           is_published: boolean | null
-          publish_date: string
-          scripture_reference: string
-          slug: string
-          title: string
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          author_name?: string | null
-          content: string
-          created_at?: string | null
           id?: string
+          title: string
+          slug: string
+          content: string
+          scripture_reference: string
+          author_name?: string | null
+          publish_date: string
           image?: string | null
           is_published?: boolean | null
-          publish_date: string
-          scripture_reference: string
-          slug: string
-          title: string
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          author_name?: string | null
-          content?: string
-          created_at?: string | null
           id?: string
+          title?: string
+          slug?: string
+          content?: string
+          scripture_reference?: string
+          author_name?: string | null
+          publish_date?: string
           image?: string | null
           is_published?: boolean | null
-          publish_date?: string
-          scripture_reference?: string
-          slug?: string
-          title?: string
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       donation_campaigns: {
         Row: {
-          created_at: string | null
-          current_amount: number | null
-          description: string
-          end_date: string | null
-          goal_amount: number | null
           id: string
-          image: string | null
-          is_active: boolean | null
           name: string
           slug: string
+          description: string
+          goal_amount: number | null
+          current_amount: number | null
           start_date: string
+          end_date: string | null
+          image: string | null
+          is_active: boolean | null
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          current_amount?: number | null
-          description: string
-          end_date?: string | null
-          goal_amount?: number | null
           id?: string
-          image?: string | null
-          is_active?: boolean | null
           name: string
           slug: string
+          description: string
+          goal_amount?: number | null
+          current_amount?: number | null
           start_date: string
+          end_date?: string | null
+          image?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          current_amount?: number | null
-          description?: string
-          end_date?: string | null
-          goal_amount?: number | null
           id?: string
-          image?: string | null
-          is_active?: boolean | null
           name?: string
           slug?: string
+          description?: string
+          goal_amount?: number | null
+          current_amount?: number | null
           start_date?: string
+          end_date?: string | null
+          image?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       donations: {
         Row: {
-          amount: number
-          campaign_id: string | null
-          created_at: string | null
-          currency: string | null
-          donor_email: string | null
-          donor_name: string | null
           id: string
-          is_anonymous: boolean | null
-          payment_id: string | null
-          payment_method: string
-          status: string | null
-          type: string | null
           user_id: string | null
+          campaign_id: string | null
+          amount: number
+          currency: string
+          payment_method: string | null
+          payment_id: string | null
+          donor_name: string | null
+          donor_email: string | null
+          is_anonymous: boolean | null
+          status: string
+          created_at: string | null
+          type: string | null
         }
         Insert: {
-          amount: number
-          campaign_id?: string | null
-          created_at?: string | null
-          currency?: string | null
-          donor_email?: string | null
-          donor_name?: string | null
           id?: string
-          is_anonymous?: boolean | null
-          payment_id?: string | null
-          payment_method: string
-          status?: string | null
-          type?: string | null
           user_id?: string | null
+          campaign_id?: string | null
+          amount: number
+          currency?: string
+          payment_method?: string | null
+          payment_id?: string | null
+          donor_name?: string | null
+          donor_email?: string | null
+          is_anonymous?: boolean | null
+          status?: string
+          created_at?: string | null
+          type?: string | null
         }
         Update: {
-          amount?: number
-          campaign_id?: string | null
-          created_at?: string | null
-          currency?: string | null
-          donor_email?: string | null
-          donor_name?: string | null
           id?: string
-          is_anonymous?: boolean | null
-          payment_id?: string | null
-          payment_method?: string
-          status?: string | null
-          type?: string | null
           user_id?: string | null
+          campaign_id?: string | null
+          amount?: number
+          currency?: string
+          payment_method?: string | null
+          payment_id?: string | null
+          donor_name?: string | null
+          donor_email?: string | null
+          is_anonymous?: boolean | null
+          status?: string
+          created_at?: string | null
+          type?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "donations_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "donation_campaigns"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "donations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       event_registrations: {
         Row: {
-          created_at: string | null
-          email: string
-          event_id: string | null
-          full_name: string
           id: string
-          notes: string | null
-          phone: string | null
+          event_id: string | null
           user_id: string | null
+          full_name: string
+          email: string
+          phone: string | null
+          status: string | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          email: string
-          event_id?: string | null
-          full_name: string
           id?: string
-          notes?: string | null
-          phone?: string | null
+          event_id?: string | null
           user_id?: string | null
+          full_name: string
+          email: string
+          phone?: string | null
+          status?: string | null
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          email?: string
-          event_id?: string | null
-          full_name?: string
           id?: string
-          notes?: string | null
-          phone?: string | null
+          event_id?: string | null
           user_id?: string | null
+          full_name?: string
+          email?: string
+          phone?: string | null
+          status?: string | null
+          created_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "event_registrations_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "event_registrations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       events: {
         Row: {
-          address: string | null
-          capacity: number | null
-          category: string | null
-          created_at: string | null
-          description: string
-          end_date: string | null
-          end_time: string | null
-          event_date: string
           id: string
+          title: string
+          slug: string
+          description: string
+          event_date: string
+          end_date: string | null
+          location: string | null
+          address: string | null
           image: string | null
-          image_url: string | null
+          registration_url: string | null
+          max_attendees: number | null
           is_featured: boolean | null
           is_published: boolean | null
-          location: string | null
-          max_attendees: number | null
-          registration_url: string | null
-          slug: string
+          created_at: string | null
+          updated_at: string | null
+          category: string | null
+          capacity: number | null
           speaker: string | null
           start_time: string | null
-          title: string
-          updated_at: string | null
+          end_time: string | null
+          image_url: string | null
         }
         Insert: {
-          address?: string | null
-          capacity?: number | null
-          category?: string | null
-          created_at?: string | null
-          description: string
-          end_date?: string | null
-          end_time?: string | null
-          event_date: string
           id?: string
+          title: string
+          slug: string
+          description: string
+          event_date: string
+          end_date?: string | null
+          location?: string | null
+          address?: string | null
           image?: string | null
-          image_url?: string | null
+          registration_url?: string | null
+          max_attendees?: number | null
           is_featured?: boolean | null
           is_published?: boolean | null
-          location?: string | null
-          max_attendees?: number | null
-          registration_url?: string | null
-          slug: string
+          created_at?: string | null
+          updated_at?: string | null
+          category?: string | null
+          capacity?: number | null
           speaker?: string | null
           start_time?: string | null
-          title: string
-          updated_at?: string | null
+          end_time?: string | null
+          image_url?: string | null
         }
         Update: {
-          address?: string | null
-          capacity?: number | null
-          category?: string | null
-          created_at?: string | null
-          description?: string
-          end_date?: string | null
-          end_time?: string | null
-          event_date?: string
           id?: string
+          title?: string
+          slug?: string
+          description?: string
+          event_date?: string
+          end_date?: string | null
+          location?: string | null
+          address?: string | null
           image?: string | null
-          image_url?: string | null
+          registration_url?: string | null
+          max_attendees?: number | null
           is_featured?: boolean | null
           is_published?: boolean | null
-          location?: string | null
-          max_attendees?: number | null
-          registration_url?: string | null
-          slug?: string
+          created_at?: string | null
+          updated_at?: string | null
+          category?: string | null
+          capacity?: number | null
           speaker?: string | null
           start_time?: string | null
-          title?: string
-          updated_at?: string | null
+          end_time?: string | null
+          image_url?: string | null
         }
         Relationships: []
       }
       gallery_albums: {
         Row: {
-          cover_image_public_id: string | null
-          cover_image_url: string | null
-          created_at: string | null
-          created_by: string | null
-          description: string | null
           id: string
           title: string
+          slug: string
+          description: string | null
+          cover_image: string | null
+          created_at: string | null
+          updated_at: string | null
         }
         Insert: {
-          cover_image_public_id?: string | null
-          cover_image_url?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
           id?: string
           title: string
+          slug: string
+          description?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          updated_at?: string | null
         }
         Update: {
-          cover_image_public_id?: string | null
-          cover_image_url?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
           id?: string
           title?: string
+          slug?: string
+          description?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "gallery_albums_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       gallery_photos: {
         Row: {
+          id: string
           album_id: string | null
+          url: string
           caption: string | null
           created_at: string | null
-          height: number | null
-          id: string
-          public_id: string | null
-          uploaded_by: string | null
-          url: string
-          width: number | null
         }
         Insert: {
+          id?: string
           album_id?: string | null
+          url: string
           caption?: string | null
           created_at?: string | null
-          height?: number | null
-          id?: string
-          public_id?: string | null
-          uploaded_by?: string | null
-          url: string
-          width?: number | null
         }
         Update: {
+          id?: string
           album_id?: string | null
+          url?: string
           caption?: string | null
           created_at?: string | null
-          height?: number | null
-          id?: string
-          public_id?: string | null
-          uploaded_by?: string | null
-          url?: string
-          width?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "gallery_photos_album_id_fkey"
-            columns: ["album_id"]
-            isOneToOne: false
-            referencedRelation: "gallery_albums"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "gallery_photos_uploaded_by_fkey"
-            columns: ["uploaded_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       group_attendance: {
         Row: {
-          created_at: string | null
-          group_id: string | null
           id: string
+          group_id: string | null
           meeting_date: string
           members_present_count: number | null
           new_guests_count: number | null
           notes: string | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          group_id?: string | null
           id?: string
+          group_id?: string | null
           meeting_date: string
           members_present_count?: number | null
           new_guests_count?: number | null
           notes?: string | null
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          group_id?: string | null
           id?: string
+          group_id?: string | null
           meeting_date?: string
           members_present_count?: number | null
           new_guests_count?: number | null
           notes?: string | null
+          created_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "group_attendance_group_id_fkey"
-            columns: ["group_id"]
-            isOneToOne: false
-            referencedRelation: "small_groups"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       group_members: {
         Row: {
-          created_at: string
-          group_id: string
           id: string
-          joined_at: string
-          role: string
-          status: string
-          updated_at: string
           user_id: string
+          group_id: string
+          status: string
+          role: string
+          joined_at: string
+          created_at: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string
-          group_id: string
           id?: string
-          joined_at?: string
-          role?: string
-          status?: string
-          updated_at?: string
           user_id: string
+          group_id: string
+          status?: string
+          role?: string
+          joined_at?: string
+          created_at?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string
-          group_id?: string
           id?: string
-          joined_at?: string
-          role?: string
-          status?: string
-          updated_at?: string
           user_id?: string
+          group_id?: string
+          status?: string
+          role?: string
+          joined_at?: string
+          created_at?: string
+          updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "group_members_group_id_fkey"
-            columns: ["group_id"]
-            isOneToOne: false
-            referencedRelation: "small_groups"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       inbox_messages: {
         Row: {
-          attachments: Json | null
-          body: string
-          created_at: string
           id: string
-          is_read: boolean
-          parent_id: string | null
-          recipient_deleted: boolean
-          recipient_id: string
-          recipient_purged: boolean
-          recipient_starred: boolean
-          sender_deleted: boolean
           sender_id: string
-          sender_purged: boolean
-          sender_starred: boolean
-          subject: string | null
-          updated_at: string
+          recipient_id: string
+          subject: string
+          body: string
+          is_read: boolean | null
+          parent_id: string | null
+          attachments: any | null
+          sender_deleted: boolean | null
+          recipient_deleted: boolean | null
+          sender_starred: boolean | null
+          recipient_starred: boolean | null
+          sender_purged: boolean | null
+          recipient_purged: boolean | null
+          created_at: string | null
+          updated_at: string | null
         }
         Insert: {
-          attachments?: Json | null
-          body: string
-          created_at?: string
           id?: string
-          is_read?: boolean
-          parent_id?: string | null
-          recipient_deleted?: boolean
-          recipient_id: string
-          recipient_purged?: boolean
-          recipient_starred?: boolean
-          sender_deleted?: boolean
           sender_id: string
-          sender_purged?: boolean
-          sender_starred?: boolean
-          subject?: string | null
-          updated_at?: string
+          recipient_id: string
+          subject: string
+          body: string
+          is_read?: boolean | null
+          parent_id?: string | null
+          attachments?: any | null
+          sender_deleted?: boolean | null
+          recipient_deleted?: boolean | null
+          sender_starred?: boolean | null
+          recipient_starred?: boolean | null
+          sender_purged?: boolean | null
+          recipient_purged?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
         }
         Update: {
-          attachments?: Json | null
-          body?: string
-          created_at?: string
           id?: string
-          is_read?: boolean
-          parent_id?: string | null
-          recipient_deleted?: boolean
-          recipient_id?: string
-          recipient_purged?: boolean
-          recipient_starred?: boolean
-          sender_deleted?: boolean
           sender_id?: string
-          sender_purged?: boolean
-          sender_starred?: boolean
-          subject?: string | null
-          updated_at?: string
+          recipient_id?: string
+          subject?: string
+          body?: string
+          is_read?: boolean | null
+          parent_id?: string | null
+          attachments?: any | null
+          sender_deleted?: boolean | null
+          recipient_deleted?: boolean | null
+          sender_starred?: boolean | null
+          recipient_starred?: boolean | null
+          sender_purged?: boolean | null
+          recipient_purged?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -1090,382 +1001,330 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       lesson_progress: {
         Row: {
+          id: string
+          user_id: string
+          lesson_id: string
           completed: boolean | null
           completed_at: string | null
-          id: string
-          lesson_id: string | null
-          user_id: string | null
+          created_at: string
+          updated_at: string
         }
         Insert: {
+          id?: string
+          user_id: string
+          lesson_id: string
           completed?: boolean | null
           completed_at?: string | null
-          id?: string
-          lesson_id?: string | null
-          user_id?: string | null
+          created_at?: string
+          updated_at?: string
         }
         Update: {
+          id?: string
+          user_id?: string
+          lesson_id?: string
           completed?: boolean | null
           completed_at?: string | null
-          id?: string
-          lesson_id?: string | null
-          user_id?: string | null
+          created_at?: string
+          updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "lesson_progress_lesson_id_fkey"
-            columns: ["lesson_id"]
-            isOneToOne: false
-            referencedRelation: "course_lessons"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lesson_progress_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       messages: {
         Row: {
-          channel: string
-          content: string
-          created_at: string
           id: string
           user_id: string | null
+          content: string
+          channel: string | null
+          created_at: string
         }
         Insert: {
-          channel?: string
-          content: string
-          created_at?: string
           id?: string
           user_id?: string | null
+          content: string
+          channel?: string | null
+          created_at?: string
         }
         Update: {
-          channel?: string
-          content?: string
-          created_at?: string
           id?: string
           user_id?: string | null
+          content?: string
+          channel?: string | null
+          created_at?: string
         }
         Relationships: []
       }
       ministries: {
         Row: {
-          created_at: string | null
-          description: string
           id: string
-          image: string | null
-          is_active: boolean | null
-          leader_email: string | null
-          leader_id: string | null
+          name: string
+          slug: string
+          description: string
           leader_name: string | null
-          location: string | null
+          leader_email: string | null
+          image: string | null
           meeting_day: string | null
           meeting_time: string | null
-          name: string
+          location: string | null
+          is_active: boolean | null
           order: number | null
-          slug: string
+          created_at: string | null
           updated_at: string | null
+          leader_id: string | null
         }
         Insert: {
-          created_at?: string | null
-          description: string
           id?: string
-          image?: string | null
-          is_active?: boolean | null
-          leader_email?: string | null
-          leader_id?: string | null
+          name: string
+          slug: string
+          description: string
           leader_name?: string | null
-          location?: string | null
+          leader_email?: string | null
+          image?: string | null
           meeting_day?: string | null
           meeting_time?: string | null
-          name: string
+          location?: string | null
+          is_active?: boolean | null
           order?: number | null
-          slug: string
+          created_at?: string | null
           updated_at?: string | null
+          leader_id?: string | null
         }
         Update: {
-          created_at?: string | null
-          description?: string
           id?: string
-          image?: string | null
-          is_active?: boolean | null
-          leader_email?: string | null
-          leader_id?: string | null
+          name?: string
+          slug?: string
+          description?: string
           leader_name?: string | null
-          location?: string | null
+          leader_email?: string | null
+          image?: string | null
           meeting_day?: string | null
           meeting_time?: string | null
-          name?: string
+          location?: string | null
+          is_active?: boolean | null
           order?: number | null
-          slug?: string
+          created_at?: string | null
           updated_at?: string | null
+          leader_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "ministries_leader_id_fkey"
-            columns: ["leader_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       navigation_items: {
         Row: {
-          created_at: string | null
-          icon: string | null
           id: string
-          is_external: boolean | null
-          label: string
           menu_id: string | null
+          label: string
+          url: string
+          icon: string | null
           order: number
           parent_id: string | null
-          url: string
+          is_external: boolean | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          icon?: string | null
           id?: string
-          is_external?: boolean | null
-          label: string
           menu_id?: string | null
+          label: string
+          url: string
+          icon?: string | null
           order?: number
           parent_id?: string | null
-          url: string
+          is_external?: boolean | null
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          icon?: string | null
           id?: string
-          is_external?: boolean | null
-          label?: string
           menu_id?: string | null
+          label?: string
+          url?: string
+          icon?: string | null
           order?: number
           parent_id?: string | null
-          url?: string
+          is_external?: boolean | null
+          created_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "navigation_items_menu_id_fkey"
-            columns: ["menu_id"]
-            isOneToOne: false
-            referencedRelation: "navigation_menus"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "navigation_items_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "navigation_items"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       navigation_menus: {
         Row: {
-          created_at: string | null
           id: string
           name: string
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
           id?: string
           name: string
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
           id?: string
           name?: string
+          created_at?: string | null
         }
         Relationships: []
       }
       newsletter_subscriptions: {
         Row: {
-          created_at: string | null
-          email: string
           id: string
-          is_active: boolean | null
+          email: string
           name: string | null
+          is_active: boolean | null
           subscribed_at: string | null
           unsubscribed_at: string | null
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          email: string
           id?: string
-          is_active?: boolean | null
+          email: string
           name?: string | null
+          is_active?: boolean | null
           subscribed_at?: string | null
           unsubscribed_at?: string | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          email?: string
           id?: string
-          is_active?: boolean | null
+          email: string
           name?: string | null
+          is_active?: boolean | null
           subscribed_at?: string | null
           unsubscribed_at?: string | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       pages: {
         Row: {
-          content: string
-          created_at: string | null
-          featured_image: string | null
           id: string
-          is_published: boolean | null
-          meta_description: string | null
-          order: number | null
-          slug: string
-          subtitle: string | null
           title: string
+          slug: string
+          content: string | null
+          is_published: boolean | null
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          content: string
-          created_at?: string | null
-          featured_image?: string | null
           id?: string
-          is_published?: boolean | null
-          meta_description?: string | null
-          order?: number | null
-          slug: string
-          subtitle?: string | null
           title: string
+          slug: string
+          content?: string | null
+          is_published?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          content?: string
-          created_at?: string | null
-          featured_image?: string | null
           id?: string
-          is_published?: boolean | null
-          meta_description?: string | null
-          order?: number | null
-          slug?: string
-          subtitle?: string | null
           title?: string
+          slug?: string
+          content?: string | null
+          is_published?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       pastor_messages: {
         Row: {
-          created_at: string | null
-          date: string
-          duration: string | null
           id: string
-          image_url: string | null
-          is_active: boolean | null
-          pastor_name: string
           title: string
+          pastor_name: string
+          date: string
+          image_url: string | null
           video_url: string | null
+          duration: string | null
+          is_active: boolean | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          date?: string
-          duration?: string | null
           id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          pastor_name: string
           title: string
+          pastor_name: string
+          date?: string
+          image_url?: string | null
           video_url?: string | null
+          duration?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          date?: string
-          duration?: string | null
           id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          pastor_name?: string
           title?: string
+          pastor_name?: string
+          date?: string
+          image_url?: string | null
           video_url?: string | null
+          duration?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
         }
         Relationships: []
       }
       prayer_intersessions: {
         Row: {
-          created_at: string
           id: string
-          prayer_request_id: string | null
+          request_id: string | null
           user_id: string | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string
           id?: string
-          prayer_request_id?: string | null
+          request_id?: string | null
           user_id?: string | null
+          created_at?: string | null
         }
         Update: {
-          created_at?: string
           id?: string
-          prayer_request_id?: string | null
+          request_id?: string | null
           user_id?: string | null
+          created_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "prayer_intersessions_prayer_request_id_fkey"
-            columns: ["prayer_request_id"]
-            isOneToOne: false
-            referencedRelation: "prayer_requests"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       prayer_requests: {
         Row: {
-          created_at: string | null
-          email: string | null
           id: string
-          is_anonymous: boolean | null
-          is_answered: boolean | null
-          is_approved: boolean | null
-          is_private: boolean | null
-          request: string
-          requester_name: string
-          updated_at: string | null
           user_id: string | null
+          requester_name: string | null
+          email: string | null
+          request: string
+          is_anonymous: boolean | null
+          is_approved: boolean | null
+          is_answered: boolean | null
+          created_at: string | null
+          updated_at: string | null
+          is_private: boolean | null
         }
         Insert: {
-          created_at?: string | null
-          email?: string | null
           id?: string
-          is_anonymous?: boolean | null
-          is_answered?: boolean | null
-          is_approved?: boolean | null
-          is_private?: boolean | null
-          request: string
-          requester_name: string
-          updated_at?: string | null
           user_id?: string | null
+          requester_name?: string | null
+          email?: string | null
+          request: string
+          is_anonymous?: boolean | null
+          is_approved?: boolean | null
+          is_answered?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+          is_private?: boolean | null
         }
         Update: {
-          created_at?: string | null
-          email?: string | null
           id?: string
-          is_anonymous?: boolean | null
-          is_answered?: boolean | null
-          is_approved?: boolean | null
-          is_private?: boolean | null
-          request?: string
-          requester_name?: string
-          updated_at?: string | null
           user_id?: string | null
+          requester_name?: string | null
+          email?: string | null
+          request?: string
+          is_anonymous?: boolean | null
+          is_approved?: boolean | null
+          is_answered?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+          is_private?: boolean | null
         }
         Relationships: [
           {
@@ -1474,691 +1333,686 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       profiles: {
         Row: {
           address: string | null
           avatar_url: string | null
-          baptism_date: string | null
+          baptized: boolean | null
           birth_date: string | null
+          city: string | null
           created_at: string | null
           email: string | null
-          full_name: string | null
+          first_name: string | null
+          gender: string | null
           id: string
-          is_location_public: boolean | null
-          latitude: number | null
-          longitude: number | null
-          ministry: string | null
+          last_name: string | null
+          member_since: string | null
+          ministries: string[] | null
           phone: string | null
-          role: string | null
-          role_id: string | null
-          small_group: string | null
+          roles: string[] | null
+          status: string | null
           updated_at: string | null
           username: string | null
-          website: string | null
         }
         Insert: {
           address?: string | null
           avatar_url?: string | null
-          baptism_date?: string | null
+          baptized?: boolean | null
           birth_date?: string | null
+          city?: string | null
           created_at?: string | null
           email?: string | null
-          full_name?: string | null
+          first_name?: string | null
+          gender?: string | null
           id: string
-          is_location_public?: boolean | null
-          latitude?: number | null
-          longitude?: number | null
-          ministry?: string | null
+          last_name?: string | null
+          member_since?: string | null
+          ministries?: string[] | null
           phone?: string | null
-          role?: string | null
-          role_id?: string | null
-          small_group?: string | null
+          roles?: string[] | null
+          status?: string | null
           updated_at?: string | null
           username?: string | null
-          website?: string | null
         }
         Update: {
           address?: string | null
           avatar_url?: string | null
-          baptism_date?: string | null
+          baptized?: boolean | null
           birth_date?: string | null
+          city?: string | null
           created_at?: string | null
           email?: string | null
-          full_name?: string | null
+          first_name?: string | null
+          gender?: string | null
           id?: string
-          is_location_public?: boolean | null
-          latitude?: number | null
-          longitude?: number | null
-          ministry?: string | null
+          last_name?: string | null
+          member_since?: string | null
+          ministries?: string[] | null
           phone?: string | null
-          role?: string | null
-          role_id?: string | null
-          small_group?: string | null
+          roles?: string[] | null
+          status?: string | null
           updated_at?: string | null
           username?: string | null
-          website?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "app_roles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       reading_history: {
         Row: {
+          id: string
+          user_id: string
           book_name: string
           chapter: number
-          id: string
           read_at: string
-          user_id: string
         }
         Insert: {
+          id?: string
+          user_id: string
           book_name: string
           chapter: number
-          id?: string
           read_at?: string
-          user_id: string
         }
         Update: {
-          book_name?: string
-          chapter?: number
           id?: string
+          user_id: string
+          book_name: string
+          chapter: number
           read_at?: string
-          user_id?: string
         }
         Relationships: []
       }
       resource_categories: {
         Row: {
-          created_at: string | null
-          description: string | null
-          icon: string | null
           id: string
           name: string
-          order: number | null
           slug: string
+          description: string | null
+          icon: string | null
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          description?: string | null
-          icon?: string | null
           id?: string
           name: string
-          order?: number | null
           slug: string
-        }
-        Update: {
-          created_at?: string | null
           description?: string | null
           icon?: string | null
+          created_at?: string | null
+        }
+        Update: {
           id?: string
           name?: string
-          order?: number | null
           slug?: string
+          description?: string | null
+          icon?: string | null
+          created_at?: string | null
         }
         Relationships: []
       }
       resources: {
         Row: {
-          category_id: string | null
-          created_at: string | null
-          description: string
-          download_count: number | null
-          external_url: string | null
-          file_type: string | null
-          file_url: string | null
           id: string
+          category_id: string | null
+          title: string
+          slug: string
+          description: string
+          file_url: string | null
+          external_url: string | null
+          thumbnail: string | null
+          file_type: string | null
+          download_count: number | null
           is_featured: boolean | null
           is_published: boolean | null
-          slug: string
-          thumbnail: string | null
-          title: string
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          category_id?: string | null
-          created_at?: string | null
-          description: string
-          download_count?: number | null
-          external_url?: string | null
-          file_type?: string | null
-          file_url?: string | null
           id?: string
+          category_id?: string | null
+          title: string
+          slug: string
+          description: string
+          file_url?: string | null
+          external_url?: string | null
+          thumbnail?: string | null
+          file_type?: string | null
+          download_count?: number | null
           is_featured?: boolean | null
           is_published?: boolean | null
-          slug: string
-          thumbnail?: string | null
-          title: string
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          category_id?: string | null
-          created_at?: string | null
-          description?: string
-          download_count?: number | null
-          external_url?: string | null
-          file_type?: string | null
-          file_url?: string | null
           id?: string
+          category_id?: string | null
+          title?: string
+          slug?: string
+          description?: string
+          file_url?: string | null
+          external_url?: string | null
+          thumbnail?: string | null
+          file_type?: string | null
+          download_count?: number | null
           is_featured?: boolean | null
           is_published?: boolean | null
-          slug?: string
-          thumbnail?: string | null
-          title?: string
+          created_at?: string | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "resources_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "resource_categories"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       role_permissions: {
         Row: {
-          can_create: boolean | null
-          can_delete: boolean | null
-          can_edit: boolean | null
-          can_export: boolean | null
-          can_view: boolean | null
-          created_at: string | null
           id: string
-          module: string
-          role_id: string | null
-          updated_at: string | null
+          role_id: string
+          permission_slug: string
+          created_at: string | null
         }
         Insert: {
-          can_create?: boolean | null
-          can_delete?: boolean | null
-          can_edit?: boolean | null
-          can_export?: boolean | null
-          can_view?: boolean | null
-          created_at?: string | null
           id?: string
-          module: string
-          role_id?: string | null
-          updated_at?: string | null
+          role_id: string
+          permission_slug: string
+          created_at?: string | null
         }
         Update: {
-          can_create?: boolean | null
-          can_delete?: boolean | null
-          can_edit?: boolean | null
-          can_export?: boolean | null
-          can_view?: boolean | null
-          created_at?: string | null
           id?: string
-          module?: string
-          role_id?: string | null
-          updated_at?: string | null
+          role_id?: string
+          permission_slug?: string
+          created_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "role_permissions_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "app_roles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       scriptures: {
         Row: {
-          book_name: string
-          chapter: number
-          content: string
+          book_name: string | null
+          chapter: number | null
+          content: string | null
           id: number
-          search_vector: unknown
-          testament: string
-          verse_number: number
+          search_vector: string | null
+          testament: string | null
+          verse_number: number | null
           visual_theme: string | null
         }
         Insert: {
-          book_name: string
-          chapter: number
-          content: string
+          book_name?: string | null
+          chapter?: number | null
+          content?: string | null
           id?: number
-          search_vector?: unknown
-          testament: string
-          verse_number: number
+          search_vector?: string | null
+          testament?: string | null
+          verse_number?: number | null
           visual_theme?: string | null
         }
         Update: {
-          book_name?: string
-          chapter?: number
-          content?: string
+          book_name?: string | null
+          chapter?: number | null
+          content?: string | null
           id?: number
-          search_vector?: unknown
-          testament?: string
-          verse_number?: number
+          search_vector?: string | null
+          testament?: string | null
+          verse_number?: number | null
           visual_theme?: string | null
         }
         Relationships: []
       }
       sermons: {
         Row: {
-          content: string | null
-          created_at: string | null
           id: string
+          user_id: string
+          title: string
+          content: string | null
           reference_book: string | null
           reference_chapter: number | null
           tags: string[] | null
-          title: string
+          created_at: string | null
           updated_at: string | null
-          user_id: string
         }
         Insert: {
-          content?: string | null
-          created_at?: string | null
           id?: string
+          user_id: string
+          title: string
+          content?: string | null
           reference_book?: string | null
           reference_chapter?: number | null
           tags?: string[] | null
-          title: string
+          created_at?: string | null
           updated_at?: string | null
-          user_id: string
         }
         Update: {
-          content?: string | null
-          created_at?: string | null
           id?: string
+          user_id?: string
+          title?: string
+          content?: string | null
           reference_book?: string | null
           reference_chapter?: number | null
           tags?: string[] | null
-          title?: string
+          created_at?: string | null
           updated_at?: string | null
-          user_id?: string
         }
         Relationships: []
       }
       service_settings: {
         Row: {
-          created_at: string | null
-          google_maps_url: string | null
           id: string
-          next_service_date: string
-          next_service_description: string | null
+          next_service_title: string | null
+          next_service_preacher: string | null
+          next_service_date: string | null
+          next_service_location: string | null
           next_service_image: string | null
-          next_service_image_public_id: string | null
-          next_service_image_url: string | null
-          next_service_location: string
-          next_service_preacher: string
           next_service_series: string | null
+          next_service_description: string | null
+          offline_message: string | null
+          offline_subtitle: string | null
+          google_maps_url: string | null
+          next_service_image_url: string | null
+          next_service_image_public_id: string | null
           next_service_tags: string[] | null
-          next_service_title: string
-          offline_message: string
-          offline_subtitle: string
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          google_maps_url?: string | null
           id?: string
-          next_service_date?: string
-          next_service_description?: string | null
+          next_service_title?: string | null
+          next_service_preacher?: string | null
+          next_service_date?: string | null
+          next_service_location?: string | null
           next_service_image?: string | null
-          next_service_image_public_id?: string | null
-          next_service_image_url?: string | null
-          next_service_location?: string
-          next_service_preacher?: string
           next_service_series?: string | null
+          next_service_description?: string | null
+          offline_message?: string | null
+          offline_subtitle?: string | null
+          google_maps_url?: string | null
+          next_service_image_url?: string | null
+          next_service_image_public_id?: string | null
           next_service_tags?: string[] | null
-          next_service_title?: string
-          offline_message?: string
-          offline_subtitle?: string
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          google_maps_url?: string | null
           id?: string
-          next_service_date?: string
-          next_service_description?: string | null
+          next_service_title?: string | null
+          next_service_preacher?: string | null
+          next_service_date?: string | null
+          next_service_location?: string | null
           next_service_image?: string | null
-          next_service_image_public_id?: string | null
-          next_service_image_url?: string | null
-          next_service_location?: string
-          next_service_preacher?: string
           next_service_series?: string | null
+          next_service_description?: string | null
+          offline_message?: string | null
+          offline_subtitle?: string | null
+          google_maps_url?: string | null
+          next_service_image_url?: string | null
+          next_service_image_public_id?: string | null
           next_service_tags?: string[] | null
-          next_service_title?: string
-          offline_message?: string
-          offline_subtitle?: string
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       site_settings: {
         Row: {
-          description: string | null
           id: string
           key: string
-          type: string
-          updated_at: string | null
           value: string
+          type: string
+          description: string | null
+          updated_at: string | null
         }
         Insert: {
-          description?: string | null
           id?: string
           key: string
-          type?: string
-          updated_at?: string | null
           value: string
+          type?: string
+          description?: string | null
+          updated_at?: string | null
         }
         Update: {
-          description?: string | null
           id?: string
           key?: string
-          type?: string
-          updated_at?: string | null
           value?: string
+          type?: string
+          description?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
       small_groups: {
         Row: {
-          category: string
-          created_at: string | null
-          description: string | null
           id: string
-          image_url: string | null
-          is_active: boolean | null
-          is_location_public: boolean | null
-          latitude: number | null
-          leader: string
-          leader_image_url: string | null
-          location: string | null
-          longitude: number | null
-          members_count: number | null
           name: string
+          category: string
+          leader: string
+          description: string | null
+          members_count: number | null
+          image_url: string | null
+          leader_image_url: string | null
           schedule: string | null
+          location: string | null
+          is_active: boolean | null
+          created_at: string | null
           updated_at: string | null
+          latitude: number | null
+          longitude: number | null
+          is_location_public: boolean | null
         }
         Insert: {
-          category: string
-          created_at?: string | null
-          description?: string | null
           id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          is_location_public?: boolean | null
-          latitude?: number | null
-          leader: string
-          leader_image_url?: string | null
-          location?: string | null
-          longitude?: number | null
-          members_count?: number | null
           name: string
+          category: string
+          leader: string
+          description?: string | null
+          members_count?: number | null
+          image_url?: string | null
+          leader_image_url?: string | null
           schedule?: string | null
+          location?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          is_location_public?: boolean | null
         }
         Update: {
-          category?: string
-          created_at?: string | null
-          description?: string | null
           id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          is_location_public?: boolean | null
-          latitude?: number | null
-          leader?: string
-          leader_image_url?: string | null
-          location?: string | null
-          longitude?: number | null
-          members_count?: number | null
           name?: string
+          category?: string
+          leader?: string
+          description?: string | null
+          members_count?: number | null
+          image_url?: string | null
+          leader_image_url?: string | null
           schedule?: string | null
+          location?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
           updated_at?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          is_location_public?: boolean | null
         }
         Relationships: []
       }
       spiritual_journey_steps: {
         Row: {
-          created_at: string | null
-          description: string | null
           id: string
           name: string
+          description: string | null
           order_index: number
+          created_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          description?: string | null
           id?: string
           name: string
+          description?: string | null
           order_index: number
+          created_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          description?: string | null
           id?: string
           name?: string
+          description?: string | null
           order_index?: number
+          created_at?: string | null
         }
         Relationships: []
       }
       testimonials: {
         Row: {
-          avatar_url: string | null
-          category: string | null
-          created_at: string
-          handle: string | null
           id: string
-          is_active: boolean | null
+          user_id: string | null
           name: string
-          text: string
-          type: string | null
+          content: string
+          rating: number | null
+          is_published: boolean | null
+          created_at: string | null
         }
         Insert: {
-          avatar_url?: string | null
-          category?: string | null
-          created_at?: string
-          handle?: string | null
           id?: string
-          is_active?: boolean | null
+          user_id?: string | null
           name: string
-          text: string
-          type?: string | null
+          content: string
+          rating?: number | null
+          is_published?: boolean | null
+          created_at?: string | null
         }
         Update: {
-          avatar_url?: string | null
-          category?: string | null
-          created_at?: string
-          handle?: string | null
           id?: string
-          is_active?: boolean | null
+          user_id?: string | null
           name?: string
-          text?: string
-          type?: string | null
+          content?: string
+          rating?: number | null
+          is_published?: boolean | null
+          created_at?: string | null
         }
         Relationships: []
       }
       testimonies: {
         Row: {
+          id: string
+          user_id: string | null
           author_name: string | null
           author_role: string | null
+          full_name: string | null
+          content: string
+          image: string | null
           avatar_url: string | null
           category: string | null
-          content: string
-          created_at: string | null
-          featured: boolean | null
-          full_name: string | null
-          id: string
-          image: string | null
-          is_approved: boolean | null
           is_featured: boolean | null
+          featured: boolean | null
+          is_approved: boolean | null
+          is_public: boolean | null
           order: number | null
+          created_at: string | null
           updated_at: string | null
-          user_id: string | null
         }
         Insert: {
+          id?: string
+          user_id?: string | null
           author_name?: string | null
           author_role?: string | null
+          full_name?: string | null
+          content: string
+          image?: string | null
           avatar_url?: string | null
           category?: string | null
-          content: string
-          created_at?: string | null
-          featured?: boolean | null
-          full_name?: string | null
-          id?: string
-          image?: string | null
-          is_approved?: boolean | null
           is_featured?: boolean | null
+          featured?: boolean | null
+          is_approved?: boolean | null
+          is_public?: boolean | null
           order?: number | null
+          created_at?: string | null
           updated_at?: string | null
-          user_id?: string | null
         }
         Update: {
+          id?: string
+          user_id?: string | null
           author_name?: string | null
           author_role?: string | null
+          full_name?: string | null
+          content?: string
+          image?: string | null
           avatar_url?: string | null
           category?: string | null
-          content?: string
-          created_at?: string | null
-          featured?: boolean | null
-          full_name?: string | null
-          id?: string
-          image?: string | null
-          is_approved?: boolean | null
           is_featured?: boolean | null
+          featured?: boolean | null
+          is_approved?: boolean | null
+          is_public?: boolean | null
           order?: number | null
+          created_at?: string | null
           updated_at?: string | null
-          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "testimonies_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       user_certificates: {
         Row: {
-          created_at: string | null
-          file_url: string | null
+          completion_date: string | null
+          completion_text: string | null
+          course_id: string | null
+          course_template_url: string | null
           id: string
+          intro_text: string | null
           issued_at: string | null
-          title: string
-          type: string
-          user_id: string
+          lessons_completed: string[] | null
+          member_text: string | null
+          program_name: string | null
+          seal_url: string | null
+          show_lessons: boolean | null
+          signature_title: string | null
+          signer1_name: string | null
+          signer1_title: string | null
+          signer2_name: string | null
+          signer2_title: string | null
+          student_name: string | null
+          title: string | null
+          title_text: string | null
+          type: string | null
+          user_id: string | null
         }
         Insert: {
-          created_at?: string | null
-          file_url?: string | null
+          completion_date?: string | null
+          completion_text?: string | null
+          course_id?: string | null
+          course_template_url?: string | null
           id?: string
+          intro_text?: string | null
           issued_at?: string | null
-          title: string
-          type: string
-          user_id: string
+          lessons_completed?: string[] | null
+          member_text?: string | null
+          program_name?: string | null
+          seal_url?: string | null
+          show_lessons?: boolean | null
+          signature_title?: string | null
+          signer1_name?: string | null
+          signer1_title?: string | null
+          signer2_name?: string | null
+          signer2_title?: string | null
+          student_name?: string | null
+          title?: string | null
+          title_text?: string | null
+          type?: string | null
+          user_id?: string | null
         }
         Update: {
-          created_at?: string | null
-          file_url?: string | null
+          completion_date?: string | null
+          completion_text?: string | null
+          course_id?: string | null
+          course_template_url?: string | null
           id?: string
+          intro_text?: string | null
           issued_at?: string | null
-          title?: string
-          type?: string
-          user_id?: string
+          lessons_completed?: string[] | null
+          member_text?: string | null
+          program_name?: string | null
+          seal_url?: string | null
+          show_lessons?: boolean | null
+          signature_title?: string | null
+          signer1_name?: string | null
+          signer1_title?: string | null
+          signer2_name?: string | null
+          signer2_title?: string | null
+          student_name?: string | null
+          title?: string | null
+          title_text?: string | null
+          type?: string | null
+          user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "user_certificates_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "user_certificates_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       user_highlights: {
         Row: {
-          book_name: string
-          chapter: number
-          color: string | null
-          created_at: string | null
           id: string
           user_id: string
-          verse_number: number
-        }
-        Insert: {
           book_name: string
           chapter: number
-          color?: string | null
-          created_at?: string | null
+          verse: number
+          color: string | null
+          created_at: string
+        }
+        Insert: {
           id?: string
           user_id: string
-          verse_number: number
+          book_name: string
+          chapter: number
+          verse: number
+          color?: string | null
+          created_at?: string
         }
         Update: {
-          book_name?: string
-          chapter?: number
-          color?: string | null
-          created_at?: string | null
           id?: string
           user_id?: string
-          verse_number?: number
+          book_name?: string
+          chapter?: number
+          verse?: number
+          color?: string | null
+          created_at?: string
         }
         Relationships: []
       }
       user_milestones: {
         Row: {
-          completed_at: string | null
-          created_at: string | null
           id: string
-          is_completed: boolean | null
-          milestone_slug: string
-          title: string
           user_id: string
+          milestone_type: string
+          achieved_at: string
+          metadata: Json | null
         }
         Insert: {
-          completed_at?: string | null
-          created_at?: string | null
           id?: string
-          is_completed?: boolean | null
-          milestone_slug: string
-          title: string
           user_id: string
+          milestone_type: string
+          achieved_at?: string
+          metadata?: Json | null
         }
         Update: {
-          completed_at?: string | null
-          created_at?: string | null
           id?: string
-          is_completed?: boolean | null
-          milestone_slug?: string
-          title?: string
           user_id?: string
+          milestone_type?: string
+          achieved_at?: string
+          metadata?: Json | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_milestones_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_ministries: {
         Row: {
-          joined_at: string | null
-          ministry_id: string
-          role: string | null
           user_id: string
+          ministry_id: string
+          joined_at: string | null
+          role: string | null
         }
         Insert: {
-          joined_at?: string | null
-          ministry_id: string
-          role?: string | null
           user_id: string
+          ministry_id: string
+          joined_at?: string | null
+          role?: string | null
         }
         Update: {
-          joined_at?: string | null
-          ministry_id?: string
-          role?: string | null
           user_id?: string
+          ministry_id?: string
+          joined_at?: string | null
+          role?: string | null
         }
         Relationships: [
           {
@@ -2174,90 +2028,101 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       user_notes: {
         Row: {
-          book_name: string
-          chapter: number
-          content: string
-          created_at: string
           id: number
           user_id: string
-          verse_number: number | null
-        }
-        Insert: {
           book_name: string
           chapter: number
+          verse_number: number | null
           content: string
-          created_at?: string
+          created_at: string
+        }
+        Insert: {
           id?: number
           user_id: string
+          book_name: string
+          chapter: number
           verse_number?: number | null
+          content: string
+          created_at?: string
         }
         Update: {
-          book_name?: string
-          chapter?: number
-          content?: string
-          created_at?: string
           id?: number
           user_id?: string
+          book_name?: string
+          chapter?: number
           verse_number?: number | null
+          content?: string
+          created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_notes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       user_progress: {
         Row: {
-          current_streak: number | null
-          id: number
-          last_book: string | null
-          last_chapter: number | null
-          last_read_at: string | null
-          total_chapters_read: number | null
+          id: string
           user_id: string
+          item_type: string
+          item_id: string
+          progress: number | null
+          completed: boolean | null
+          completed_at: string | null
+          updated_at: string
         }
         Insert: {
-          current_streak?: number | null
-          id?: number
-          last_book?: string | null
-          last_chapter?: number | null
-          last_read_at?: string | null
-          total_chapters_read?: number | null
+          id?: string
           user_id: string
+          item_type: string
+          item_id: string
+          progress?: number | null
+          completed?: boolean | null
+          completed_at?: string | null
+          updated_at?: string
         }
         Update: {
-          current_streak?: number | null
-          id?: number
-          last_book?: string | null
-          last_chapter?: number | null
-          last_read_at?: string | null
-          total_chapters_read?: number | null
+          id?: string
           user_id?: string
+          item_type?: string
+          item_id?: string
+          progress?: number | null
+          completed?: boolean | null
+          completed_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
       user_spiritual_journey: {
         Row: {
-          completed_at: string | null
           id: string
-          notes: string | null
-          step_id: string | null
           user_id: string | null
+          step_id: string | null
+          completed_at: string | null
+          notes: string | null
         }
         Insert: {
-          completed_at?: string | null
           id?: string
-          notes?: string | null
-          step_id?: string | null
           user_id?: string | null
+          step_id?: string | null
+          completed_at?: string | null
+          notes?: string | null
         }
         Update: {
-          completed_at?: string | null
           id?: string
-          notes?: string | null
-          step_id?: string | null
           user_id?: string | null
+          step_id?: string | null
+          completed_at?: string | null
+          notes?: string | null
         }
         Relationships: [
           {
@@ -2273,50 +2138,50 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
       weekly_activities: {
         Row: {
-          category: string
-          color: string | null
-          created_at: string | null
-          day_of_week: string
-          description: string | null
-          display_order: number
-          icon_name: string | null
           id: string
-          is_active: boolean | null
-          time: string
+          day_of_week: string
           title: string
+          time: string
+          description: string | null
+          category: string
+          icon_name: string | null
+          color: string | null
+          is_active: boolean | null
+          display_order: number
+          created_at: string | null
           updated_at: string | null
         }
         Insert: {
-          category?: string
-          color?: string | null
-          created_at?: string | null
-          day_of_week: string
-          description?: string | null
-          display_order?: number
-          icon_name?: string | null
           id?: string
-          is_active?: boolean | null
-          time: string
+          day_of_week: string
           title: string
+          time: string
+          description?: string | null
+          category?: string
+          icon_name?: string | null
+          color?: string | null
+          is_active?: boolean | null
+          display_order?: number
+          created_at?: string | null
           updated_at?: string | null
         }
         Update: {
-          category?: string
-          color?: string | null
-          created_at?: string | null
-          day_of_week?: string
-          description?: string | null
-          display_order?: number
-          icon_name?: string | null
           id?: string
+          day_of_week: string
+          title: string
+          time: string
+          description?: string | null
+          category?: string
+          icon_name?: string | null
+          color?: string | null
           is_active?: boolean | null
-          time?: string
-          title?: string
+          display_order?: number
+          created_at?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -2326,14 +2191,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_prayer_count: { Args: { request_id: string }; Returns: number }
-      is_admin:
-      | { Args: never; Returns: boolean }
-      | { Args: { user_id: string }; Returns: boolean }
-      reset_reading_progress: { Args: never; Returns: undefined }
+      get_prayer_count: {
+        Args: {
+          request_id: string
+        }
+        Returns: number
+      }
+      is_admin: {
+        Args: {
+          user_id?: string
+        }
+        Returns: boolean
+      }
       track_reading: {
-        Args: { p_book_name: string; p_chapter: number }
+        Args: {
+          p_book_name: string
+          p_chapter: number
+        }
         Returns: Json
+      }
+      reset_reading_progress: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {
@@ -2345,33 +2224,27 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type PublicSchema = Database["public"]
 
 export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-  | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  PublicTableNameOrOptions extends
+  | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+  ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+    Database[PublicTableNameOrOptions["schema"]]["Views"])
   : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+    Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
   ? R
   : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])
-  ? (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+    PublicSchema["Views"])
+  ? (PublicSchema["Tables"] &
+    PublicSchema["Views"])[PublicTableNameOrOptions] extends {
       Row: infer R
     }
   ? R
@@ -2379,24 +2252,20 @@ export type Tables<
   : never
 
 export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  PublicTableNameOrOptions extends
+  | keyof PublicSchema["Tables"]
+  | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
   : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
     Insert: infer I
   }
   ? I
   : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
     Insert: infer I
   }
   ? I
@@ -2404,24 +2273,20 @@ export type TablesInsert<
   : never
 
 export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  PublicTableNameOrOptions extends
+  | keyof PublicSchema["Tables"]
+  | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
   : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
     Update: infer U
   }
   ? U
   : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
     Update: infer U
   }
   ? U
@@ -2429,44 +2294,14 @@ export type TablesUpdate<
   : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-  | keyof DefaultSchema["Enums"]
-  | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  PublicEnumNameOrOptions extends
+  | keyof PublicSchema["Enums"]
+  | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
   : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
   : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-  | keyof DefaultSchema["CompositeTypes"]
-  | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-  : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-  : never
-
-export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
-  public: {
-    Enums: {},
-  },
-} as const

@@ -33,7 +33,7 @@ export function CourseStudentsViewer({ courseId, courseTitle, onClose }: CourseS
     };
 
     const filteredStudents = students.filter(student =>
-        student.profiles.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        `${student.profiles.first_name || ''} ${student.profiles.last_name || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.profiles.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -110,14 +110,16 @@ export function CourseStudentsViewer({ courseId, courseTitle, onClose }: CourseS
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center overflow-hidden font-bold text-slate-500 shrink-0">
                                                     {enrollment.profiles?.avatar_url ? (
-                                                        <img src={enrollment.profiles.avatar_url} alt={enrollment.profiles.full_name} className="w-full h-full object-cover" />
+                                                        <img src={enrollment.profiles.avatar_url} alt={`${enrollment.profiles.first_name || ''} ${enrollment.profiles.last_name || ''}`} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        (enrollment.profiles.full_name?.[0] || 'U')
+                                                        (enrollment.profiles.first_name?.[0] || enrollment.profiles.last_name?.[0] || 'U')
                                                     )}
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight line-clamp-1">
-                                                        {enrollment.profiles.full_name || 'Usuario'}
+                                                        {enrollment.profiles.first_name || enrollment.profiles.last_name
+                                                            ? `${enrollment.profiles.first_name || ''} ${enrollment.profiles.last_name || ''}`.trim()
+                                                            : 'Usuario'}
                                                     </p>
                                                     <p className="text-[10px] text-slate-400 font-medium font-mono">
                                                         {enrollment.profiles.email}

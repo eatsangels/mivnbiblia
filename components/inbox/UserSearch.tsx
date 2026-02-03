@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils"
 
 export type UserResult = {
     id: string
-    full_name: string | null
+    first_name: string | null
+    last_name: string | null
     avatar_url: string | null
     email: string | null
 }
@@ -34,11 +35,11 @@ export function UserSearch({ onSelect, label = "Buscar miembro...", className, s
             setLoading(true)
             let req = supabase
                 .from('profiles')
-                .select('id, full_name, avatar_url, email')
+                .select('id, first_name, last_name, avatar_url, email')
                 .limit(10)
 
             if (query.trim().length >= 1) {
-                req = req.ilike('full_name', `%${query}%`)
+                req = req.or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
             }
 
             const { data, error } = await req
@@ -101,13 +102,17 @@ export function UserSearch({ onSelect, label = "Buscar miembro...", className, s
                                 >
                                     <div className="w-8 h-8 rounded-full bg-mivn-blue/10 flex items-center justify-center text-mivn-blue text-xs font-bold overflow-hidden shrink-0">
                                         {user.avatar_url ? (
-                                            <img src={user.avatar_url} alt={user.full_name || ""} className="w-full h-full object-cover" />
+                                            <img src={user.avatar_url} alt={`${user.first_name || ''} ${user.last_name || ''}`} className="w-full h-full object-cover" />
                                         ) : (
-                                            user.full_name?.[0] || "?"
+                                            user.first_name?.[0] || user.last_name?.[0] || "?"
                                         )}
                                     </div>
                                     <div className="flex-1 min-w-0 text-left">
-                                        <p className="text-sm font-bold text-slate-800 dark:text-white truncate">{user.full_name}</p>
+                                        <p className="text-sm font-bold text-slate-800 dark:text-white truncate">
+                                            {user.first_name || user.last_name
+                                                ? `${user.first_name || ''} ${user.last_name || ''}`.trim()
+                                                : 'Usuario'}
+                                        </p>
                                         <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
                                     </div>
                                     <button

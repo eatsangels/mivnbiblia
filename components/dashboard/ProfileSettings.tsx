@@ -18,7 +18,8 @@ import { signCloudinaryParameters } from "@/app/actions/cloudinary";
 export interface ProfileData {
     id: string;
     username: string | null;
-    full_name: string | null;
+    first_name: string | null;
+    last_name: string | null;
     avatar_url: string | null;
     email: string | null;
     phone?: string | null;
@@ -49,7 +50,8 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
 
     const [formData, setFormData] = useState({
         username: profile.username || '',
-        full_name: profile.full_name || '',
+        first_name: profile.first_name || '',
+        last_name: profile.last_name || '',
         phone: profile.phone || '',
         birth_date: profile.birth_date || '',
         address: profile.address || '',
@@ -151,7 +153,8 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
         const { error } = await supabase
             .from('profiles')
             .update({
-                full_name: formData.full_name,
+                first_name: formData.first_name,
+                last_name: formData.last_name,
                 username: formData.username,
                 phone: formData.phone,
                 birth_date: formData.birth_date || null,
@@ -212,7 +215,9 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
                             <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} className="hidden" accept="image/*" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">{formData.full_name || "Usuario MIVN"}</h3>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                                {formData.first_name} {formData.last_name}
+                            </h3>
                             <div className="flex items-center justify-center gap-2 mt-2">
                                 <span className="bg-mivn-blue/10 text-mivn-blue px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-mivn-blue/20">
                                     {(profile.role === 'admin' && 'Administrador') ||
@@ -292,11 +297,20 @@ export default function ProfileSettings({ profile }: { profile: ProfileData }) {
 
                             <div className="p-10 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-10">
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nombre Completo</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Nombre(s)</label>
                                     <input
                                         type="text"
-                                        value={formData.full_name}
-                                        onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                                        value={formData.first_name}
+                                        onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none font-medium"
+                                    />
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-4">Apellido(s)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.last_name}
+                                        onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
                                         className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-5 px-8 text-slate-800 dark:text-white focus:border-mivn-blue transition-all outline-none font-medium"
                                     />
                                 </div>

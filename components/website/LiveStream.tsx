@@ -41,7 +41,7 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
                     // Fetch profile for the new message
                     const { data: profile } = await (supabase as any)
                         .from('profiles')
-                        .select('full_name, avatar_url')
+                        .select('first_name, last_name, avatar_url')
                         .eq('id', payload.new.user_id)
                         .single();
 
@@ -69,7 +69,7 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
     const fetchMessages = async () => {
         const { data, error } = await (supabase as any)
             .from('messages')
-            .select('*, profiles(full_name, avatar_url)')
+            .select('*, profiles(first_name, last_name, avatar_url)')
             .eq('channel', 'general')
             .order('created_at', { ascending: true })
             .limit(50);
@@ -292,12 +292,12 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
                                             {m.profiles?.avatar_url ? (
                                                 <img
                                                     src={m.profiles.avatar_url}
-                                                    alt={m.profiles?.full_name || "Usuario"}
+                                                    alt={m.profiles ? `${m.profiles.first_name || ''} ${m.profiles.last_name || ''}`.trim() : "Usuario"}
                                                     className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-800 shadow-md"
                                                 />
                                             ) : (
                                                 <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs bg-gradient-to-br from-mivn-blue to-mivn-gold text-white border-2 border-white dark:border-slate-800 shadow-md">
-                                                    {getInitials(m.profiles?.full_name)}
+                                                    {getInitials(m.profiles ? `${m.profiles.first_name || ''} ${m.profiles.last_name || ''}`.trim() : "")}
                                                 </div>
                                             )}
                                         </div>
@@ -306,7 +306,9 @@ export const LiveStream = ({ liveStream, latestVideo, serviceSettings }: LiveStr
                                         <div className="flex-1 max-w-[75%]">
                                             <div className="bg-white dark:bg-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:shadow-md transition-shadow">
                                                 <p className="text-[10px] font-bold text-mivn-blue mb-1">
-                                                    {m.profiles?.full_name || "MIVN Miembro"}
+                                                    {m.profiles
+                                                        ? `${m.profiles.first_name || ''} ${m.profiles.last_name || ''}`.trim() || "MIVN Miembro"
+                                                        : "MIVN Miembro"}
                                                 </p>
                                                 <p className="text-sm text-slate-700 dark:text-gray-300 leading-relaxed break-words">
                                                     {m.content}
