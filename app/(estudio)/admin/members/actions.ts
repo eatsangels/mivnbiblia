@@ -29,6 +29,7 @@ export async function updateMember(userId: string, data: any) {
             last_name: lastName,
             phone: data.phone,
             role: data.role,
+            roles: data.role === 'member' ? ['member'] : ['member', data.role],
             ministry: data.ministry,
             baptism_date: data.baptism_date || null,
             updated_at: new Date().toISOString(),

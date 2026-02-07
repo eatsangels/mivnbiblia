@@ -243,7 +243,7 @@ export async function getRolesSummary() {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from('profiles')
-        .select('role');
+        .select('role, roles');
 
     if (error) {
         console.error('Error fetching roles summary:', error);

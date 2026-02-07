@@ -139,7 +139,10 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
         try {
             const { error: updateError } = await (supabase as any)
                 .from("profiles")
-                .update({ role: activeRole })
+                .update({
+                    role: activeRole,
+                    roles: activeRole === 'member' ? ['member'] : ['member', activeRole]
+                })
                 .eq("id", userId);
 
             if (updateError) {
@@ -195,7 +198,10 @@ export function RolesManager({ rolesSummary, initialUsers }: RolesManagerProps) 
         try {
             const { error: updateError } = await (supabase as any)
                 .from("profiles")
-                .update({ role: "member" })
+                .update({
+                    role: "member",
+                    roles: ["member"]
+                })
                 .eq("id", userId);
 
             if (updateError) {
