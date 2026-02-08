@@ -13,9 +13,10 @@ interface CultosProps {
     videos: YouTubeVideo[];
     serviceSettings: ServiceSettings | null;
     weeklyActivities: WeeklyActivity[];
+    settings: Record<string, string>;
 }
 
-export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities }: CultosProps) => {
+export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities, settings }: CultosProps) => {
     const [selectedVideo, setSelectedVideo] = useState<string | null>(liveStream?.videoId || null);
     const [filter, setFilter] = useState<string>("Todos");
     const [now, setNow] = useState<Date | null>(null);
@@ -244,12 +245,17 @@ export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities }
                             <div className="space-y-4">
                                 <h3 className="text-2xl font-playfair font-bold text-slate-900 dark:text-white uppercase tracking-tight">Asistir Presencialmente</h3>
                                 <p className="text-lg text-slate-500 dark:text-slate-400 font-light italic leading-relaxed">
-                                    "Estamos ubicados en Av. Central 123. ¡Nos encantaría saludarte en persona y adorar juntos!"
+                                    "Estamos ubicados en {settings.address || "100 Hurricane Shoals Rd NW, Suite F, Lawrenceville, GA 30043"}. ¡Nos encantaría saludarte en persona y adorar juntos!"
                                 </p>
                             </div>
-                            <button className="w-full bg-slate-50 dark:bg-white/5 py-6 rounded-3xl font-black uppercase tracking-[0.3em] text-[10px] text-mivn-blue flex items-center justify-center gap-4 hover:bg-mivn-blue hover:text-white transition-all border border-slate-100 dark:border-white/10 mt-auto">
+                            <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address || "100 Hurricane Shoals Rd NW, Suite F, Lawrenceville, GA 30043")}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-slate-50 dark:bg-white/5 py-6 rounded-3xl font-black uppercase tracking-[0.3em] text-[10px] text-mivn-blue flex items-center justify-center gap-4 hover:bg-mivn-blue hover:text-white transition-all border border-slate-100 dark:border-white/10 mt-auto"
+                            >
                                 <ExternalLink className="w-4 h-4" /> Ver en Google Maps
-                            </button>
+                            </a>
                         </div>
 
                         {/* Option 2: Digital */}
