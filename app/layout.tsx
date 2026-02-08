@@ -31,8 +31,50 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Ministerio Internacional Vida Nueva | Santuario Digital",
-  description: "Plataforma de estudio bíblico profundo y crecimiento espiritual del Ministerio Internacional Vida Nueva (MIVN).",
+  title: {
+    default: "Ministerio Internacional Vida Nueva | Santuario Digital",
+    template: "%s | MIVN"
+  },
+  description: "Plataforma de estudio bíblico profundo y crecimiento espiritual del Ministerio Internacional Vida Nueva (MIVN). Transformando vidas a través del amor de Cristo.",
+  keywords: ["iglesia", "cristiana", "vida nueva", "mivn", "estudio bíblico", "crecimiento espiritual", "Lawrenceville", "Georgia"],
+  authors: [{ name: "Edward Trinidad" }],
+  creator: "Edward Trinidad",
+  publisher: "Ministerio Internacional Vida Nueva",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://mivn.online"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Ministerio Internacional Vida Nueva | Santuario Digital",
+    description: "Conéctate, crece y participa en nuestra comunidad cristiana. Experimenta la gracia de Dios cada día.",
+    url: "https://mivn.online",
+    siteName: "MIVN",
+    locale: "es_US",
+    type: "website",
+    images: [
+      {
+        url: "/logo_mivn.png",
+        width: 800,
+        height: 600,
+        alt: "Logo MIVN",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ministerio Internacional Vida Nueva",
+    description: "Transformando vidas a través del amor de Cristo.",
+    images: ["/logo_mivn.png"],
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export const viewport = {
@@ -45,6 +87,7 @@ export const viewport = {
 import { TopBanner } from "@/components/institute/TopBanner";
 import { CookieProvider } from "@/contexts/CookieContext";
 import { CookieBanner } from "@/components/cookies/CookieBanner";
+import OrganizationSchema from "@/components/seo/OrganizationSchema";
 
 export default function RootLayout({
   children,
@@ -57,6 +100,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${libreBaskerville.variable} ${playfair.variable} ${lexend.variable} antialiased`}
       >
         <CookieProvider>
+          <OrganizationSchema />
           <TopBanner />
           {children}
           <CookieBanner />

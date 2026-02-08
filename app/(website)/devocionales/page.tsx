@@ -1,6 +1,17 @@
 import { getDevotionals, getTodayDevotional } from "@/lib/queries/devotionals";
 import { Book, Calendar, User, ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Devocionales Diarios",
+    description: "Reflexiones diarias basadas en la Biblia para fortalecer tu vida espiritual y caminar con Dios cada día.",
+    openGraph: {
+        title: "Devocionales Diarios | MIVN",
+        description: "Palabra fresca para tu corazón, todos los días.",
+        images: ["https://images.unsplash.com/photo-1504052434569-7c96024f4a08?auto=format&fit=crop&q=80&w=1200"],
+    },
+};
 
 export default async function DevocionalPage() {
     const todayDevotional = await getTodayDevotional();

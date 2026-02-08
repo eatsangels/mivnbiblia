@@ -1,6 +1,17 @@
 import { getUpcomingEvents, getFeaturedEvents } from "@/lib/queries/events";
 import { Calendar, MapPin, Users, ArrowRight, Clock, User } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Próximos Eventos",
+    description: "Mantente al tanto de nuestros próximos eventos, conferencias y actividades. ¡Te esperamos en el Ministerio Internacional Vida Nueva!",
+    openGraph: {
+        title: "Próximos Eventos | MIVN",
+        description: "Experiencias transformadoras que fortalecen tu fe y comunidad.",
+        images: ["/images/events_hero.png"],
+    },
+};
 
 export const dynamic = "force-dynamic";
 

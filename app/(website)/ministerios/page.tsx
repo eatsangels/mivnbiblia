@@ -1,6 +1,17 @@
 import { getMinistries } from "@/lib/queries/ministries";
 import { Users, ArrowRight, UserPlus, HeartHandshake } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Nuestros Ministerios",
+    description: "Descubre los diferentes ministerios del MIVN y cómo puedes usar tus talentos para servir a Dios y a la comunidad.",
+    openGraph: {
+        title: "Nuestros Ministerios | MIVN",
+        description: "Hay un lugar para tus talentos en nuestra familia.",
+        images: ["/images/ministries_hero.png"],
+    },
+};
 
 export default async function MinistriesPage() {
     const ministries = await getMinistries();
