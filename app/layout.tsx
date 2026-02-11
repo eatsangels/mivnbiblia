@@ -88,6 +88,7 @@ import { TopBanner } from "@/components/institute/TopBanner";
 import { CookieProvider } from "@/contexts/CookieContext";
 import { CookieBanner } from "@/components/cookies/CookieBanner";
 import OrganizationSchema from "@/components/seo/OrganizationSchema";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export default function RootLayout({
   children,
@@ -99,6 +100,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${libreBaskerville.variable} ${playfair.variable} ${lexend.variable} antialiased`}
       >
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-XXXXXXXXXX'} />
         <CookieProvider>
           <OrganizationSchema />
           <TopBanner />
