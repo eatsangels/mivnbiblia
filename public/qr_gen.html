@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MIVN QR Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f4f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #container {
+            position: relative;
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border-radius: 15px;
+        }
+        #logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+        .title {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="qr-canvas"></canvas>
+        <div id="logo-container">
+            <img src="file:///c:/mivn/public/logo_mivn.png" alt="Logo">
+        </div>
+    </div>
+    <div class="title">MI<span style="color: #60a5fa">VN</span>.ONLINE</div>
+    <div class="subtitle">Escanéame para entrar</div>
+
+    <script>
+        const canvas = document.getElementById('qr-canvas');
+        QRCode.toCanvas(canvas, 'https://mivn.online/', {
+            width: 400,
+            margin: 2,
+            color: {
+                dark: '#0f172a',
+                light: '#ffffff'
+            },
+            errorCorrectionLevel: 'H'
+        }, function (error) {
+            if (error) console.error(error);
+            console.log('success!');
+        });
+    </script>
+</body>
+</html>
