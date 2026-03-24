@@ -225,7 +225,7 @@ export function AdminDashboard({ stats, agenda, pendingTestimonies, activity: in
                                 <p className="text-sm text-slate-400 italic text-center">No hay eventos próximos</p>
                             )}
                         </div>
-                        <Link href="/admin/gestion-web/eventos" className="block w-full text-center mt-8 py-3 border border-slate-200 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <Link href="/admin/events" className="block w-full text-center mt-8 py-3 border border-slate-200 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                             Ver Calendario Completo
                         </Link>
                     </section>

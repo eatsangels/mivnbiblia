@@ -40,11 +40,13 @@ export default async function AdminLayout({
                 <div className="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href="/admin" className="flex items-center gap-4 group">
-                            <div className="w-10 h-10 relative transition-transform group-hover:scale-110">
+                            <div className="w-14 h-14 md:w-16 md:h-16 relative transition-transform group-hover:scale-110">
                                 <Image src="/logo_mivn.png" alt="MIVN" fill className="object-contain" />
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold font-playfair tracking-tighter text-mivn-blue dark:text-white uppercase leading-none">MIVN <span className="text-slate-400">Admin</span></h1>
+                                <h1 className="text-xl md:text-2xl font-bold font-playfair tracking-tighter text-mivn-blue dark:text-white uppercase leading-none">
+                                    MIVN <span className="text-slate-400">Admin</span>
+                                </h1>
                             </div>
                         </Link>
 
