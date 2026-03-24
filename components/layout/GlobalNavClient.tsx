@@ -62,9 +62,11 @@ export const GlobalNavClient = ({ user, navItems }: GlobalNavClientProps) => {
                         <Image
                             src="/logo_mivn.png"
                             alt="MIVN Logo"
-                            width={48}
-                            height={48}
-                            className="h-12 w-auto"
+                            width={256}
+                            height={256}
+                            quality={100}
+                            priority
+                            className="h-16 sm:h-[72px] w-auto object-contain"
                         />
                         <span className="font-playfair text-xl font-bold tracking-tight text-slate-900 dark:text-white hidden sm:block uppercase">
                             MIVN

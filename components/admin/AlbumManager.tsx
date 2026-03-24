@@ -240,7 +240,7 @@ export function AlbumManager({ albumId }: { albumId: string }) {
                         <ImageUploader
                             onUploadComplete={handlePhotoUpload}
                             folder="gallery"
-                            aspectRatio={1} // Square for gallery by default or variable? Keeping it square for consistency
+                            preserveOriginalAspect={true}
                         />
                     </div>
                 </div>

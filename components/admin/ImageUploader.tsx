@@ -14,6 +14,7 @@ interface ImageUploaderProps {
     aspectRatio?: number;
     circularCrop?: boolean;
     noCrop?: boolean; // Si es true, sube directamente sin recortar
+    preserveOriginalAspect?: boolean;
 }
 
 export function ImageUploader({
@@ -22,9 +23,11 @@ export function ImageUploader({
     folder = "uploads",
     aspectRatio = 16 / 9,
     circularCrop = false,
-    noCrop = false
+    noCrop = false,
+    preserveOriginalAspect = false
 }: ImageUploaderProps) {
     const [uploading, setUploading] = useState(false);
+    const [dynamicAspect, setDynamicAspect] = useState(aspectRatio);
     const [preview, setPreview] = useState<string | null>(currentImage || null);
     const [error, setError] = useState<string | null>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -234,12 +237,17 @@ export function ImageUploader({
                                 image={imageToCrop}
                                 crop={crop}
                                 zoom={zoom}
-                                aspect={aspectRatio}
+                                aspect={preserveOriginalAspect ? dynamicAspect : aspectRatio}
                                 cropShape={circularCrop ? 'round' : 'rect'}
                                 showGrid={true}
                                 onCropChange={setCrop}
                                 onCropComplete={onCropComplete}
                                 onZoomChange={setZoom}
+                                onMediaLoaded={(mediaSize) => {
+                                    if (preserveOriginalAspect) {
+                                        setDynamicAspect(mediaSize.width / mediaSize.height);
+                                    }
+                                }}
                             />
                         </div>
 
