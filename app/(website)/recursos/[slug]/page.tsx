@@ -13,12 +13,13 @@ type ResourceWithCategory = Database['public']['Tables']['resources']['Row'] & {
 };
 
 interface ResourcePageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export default async function ResourceDetailPage({ params }: ResourcePageProps) {
+    const resolvedParams = await params;
     const supabase = await createClient();
 
     const { data: rawResource } = await supabase
@@ -30,7 +31,7 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
                 name
             )
         `)
-        .eq("slug", params.slug)
+        .eq("slug", resolvedParams.slug)
         .eq("is_published", true)
         .single();
 
