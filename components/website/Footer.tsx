@@ -28,12 +28,17 @@ export async function Footer() {
                     {/* Column 1: Brand Identity & Mission */}
                     <div className="flex flex-col gap-8">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-2xl overflow-hidden p-1">
-                                <Image src={logoUrl} alt="MIVN" width={48} height={48} className="object-contain" />
+                            <div className="w-20 h-20 md:w-24 md:h-24 relative flex items-center justify-center drop-shadow-2xl shrink-0">
+                                <Image src={logoUrl} alt="MIVN Logo" fill className="object-contain" />
                             </div>
-                            <h2 className="text-3xl font-black leading-none tracking-tighter italic">
-                                {settings.site_name || 'MIVN'}
-                            </h2>
+                            <div className="relative h-16 md:h-20 flex-1 min-w-[200px]">
+                                <Image 
+                                    src="/Marca D'água com Sombreado 2.png" 
+                                    alt="Ministerio Internacional Vida Nueva" 
+                                    fill 
+                                    className="object-contain object-left" 
+                                />
+                            </div>
                         </div>
                         <p className="text-white/90 text-sm leading-relaxed font-light">
                             {settings.site_tagline || 'Transformando vidas a través del amor de Cristo.'}
