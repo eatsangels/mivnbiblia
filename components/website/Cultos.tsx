@@ -46,6 +46,45 @@ export const Cultos = ({ liveStream, initialVideos, initialNextPageToken, servic
         }
     };
 
+    const handleShare = async () => {
+        const shareData = {
+            title: 'Cultos y Servicios | MIVN',
+            text: 'Únete a nuestros cultos en vivo y mensajes recientes. ¡La Presencia de Dios nos Transforma!',
+            url: window.location.href,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(window.location.href);
+                alert("Enlace copiado al portapapeles");
+            }
+        } catch (err) {
+            console.error('Error sharing:', err);
+        }
+    };
+
+    const handleShareVideo = async () => {
+        if (!selectedVideo) return;
+        const url = `https://youtube.com/watch?v=${selectedVideo}`;
+        
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'Cultos y Servicios | MIVN',
+                    text: 'Mira este mensaje de MIVN.',
+                    url: url,
+                });
+            } else {
+                await navigator.clipboard.writeText(url);
+                alert("Enlace del video copiado al portapapeles");
+            }
+        } catch (err) {
+            console.error('Error sharing video:', err);
+        }
+    };
+
     // Countdown timer effect
     useEffect(() => {
         setNow(new Date());
@@ -473,7 +512,10 @@ export const Cultos = ({ liveStream, initialVideos, initialNextPageToken, servic
                                         </h2>
                                     </div>
                                     <div className="flex gap-4">
-                                        <button className="px-6 py-3 bg-mivn-blue text-white rounded-xl font-bold text-sm hover:bg-sky-600 transition-all flex items-center gap-2">
+                                        <button 
+                                            onClick={handleShareVideo}
+                                            className="px-6 py-3 bg-mivn-blue text-white rounded-xl font-bold text-sm hover:bg-sky-600 transition-all flex items-center gap-2"
+                                        >
                                             <Share2 className="w-4 h-4" /> Compartir
                                         </button>
                                         <button className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-2">
@@ -499,17 +541,36 @@ export const Cultos = ({ liveStream, initialVideos, initialNextPageToken, servic
                         </p>
 
                         <div className="flex flex-wrap justify-center gap-8">
-                            <button className="bg-white text-mivn-blue px-12 py-6 rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:scale-105 transition-all flex items-center gap-4">
+                            <button 
+                                onClick={handleShare}
+                                className="bg-white text-mivn-blue px-12 py-6 rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:scale-105 transition-all flex items-center gap-4"
+                            >
                                 <Share2 className="w-5 h-5" /> Compartir Ahora
                             </button>
 
                             <div className="flex items-center gap-6">
                                 {[
-                                    { name: "WhatsApp", icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png" },
-                                    { name: "Facebook", icon: "https://cdn-icons-png.flaticon.com/512/733/733547.png" },
-                                    { name: "Instagram", icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png" }
+                                    { 
+                                        name: "WhatsApp", 
+                                        icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png",
+                                        action: () => window.open(`https://wa.me/?text=${encodeURIComponent('Únete a nuestros cultos en MIVN: ' + window.location.href)}`, '_blank')
+                                    },
+                                    { 
+                                        name: "Facebook", 
+                                        icon: "https://cdn-icons-png.flaticon.com/512/733/733547.png",
+                                        action: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')
+                                    },
+                                    { 
+                                        name: "Instagram", 
+                                        icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png",
+                                        action: () => window.open(settings?.instagram_url || 'https://www.instagram.com/mivn2604', '_blank')
+                                    }
                                 ].map((social, i) => (
-                                    <button key={i} className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all p-4">
+                                    <button 
+                                        key={i} 
+                                        onClick={social.action}
+                                        className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all p-4"
+                                    >
                                         <img src={social.icon} alt={social.name} className="w-full h-full object-contain brightness-0 invert" />
                                     </button>
                                 ))}
