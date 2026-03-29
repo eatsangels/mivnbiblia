@@ -1,5 +1,5 @@
 import { Cultos } from "@/components/website/Cultos";
-import { getChannelLiveStreams, getChannelVideos } from "@/lib/youtube";
+import { getChannelLiveStreams, getChannelVideosPaginated } from "@/lib/youtube";
 import { getServiceSettings, getWeeklyActivities } from "@/app/(estudio)/admin/settings/actions";
 import { getSiteSettings } from "@/lib/queries/settings";
 import { Metadata } from "next";
@@ -20,13 +20,20 @@ export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function Page() {
     // Fetch live stream status, recent videos, and site settings
-    const [liveStream, videos, serviceSettings, weeklyActivities, settings] = await Promise.all([
+    const [liveStream, initialVideosData, serviceSettings, weeklyActivities, settings] = await Promise.all([
         getChannelLiveStreams(),
-        getChannelVideos(12),
+        getChannelVideosPaginated(undefined, 4),
         getServiceSettings(),
         getWeeklyActivities(),
         getSiteSettings()
     ]);
 
-    return <Cultos liveStream={liveStream} videos={videos} serviceSettings={serviceSettings} weeklyActivities={weeklyActivities} settings={settings} />;
+    return <Cultos 
+        liveStream={liveStream} 
+        initialVideos={initialVideosData.videos} 
+        initialNextPageToken={initialVideosData.nextPageToken}
+        serviceSettings={serviceSettings} 
+        weeklyActivities={weeklyActivities} 
+        settings={settings} 
+    />;
 }

@@ -5,21 +5,46 @@ import { useState, useEffect } from "react";
 import type { YouTubeLiveStream, YouTubeVideo } from "@/lib/youtube";
 import { parseDuration } from "@/lib/youtube";
 import Link from "next/link";
+import { loadMoreCultos } from "@/app/(website)/cultos/actions";
 
 import type { ServiceSettings, WeeklyActivity } from "@/app/(estudio)/admin/settings/actions";
 
 interface CultosProps {
     liveStream: YouTubeLiveStream | null;
-    videos: YouTubeVideo[];
+    initialVideos: YouTubeVideo[];
+    initialNextPageToken: string | null;
     serviceSettings: ServiceSettings | null;
     weeklyActivities: WeeklyActivity[];
     settings: Record<string, string>;
 }
 
-export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities, settings }: CultosProps) => {
+export const Cultos = ({ liveStream, initialVideos, initialNextPageToken, serviceSettings, weeklyActivities, settings }: CultosProps) => {
+    const [videos, setVideos] = useState<YouTubeVideo[]>(initialVideos);
+    const [nextPageToken, setNextPageToken] = useState<string | null>(initialNextPageToken);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState<string | null>(liveStream?.videoId || null);
     const [filter, setFilter] = useState<string>("Todos");
     const [now, setNow] = useState<Date | null>(null);
+
+    const handleLoadMore = async () => {
+        if (!nextPageToken) return;
+        setIsLoadingMore(true);
+        try {
+            const result = await loadMoreCultos(nextPageToken);
+            if (result.videos.length > 0) {
+                setVideos(prev => {
+                    const existingIds = new Set(prev.map(v => v.videoId));
+                    const newUniqueVideos = result.videos.filter(v => !existingIds.has(v.videoId));
+                    return [...prev, ...newUniqueVideos];
+                });
+            }
+            setNextPageToken(result.nextPageToken);
+        } catch (error) {
+            console.error("Error loading more videos:", error);
+        } finally {
+            setIsLoadingMore(false);
+        }
+    };
 
     // Countdown timer effect
     useEffect(() => {
@@ -414,6 +439,19 @@ export const Cultos = ({ liveStream, videos, serviceSettings, weeklyActivities, 
                             ))
                         )}
                     </div>
+
+                    {/* Pagination Button */}
+                    {nextPageToken && (
+                        <div className="flex justify-center mt-12">
+                            <button 
+                                onClick={handleLoadMore}
+                                disabled={isLoadingMore}
+                                className="px-8 py-3 bg-mivn-blue text-white rounded-[2.5rem] font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100"
+                            >
+                                {isLoadingMore ? "Cargando..." : "Cargar Más Cultos"}
+                            </button>
+                        </div>
+                    )}
 
                     {/* Selected Video Player */}
                     {selectedVideo && (

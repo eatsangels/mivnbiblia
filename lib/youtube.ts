@@ -125,17 +125,19 @@ export async function getChannelLiveStreams(): Promise<YouTubeLiveStream | null>
     }
 }
 
-export async function getChannelVideos(maxResults: number = 12): Promise<YouTubeVideo[]> {
+export async function getChannelVideosPaginated(pageToken?: string, maxResults: number = 12): Promise<{ videos: YouTubeVideo[], nextPageToken: string | null }> {
     const apiKey = process.env.YOUTUBE_API_KEY;
     const channelId = process.env.YOUTUBE_CHANNEL_ID;
 
     if (!apiKey || !channelId) {
         console.warn('YouTube API credentials not configured, returning mock videos');
-        return MOCK_VIDEOS;
+        return { videos: MOCK_VIDEOS, nextPageToken: null };
     }
 
     try {
-        const searchUrl = `${YOUTUBE_API_BASE}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${maxResults}&key=${apiKey}`;
+        let searchUrl = `${YOUTUBE_API_BASE}/search?part=snippet&channelId=${channelId}&order=date&type=video&maxResults=${maxResults}&key=${apiKey}`;
+        if (pageToken) searchUrl += `&pageToken=${pageToken}`;
+        
         const searchResponse = await fetch(searchUrl, { next: { revalidate: 3600 } }); // Increased cache to 1 hour to save quota
 
         if (!searchResponse.ok) {
@@ -147,26 +149,27 @@ export async function getChannelVideos(maxResults: number = 12): Promise<YouTube
                 message: errorData.error?.message || searchResponse.statusText
             });
 
-            return MOCK_VIDEOS;
+            return { videos: MOCK_VIDEOS, nextPageToken: null };
         }
 
         const searchData = await searchResponse.json();
+        const nextPageToken = searchData.nextPageToken || null;
 
         if (!searchData.items || searchData.items.length === 0) {
-            return [];
+            return { videos: [], nextPageToken };
         }
 
         const videoIds = searchData.items.map((item: any) => item.id.videoId).join(',');
         const detailsUrl = `${YOUTUBE_API_BASE}/videos?part=snippet,contentDetails,statistics&id=${videoIds}&key=${apiKey}`;
         const detailsResponse = await fetch(detailsUrl, { next: { revalidate: 3600 } });
 
-        if (!detailsResponse.ok) return MOCK_VIDEOS;
+        if (!detailsResponse.ok) return { videos: MOCK_VIDEOS, nextPageToken: null };
 
         const detailsData = await detailsResponse.json();
 
-        if (!detailsData.items) return MOCK_VIDEOS;
+        if (!detailsData.items) return { videos: MOCK_VIDEOS, nextPageToken: null };
 
-        return detailsData.items.map((video: any) => ({
+        const videos = detailsData.items.map((video: any) => ({
             videoId: video.id,
             title: video.snippet.title,
             description: video.snippet.description,
@@ -176,10 +179,17 @@ export async function getChannelVideos(maxResults: number = 12): Promise<YouTube
             isLive: video.snippet.liveBroadcastContent === 'live',
             viewCount: parseInt(video.statistics.viewCount || '0')
         }));
+        
+        return { videos, nextPageToken };
     } catch (error) {
         console.error('Error fetching channel videos, using fallback:', error);
-        return MOCK_VIDEOS;
+        return { videos: MOCK_VIDEOS, nextPageToken: null };
     }
+}
+
+export async function getChannelVideos(maxResults: number = 12): Promise<YouTubeVideo[]> {
+    const result = await getChannelVideosPaginated(undefined, maxResults);
+    return result.videos;
 }
 
 /**
